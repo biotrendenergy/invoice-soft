@@ -215,6 +215,7 @@ Extract the following information from each uploaded PDF file **strictly followi
   * **Remove any trailing \`.00\`** from the number (e.g., convert \`"39330.00"\` → \`"39330"\`).
   * Preserve the original **unit** use only "kg".
   * If the weight is not found, return \`null\`.
+  * it alice name is Material Weight
 
 
 
@@ -315,4 +316,126 @@ export async function getOcr(id: number) {
 
 export async function ocrCount() {
   return await prisma.ocr.count();
+}
+
+const EXtractPrompt = `
+I have multiple PDF files. Each one contains a Delivery Challan.
+
+Please extract only the Challan Number from each PDF. The challan number may appear as:
+
+"Challan No"
+
+"Challan Number"
+
+"Delivery Challan No"
+
+"DC No"
+
+or similar variations.
+
+Return the result in this JSON format:
+
+
+[
+  {
+    "file_name": "example1.pdf",
+    "challan_number": "DC-00123"
+  },
+  {
+    "file_name": "example2.pdf",
+    "challan_number": "CH-45678"
+  }
+]
+If a challan number is not found in a file, set "challan_number" to null.
+
+`;
+
+export async function getChallanNumber(filePart: any[], maxRetries = 3) {
+  let attempt = 0;
+  while (attempt < maxRetries) {
+    try {
+      const result = await model.generateContent({
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: EXtractPrompt }, ...filePart],
+          },
+        ],
+      });
+
+      const jsonText = await result.response.text();
+      const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
+      console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
+
+      return JSON.parse(jsonString);
+    } catch (error) {
+      console.error(`Attempt ${attempt + 1} failed:`, error);
+      attempt++;
+
+      // Optional: wait before retrying
+      await new Promise((res) => setTimeout(res, 500 * attempt));
+    }
+  }
+  throw new Error("Failed to extract data from image after multiple attempts.");
+}
+
+const sPrompt = `
+I have multiple PDF files. Each one contains a Delivery Challan.
+
+Please extract only the Challan Number from each PDF. The challan number may appear as:
+
+"Challan No"
+
+"Challan Number"
+
+"Delivery Challan No"
+
+"DC No"
+
+or similar variations.
+
+Return the result in this JSON format:
+
+
+[
+  {
+    "file_name": "example1.pdf",
+    "challan_number": "DC-00123"
+  },
+  {
+    "file_name": "example2.pdf",
+    "challan_number": "CH-45678"
+  }
+]
+If a challan number is not found in a file, set "challan_number" to null.
+
+`;
+
+export async function extractData_msi(filePart: any[], maxRetries = 3) {
+  let attempt = 0;
+  while (attempt < maxRetries) {
+    try {
+      const result = await model.generateContent({
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: EXtractPrompt }, ...filePart],
+          },
+        ],
+      });
+
+      const jsonText = await result.response.text();
+      const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
+      console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
+
+      return JSON.parse(jsonString);
+    } catch (error) {
+      console.error(`Attempt ${attempt + 1} failed:`, error);
+      attempt++;
+
+      // Optional: wait before retrying
+      await new Promise((res) => setTimeout(res, 500 * attempt));
+    }
+  }
+  throw new Error("Failed to extract data from image after multiple attempts.");
 }

@@ -4,6 +4,7 @@ import {
   ExtractDataFORCompar,
   extractEWayBill,
   getAllOcr,
+  getChallanNumber,
   getFilePart,
 } from "@/action/ocr";
 import { ocr } from "@/generated/prisma";
@@ -22,29 +23,36 @@ const normalizeWeight = (value: string | null) => {
 
   // Remove .00 if present
   const cleanNumber = number.endsWith(".00")
-    ? parseFloat(number).toString()
-    : number;
+    ? parseInt(number).toString()
+    : parseInt(number).toString();
+  console.log(cleanNumber, cleanNumber.replace(",", ""));
 
   return `${cleanNumber} ${normalizedUnit}`;
 };
 
 const Page = () => {
-  const [leftFile, setLeftFile] = useState<File[] | null>(null);
   const [rightFile, setRightFile] = useState<File[] | null>(null);
   const [resultMessage, setResultMessage] = useState<string | null>(null);
-  const leftInputRef = useRef<HTMLInputElement>(null);
+
   const rightInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async () => {
     let leftData = {};
     let rightData = {};
-    if (leftFile && rightFile) {
-      leftData = await Promise.all(
-        leftFile.map(async (e) => {
-          const filePart = await getFilePart(e);
-          return ExtractDataFORCompar(filePart);
-        })
-      );
+    if (rightFile && ocrData) {
+      leftData = [
+        {
+          vehicle_number: ocrData.vehicle_number,
+          date: ocrData.date.toLocaleDateString("en-GB").split("/").join("-"),
+          net_weight: ocrData.net_weight + " kg",
+        },
+      ];
+      // leftData = await Promise.all(
+      //   leftFile.map(async (e) => {
+      //     const filePart = await getFilePart(e);
+      //     return ExtractDataFORCompar(filePart);
+      //   })
+      // );
       rightData = await Promise.all(
         rightFile.map(async (e) => {
           const filePart = await getFilePart(e);
@@ -52,6 +60,8 @@ const Page = () => {
         })
       );
     }
+    console.log(leftData, rightData);
+
     // Compare leftData and rightData and show result
     // Assuming leftData and rightData are arrays of objects (one per file)
     let resultMessage = "";
@@ -64,7 +74,9 @@ const Page = () => {
           Object.keys(leftObj).forEach((key) => {
             let leftVal = leftObj[key];
             let rightVal = rightObj[key];
-
+            if (rightObj[key] == null) {
+              return;
+            }
             if (key === "net_weight") {
               leftVal = normalizeWeight(leftVal);
               rightVal = normalizeWeight(rightVal);
@@ -77,6 +89,17 @@ const Page = () => {
       });
       if (mismatches.length === 0) {
         resultMessage = "All fields match!";
+        if (rightFile) {
+          let data = await getChallanNumber(
+            await Promise.all(
+              rightFile.map(async (e) => {
+                const filePart = await getFilePart(e);
+                return filePart;
+              })
+            )
+          );
+          localStorage.setItem("data_for_mis", JSON.stringify(data));
+        }
       } else {
         resultMessage = "Mismatches found:\n" + mismatches.join("\n");
       }
@@ -149,7 +172,7 @@ const Page = () => {
                 </option>
               ))}
             </select>
-            <div>{JSON.stringify(ocrData)}</div>
+            {/* <div>{JSON.stringify(ocrData)}</div> */}
           </div>
         </div>
 
@@ -177,7 +200,7 @@ const Page = () => {
       <div className="text-center">
         <button
           className="btn btn-primary mt-6"
-          disabled={!leftFile || !rightFile}
+          disabled={!rightFile}
           onClick={handleSubmit}
         >
           Compare
