@@ -18,7 +18,9 @@ const Header = () => {
             />
           </svg>
         </label>
-        <a className="btn btn-ghost text-xl">bio trend</a>
+        <a className="btn btn-ghost text-xl">
+          <img src="/logo.png" className="w-[100px] " />
+        </a>
       </div>
     </div>
   );

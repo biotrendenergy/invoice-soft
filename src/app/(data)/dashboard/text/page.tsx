@@ -1,11 +1,17 @@
 "use client";
 
-import { addOCRData, extractEWayBill, getFilePart } from "@/action/ocr";
+import {
+  addOCRData,
+  extractEWayBill,
+  extractEWayBill_withIn,
+  getFilePart,
+} from "@/action/ocr";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 const DataComp = ({ index, entry }: { index: number; entry: any }) => {
   const [e_way_bill, setEwayBill] = useState<Number | null>(null);
+  const [invoice, setInvoice] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const handlePrintData = () => {
     if (id) {
@@ -39,7 +45,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
           </tr>
           <tr>
             <th>Invoice Number</th>
-            <td>{entry["invoice"] || "-"}</td>
+            <td>{invoice || "-"}</td>
           </tr>
           <tr>
             <th>Gross Weight (kg)</th>
@@ -72,8 +78,9 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
           onChange={async (e) => {
             if (!e.target.files) return;
             const file = await getFilePart(e.target.files[0]);
-            const e_way_bill = await extractEWayBill(file);
-            setEwayBill(e_way_bill);
+            const e_way_bill = await extractEWayBill_withIn(file);
+            setEwayBill(Number(e_way_bill.EWayBillNumber));
+            setInvoice(e_way_bill.ChallanOrInvoiceNumber);
           }}
         />
         {!e_way_bill && (
