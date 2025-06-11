@@ -8,11 +8,12 @@ import {
   getFilePart,
   ocrCount,
 } from "@/action/ocr";
-import { ocr } from "@/generated/prisma";
+import { companyDetail, ocr, vendorDetail } from "@/generated/prisma";
 import { prisma } from "@/lib/db";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner"; // For notifications
 import EditButton from "../_components/editButton";
+import { getAllVendor } from "@/action/vendores";
 // Import styles for the toast notifications
 
 const Page = () => {
@@ -133,6 +134,14 @@ const Page = () => {
       toast.error("No data to print!");
     }
   };
+  const [vender, setVendor] = useState<number | null>(null);
+  const [vendors, setVendors] = useState<vendorDetail[] | null>(null);
+  const [companies, setCompanies] = useState<companyDetail[] | null>(null);
+  useEffect(() => {
+    (async () => {
+      setVendors(await getAllVendor());
+    })();
+  }, []);
   const year = new Date().getFullYear();
   return (
     <div className="flex">
@@ -140,6 +149,25 @@ const Page = () => {
       <div className="flex p-6">
         <div className="flex-1 mr-6">
           <h2 className="text-2xl mb-4">Upload Images</h2>
+          <div className="flex flex-col">
+            <label>Vendor Name</label>
+            <select
+              className="select select-bordered"
+              defaultValue=""
+              onChange={(v) => {
+                setVendor(Number(v.target.value));
+              }}
+            >
+              <option value="" disabled>
+                Select vendor
+              </option>
+              {vendors?.map((ocr) => (
+                <option key={ocr.id} value={ocr.id}>
+                  {ocr.name || `OCR #${ocr.id}`}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <fieldset className="fieldset mb-4">
             <legend className="fieldset-legend">Invoice starting</legend>
@@ -151,8 +179,19 @@ const Page = () => {
                 setInvoiceString(e.target.value.split("$").at(-1) || "");
               }}
             >
-              <option value="">Select Invoice</option>
-              <option
+              <option value="" disabled>
+                Select Invoice
+              </option>
+              {companies?.map((v, i) => (
+                <option
+                  value={`${v.name}$${v.shotName}/${year
+                    .toString()
+                    .slice(-2)}-${(year + 1).toString().slice(-2)}`}
+                >
+                  {v.name}
+                </option>
+              ))}
+              {/* <option
                 value={`SKILL FLARE TECHNOLOGIES$CT/${year
                   .toString()
                   .slice(-2)}-${(year + 1).toString().slice(-2)}/`}
@@ -187,7 +226,7 @@ const Page = () => {
               </option>
               <option value={`BIOME SOLAPUR PLANT$BI/NTPC/SOL/`}>
                 BIOME SOLAPUR PLANT
-              </option>
+              </option> */}
             </select>
           </fieldset>
           {/* Buffer Image File Input */}
