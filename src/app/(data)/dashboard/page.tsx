@@ -40,6 +40,7 @@ const Page = async () => {
                       Print Challan
                     </button>
                   </Link>
+
                   <button className="btn btn-sm btn-warning">Edit</button>
                   <button className="btn btn-sm btn-error">Delete</button>
                 </td>

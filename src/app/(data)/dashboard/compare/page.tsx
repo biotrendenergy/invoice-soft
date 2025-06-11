@@ -98,7 +98,10 @@ const Page = () => {
               })
             )
           );
-          localStorage.setItem("data_for_mis", JSON.stringify(data));
+          localStorage.setItem(
+            `data_for_mis_${ocrData?.id}`,
+            JSON.stringify(data)
+          );
         }
       } else {
         resultMessage = "Mismatches found:\n" + mismatches.join("\n");

@@ -29,6 +29,12 @@ const Sidebar = (props: PropsWithChildren) => {
           <li>
             <Link href={"/dashboard/mis"}>MIS</Link>
           </li>
+          <li>
+            <Link href={"/dashboard/companys"}>companies</Link>
+          </li>
+          <li>
+            <Link href={"/dashboard/vendors"}>vendor</Link>
+          </li>
         </ul>
       </div>
     </div>

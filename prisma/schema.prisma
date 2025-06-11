@@ -10,7 +10,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -21,8 +21,8 @@ model user {
 }
 
 model ocr {
-  id Int @id @default(autoincrement())
-
+  id              Int      @id @default(autoincrement())
+  //add vendor name 
   A_weight        Int
   B_weight        Int
   challan         String
@@ -45,4 +45,23 @@ model challan {
   id       Int @id @default(autoincrement())
   starting Int
   ending   Int
+}
+
+model companyDetail {
+  id              Int    @id @default(autoincrement())
+  shotName        String // BTE
+  name            String
+  billingAddress  String
+  gstNo           String
+  shippingAddress String
+}
+
+model vendorDetail {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
+model mis {
+  id       Int    @id @default(autoincrement())
+  sheetURL String
 }

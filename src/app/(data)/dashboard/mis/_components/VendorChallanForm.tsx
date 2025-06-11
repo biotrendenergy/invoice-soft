@@ -1,25 +1,57 @@
-import { useForm } from "react-hook-form";
+import { useForm, UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { vendorChallanSchema } from "../_utils/schema";
 import type { z } from "zod";
 import { Field } from "./Field";
 import { useEffect, useState } from "react";
-import { ocr } from "@/generated/prisma";
-import { getAllOcr } from "@/action/ocr";
-
+import { ocr, vendorDetail } from "@/generated/prisma";
+import { extractData_msi, getAllOcr, getFilePart } from "@/action/ocr";
+import { toast } from "sonner";
+import { getAllVendor } from "@/action/vendores";
+const convertToHtmlDate = (dateStr: string) => {
+  const [day, month, year] = dateStr.split("-");
+  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+};
 const FileUploadModal = ({
   open,
   onClose,
   ocrData,
   selectOcrData,
+  setValue,
 }: {
   open: boolean;
   onClose: () => void;
   ocrData: ocr[] | undefined;
   selectOcrData: React.Dispatch<React.SetStateAction<ocr | undefined>>;
+  setValue: UseFormSetValue<z.infer<typeof vendorChallanSchema>>;
 }) => {
   if (!open) return null;
   if (!ocrData) return null;
+  const [ewayBill, setEwayBill] = useState<null | File>(null);
+  const [challan, setChallan] = useState<null | File>(null);
+
+  const onsubmit = async () => {
+    if (!ewayBill || !challan) return;
+    try {
+      const ewayBillFile = await getFilePart(ewayBill);
+      const challanFile = await getFilePart(challan);
+      let data = await extractData_msi([ewayBillFile, challanFile]);
+      if (!data) {
+        throw new Error("Data not found!!");
+      }
+
+      setValue("vendorChallanDate", convertToHtmlDate(data.challan_date));
+      setValue("vendorChallanNo", data.challan_number);
+      setValue("vendorEwayBill", data.eway_bill_number);
+      setValue("vendorEwayBillDate", convertToHtmlDate(data.eway_bill_date));
+    } catch (e: any) {
+      console.log(e);
+
+      toast.error(e.message);
+    } finally {
+      onClose();
+    }
+  };
   return (
     <dialog open className="modal">
       <div className="modal-box">
@@ -45,19 +77,34 @@ const FileUploadModal = ({
             ))}
           </select>
           <label>Vendor challan</label>
-          <input type="file" className="file-input file-input-bordered" />
+          <input
+            onChange={(e) => {
+              if (!e.target.files) return;
+              setChallan(e.target.files[0]);
+            }}
+            type="file"
+            className="file-input file-input-bordered"
+          />
           <label>Vendor E-way bill</label>
-          <input type="file" className="file-input file-input-bordered" />
-          {/*  <label>NTPC challan</label>
-
-          <input type="file" className="file-input file-input-bordered" />
-          <label>NTPC E-way bill</label>
-
-          <input type="file" className="file-input file-input-bordered" /> */}
+          <input
+            onChange={(e) => {
+              if (!e.target.files) return;
+              setEwayBill(e.target.files[0]);
+            }}
+            type="file"
+            className="file-input file-input-bordered"
+          />
         </div>
         <div className="modal-action">
           <button className="btn" onClick={onClose}>
             Close
+          </button>
+          <button
+            className="btn"
+            disabled={!ewayBill || !challan}
+            onClick={onsubmit}
+          >
+            Submit
           </button>
         </div>
       </div>
@@ -88,17 +135,20 @@ export default function VendorChallanForm() {
     })();
   }, []);
   useEffect(() => {
-    const data = localStorage.getItem("data_for_mis");
+    const data = localStorage.getItem(`data_for_mis_${ocrData?.id}`);
+
     if (!data) {
       setValue("biomeChallanNo", "");
     } else {
       let json = JSON.parse(data);
       setValue("biomeChallanNo", json.at(-1)["challan_number"]);
     }
+    setValue("challanDate", new Date().toISOString().slice(0, 10));
     setValue("grossWeight", ocrData?.gross_weight.toString() ?? "");
     setValue("netWeightNTPC", ocrData?.net_weight.toString() ?? "");
     setValue("tareWeight", ocrData?.tare_weight.toString() ?? "");
     setValue("vehicleNo", ocrData?.vehicle_number.toString() ?? "");
+    setValue("netWeightVendor", ocrData?.A_weight.toString() ?? "");
     // setValue('',ocrData?.gross_weight.toString() ?? "");
     // setValue("grossWeight", ocrData?.gross_weight.toString() ?? "");
     // setValue("grossWeight", ocrData?.gross_weight.toString() ?? "");
@@ -131,6 +181,12 @@ export default function VendorChallanForm() {
       console.error("Error submitting form:", error);
     }
   };
+  const [vendors, setVendors] = useState<vendorDetail[] | null>(null);
+  useEffect(() => {
+    (async () => {
+      setVendors(await getAllVendor());
+    })();
+  }, []);
   return (
     <>
       <button className="btn btn-accent" onClick={() => setModalOpen(true)}>
@@ -140,13 +196,25 @@ export default function VendorChallanForm() {
         onSubmit={handleSubmit(onSubmit)}
         className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
       >
-        <Field
-          label="Vendor Name"
-          name="vendorName"
-          register={register}
-          error={errors.vendorName}
-          inputClass="input"
-        />
+        <div className="flex flex-col">
+          <label>Vendor Name</label>
+          <select
+            className="select select-bordered"
+            defaultValue=""
+            onChange={(v) => {
+              setValue("vendorName", v.target.value);
+            }}
+          >
+            <option value="" disabled>
+              Select vendor
+            </option>
+            {vendors?.map((ocr) => (
+              <option key={ocr.id} value={ocr.name}>
+                {ocr.name || `OCR #${ocr.id}`}
+              </option>
+            ))}
+          </select>
+        </div>
         <Field
           label="Vendor Challan Date"
           name="vendorChallanDate"
@@ -287,6 +355,7 @@ export default function VendorChallanForm() {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         ocrData={ocr}
+        setValue={setValue}
       />
     </>
   );

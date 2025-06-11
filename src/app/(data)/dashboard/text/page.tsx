@@ -1,10 +1,12 @@
 "use client";
 
-import { addOCRData } from "@/action/ocr";
-import { useState } from "react";
+import { addOCRData, extractEWayBill, getFilePart } from "@/action/ocr";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 const DataComp = ({ index, entry }: { index: number; entry: any }) => {
+  const [e_way_bill, setEwayBill] = useState<Number | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const handlePrintData = () => {
     if (id) {
       window.open(`/data/${id}`, "popupWindow");
@@ -62,54 +64,78 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
         </tbody>
       </table>
       <div className="flex gap-1.5 my-2">
-        <button
-          className="btn btn-accent"
-          onClick={async () => {
-            const parseDate = (d: string) => {
-              const [day, month, year] = d.split("/");
-              return new Date(`20${year}-${month}-${day}`);
-            };
-
-            const safeNumber = (value: string) =>
-              Number(value.replace(/[^\d.-]/g, "") || 0);
-            try {
-              const data = await addOCRData({
-                id: 0,
-                A_weight: safeNumber(entry["a weight"] ?? 0),
-                B_weight: safeNumber(entry["b weight"] ?? 0),
-                challan: entry["invoice"] || "", // assuming challan is same as invoice
-                address: "Default address or dynamic input",
-                map_url: "https://maps.google.com/?q=26.9124,75.7873", // optional
-                latitude: 26.9124, // dummy or dynamic
-                longitude: 75.7873, // dummy or dynamic
-                delivery_date: new Date(), // or some parsed date
-                delivery_status: "Pending",
-                net_weight: safeNumber(entry["net weight"] ?? 0),
-                tare_weight: safeNumber(entry["tare weight"] ?? 0),
-                gross_weight: safeNumber(entry["gross weight"] ?? 0),
-                vehicle_number: entry["vehicle no"] || "",
-                date: parseDate(entry["date"] || "01/01/00"),
-                created_at: new Date(),
-                e_way_bill: "EWB-PLACEHOLDER", // optional if you don’t have it
-              });
-              if (!data || data instanceof Error) {
-                toast.error(data.message);
-                return;
-              }
-              setId(data.id);
-            } catch (e) {
-              console.log(e);
-            }
+        <input
+          type="file"
+          accept=".pdf"
+          className="hidden"
+          ref={inputRef}
+          onChange={async (e) => {
+            if (!e.target.files) return;
+            const file = await getFilePart(e.target.files[0]);
+            const e_way_bill = await extractEWayBill(file);
+            setEwayBill(e_way_bill);
           }}
-        >
-          Add data
-        </button>
-        {id && (
+        />
+        {!e_way_bill && (
+          <button
+            className="btn btn-active"
+            onClick={() => {
+              inputRef.current?.click();
+            }}
+          >
+            add Eway bill
+          </button>
+        )}
+        {e_way_bill && !id && (
+          <button
+            className="btn btn-accent"
+            onClick={async () => {
+              const parseDate = (d: string) => {
+                const [day, month, year] = d.split("/");
+                return new Date(`20${year}-${month}-${day}`);
+              };
+
+              const safeNumber = (value: string) =>
+                Number(value.replace(/[^\d.-]/g, "") || 0);
+              try {
+                const data = await addOCRData({
+                  id: 0,
+                  A_weight: safeNumber(entry["a weight"] ?? "0"),
+                  B_weight: safeNumber(entry["b weight"] ?? "0"),
+                  challan: entry["invoice"] || "", // assuming challan is same as invoice
+                  address: "Default address or dynamic input",
+                  map_url: "https://maps.google.com/?q=26.9124,75.7873", // optional
+                  latitude: 26.9124, // dummy or dynamic
+                  longitude: 75.7873, // dummy or dynamic
+                  delivery_date: new Date(), // or some parsed date
+                  delivery_status: "Pending",
+                  net_weight: safeNumber(entry["net weight"] ?? "0"),
+                  tare_weight: safeNumber(entry["tare weight"] ?? "0"),
+                  gross_weight: safeNumber(entry["gross weight"] ?? "0"),
+                  vehicle_number: entry["vehicle no"] || "",
+                  date: parseDate(entry["date"] || "01/01/00"),
+                  created_at: new Date(),
+                  e_way_bill: (e_way_bill ?? 0).toString(), // optional if you don’t have it
+                });
+                if (!data || data instanceof Error) {
+                  toast.error(data.message);
+                  return;
+                }
+                setId(data.id);
+              } catch (e) {
+                console.log(e);
+              }
+            }}
+          >
+            Add data
+          </button>
+        )}
+        {id && e_way_bill && (
           <button className="btn btn-accent" onClick={handlePrintData}>
             Print annexure
           </button>
         )}
-        {id && (
+        {id && e_way_bill && (
           <button className="btn btn-accent" onClick={handlePrintChallan}>
             Print challan
           </button>
