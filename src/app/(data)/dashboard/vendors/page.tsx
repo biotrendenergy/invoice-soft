@@ -29,6 +29,7 @@ export default function VendorTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     register,
@@ -57,6 +58,7 @@ export default function VendorTable() {
   };
 
   const onSubmit = async (data: VendorFormData) => {
+    setLoading(true);
     if (isEditing && selectedVendor) {
       updateVendor(selectedVendor.id, data);
       await updateData();
@@ -66,6 +68,7 @@ export default function VendorTable() {
       });
       await updateData();
     }
+    setLoading(false);
     closeModal();
   };
   useEffect(() => {
@@ -114,12 +117,14 @@ export default function VendorTable() {
                     <button
                       className="btn btn-sm btn-outline"
                       onClick={() => openFormModal(vendor)}
+                      disabled={loading}
                     >
                       Update
                     </button>
                     <button
                       className="btn btn-sm btn-error"
                       onClick={() => confirmDelete(vendor)}
+                      disabled={loading}
                     >
                       Delete
                     </button>
@@ -161,7 +166,11 @@ export default function VendorTable() {
                 )}
               </div>
               <div className="modal-action">
-                <button type="submit" className="btn btn-primary">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
                   Save
                 </button>
                 <button type="button" className="btn" onClick={closeModal}>
@@ -183,7 +192,11 @@ export default function VendorTable() {
               <strong>{selectedVendor?.name}</strong>?
             </p>
             <div className="modal-action">
-              <button className="btn btn-error" onClick={handleDelete}>
+              <button
+                className="btn btn-error"
+                onClick={handleDelete}
+                disabled={loading}
+              >
                 Delete
               </button>
               <button

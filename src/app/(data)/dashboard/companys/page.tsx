@@ -32,6 +32,7 @@ export default function CompanyTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     register,
@@ -67,6 +68,8 @@ export default function CompanyTable() {
   };
 
   const onSubmit = async (data: CompanyFormData) => {
+    setLoading(true);
+
     if (isEditing && selectedCompany) {
       updateCompany(selectedCompany.id, data);
       await updateData();
@@ -76,6 +79,8 @@ export default function CompanyTable() {
       });
       await updateData();
     }
+    setLoading(false);
+
     closeModal();
   };
 
@@ -188,7 +193,11 @@ export default function CompanyTable() {
                 </div>
               ))}
               <div className="modal-action">
-                <button type="submit" className="btn btn-primary">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
                   Save
                 </button>
                 <button type="button" className="btn" onClick={closeModal}>
@@ -210,7 +219,11 @@ export default function CompanyTable() {
               <strong>{selectedCompany?.name}</strong>?
             </p>
             <div className="modal-action">
-              <button className="btn btn-error" onClick={handleDelete}>
+              <button
+                className="btn btn-error"
+                onClick={handleDelete}
+                disabled={loading}
+              >
                 Delete
               </button>
               <button
