@@ -21,7 +21,7 @@ model user {
 }
 
 model ocr {
-  id              Int           @id @default(autoincrement())
+  id              Int            @id @default(autoincrement())
   //add vendor name 
   A_weight        Int
   B_weight        Int
@@ -37,10 +37,12 @@ model ocr {
   gross_weight    Int
   vehicle_number  String
   date            DateTime
-  created_at      DateTime      @default(now())
-  e_way_bill      String        @default("")
-  vender          vendorDetail? @relation(fields: [vendorDetailId], references: [id])
+  created_at      DateTime       @default(now())
+  e_way_bill      String         @default("")
+  vender          vendorDetail?  @relation(fields: [vendorDetailId], references: [id])
   vendorDetailId  Int?
+  company         companyDetail? @relation(fields: [companyDetailId], references: [id])
+  companyDetailId Int?
 }
 
 model challan {
@@ -56,6 +58,7 @@ model companyDetail {
   billingAddress  String
   gstNo           String
   shippingAddress String
+  ocr             ocr[]
 }
 
 model vendorDetail {

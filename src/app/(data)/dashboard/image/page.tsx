@@ -26,6 +26,10 @@ const Page = () => {
   const [loading, setLoading] = useState(false); // Loading state for the process
   const [ewayBill, setEwayBill] = useState<Number | null>(null);
   const [invoiceString, setInvoiceString] = useState<string | null>(null);
+  const [vender, setVendor] = useState<number | null>(null);
+  const [vendors, setVendors] = useState<vendorDetail[] | null>(null);
+  const [companies, setCompanies] = useState<companyDetail[] | null>(null);
+  const [company, setCompany] = useState<Number | null>(null);
   const handleFileChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
     type: string
@@ -100,6 +104,8 @@ const Page = () => {
         created_at: new Date(),
         date: new Date(),
         e_way_bill: ewayBill?.toString() ?? "",
+        companyDetailId: company,
+        vendorDetailId: vender,
       };
 
       const result = await addOCRData(ocrPayload as any);
@@ -134,15 +140,12 @@ const Page = () => {
       toast.error("No data to print!");
     }
   };
-  const [vender, setVendor] = useState<number | null>(null);
-  const [vendors, setVendors] = useState<vendorDetail[] | null>(null);
-  const [companies, setCompanies] = useState<companyDetail[] | null>(null);
+
   useEffect(() => {
     (async () => {
       setVendors(await getAllVendor());
     })();
   }, []);
-  const year = new Date().getFullYear();
   return (
     <div className="flex">
       {/* Left Column - File Upload */}
@@ -177,19 +180,14 @@ const Page = () => {
                 console.log("sss->", e.target.value.split("$").at(-1));
 
                 setInvoiceString(e.target.value.split("$").at(-1) || "");
+                setCompany(Number(e.target.value));
               }}
             >
               <option value="" disabled>
                 Select Invoice
               </option>
               {companies?.map((v, i) => (
-                <option
-                  value={`${v.name}$${v.shotName}/${year
-                    .toString()
-                    .slice(-2)}-${(year + 1).toString().slice(-2)}`}
-                >
-                  {v.name}
-                </option>
+                <option value={v.id}>{v.name}</option>
               ))}
               {/* <option
                 value={`SKILL FLARE TECHNOLOGIES$CT/${year
