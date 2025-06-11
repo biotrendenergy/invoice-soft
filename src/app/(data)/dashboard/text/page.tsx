@@ -116,6 +116,8 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   date: parseDate(entry["date"] || "01/01/00"),
                   created_at: new Date(),
                   e_way_bill: (e_way_bill ?? 0).toString(), // optional if you don’t have it
+                  vendorDetailId: null,
+                  companyDetailId: null,
                 });
                 if (!data || data instanceof Error) {
                   toast.error(data.message);
