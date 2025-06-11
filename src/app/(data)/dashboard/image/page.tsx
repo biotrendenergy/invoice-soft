@@ -14,8 +14,29 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner"; // For notifications
 import EditButton from "../_components/editButton";
 import { getAllVendor } from "@/action/vendores";
+import { getAllCompany } from "@/action/company";
 // Import styles for the toast notifications
+import { parse, isValid } from "date-fns";
+import { incrementString } from "@/utility/getPrefixData";
 
+const formats = [
+  "dd/MM/yyyy",
+  "MM-dd-yyyy",
+  "yyyy/MM/dd",
+  "yyyy-MM-dd",
+  "dd-MM-yyyy",
+  "MM/dd/yyyy",
+];
+
+function parseFlexibleDate(dateStr: string) {
+  for (const format of formats) {
+    const parsedDate = parse(dateStr, format, new Date());
+    if (isValid(parsedDate)) {
+      return parsedDate;
+    }
+  }
+  return null; // Couldn't parse with known formats
+}
 const Page = () => {
   const [netWeight, setNetWeight] = useState<ExtractDataJsonType | null>(null);
   const [grossWeight, setGrossWeight] = useState<ExtractDataJsonType | null>(
@@ -25,6 +46,7 @@ const Page = () => {
   const [data, setData] = useState<ocr | null>(null); // Store extracted data
   const [loading, setLoading] = useState(false); // Loading state for the process
   const [ewayBill, setEwayBill] = useState<Number | null>(null);
+  const [ewayBill_date, setEwayBill_date] = useState<Date | null>(null);
   const [invoiceString, setInvoiceString] = useState<string | null>(null);
   const [vender, setVendor] = useState<number | null>(null);
   const [vendors, setVendors] = useState<vendorDetail[] | null>(null);
@@ -57,7 +79,10 @@ const Page = () => {
     } else if (type === "e-way_bill") {
       let dataPart = await getFilePart(e.target.files[0]);
       const data = await extractEWayBill(dataPart);
-      setEwayBill(data);
+      console.log(data);
+
+      setEwayBill(Number(data.eway_bill_no));
+      setEwayBill_date(parseFlexibleDate(data.generated_date));
       return;
     }
   };
@@ -85,15 +110,26 @@ const Page = () => {
       const net_weight = a_weight + b_weight;
 
       // Prepare all required fields for ocr type
+      const selectCompany = companies?.filter(
+        (v) => v.id == Number(company)
+      )[0];
+      console.log(selectCompany, company);
+
       const ocrCountValue = (await ocrCount()) + 1;
-      const challanNumber = String(ocrCountValue).padStart(3, "0");
+      const getPre = incrementString(
+        selectCompany?.stringNumber!,
+        ocrCountValue
+      );
+      console.log(getPre);
+
+      const challanNumber = `${selectCompany?.shotName}${getPre?.prefix}${getPre?.number}`;
       const ocrPayload = {
         A_weight: a_weight,
         B_weight: b_weight,
         gross_weight: gross,
         tare_weight: tare,
         net_weight: net_weight,
-        challan: `${invoiceString}${challanNumber}`, // Prefix with 000
+        challan: `${challanNumber}`, // Prefix with 000
         address: grossWeight.address,
         map_url: grossWeight.map_url,
         latitude: grossWeight.latitude,
@@ -104,8 +140,9 @@ const Page = () => {
         created_at: new Date(),
         date: new Date(),
         e_way_bill: ewayBill?.toString() ?? "",
-        companyDetailId: company,
-        vendorDetailId: vender,
+        companyDetailId: company ?? undefined,
+        vendorDetailId: vender ?? undefined,
+        e_way_bill_date: ewayBill_date,
       };
 
       const result = await addOCRData(ocrPayload as any);
@@ -145,6 +182,9 @@ const Page = () => {
     (async () => {
       setVendors(await getAllVendor());
     })();
+    (async () => {
+      setCompanies(await getAllCompany());
+    })();
   }, []);
   return (
     <div className="flex">
@@ -176,6 +216,7 @@ const Page = () => {
             <legend className="fieldset-legend">Invoice starting</legend>
             <select
               className="select"
+              value={company?.toString() ?? ""}
               onChange={(e) => {
                 console.log("sss->", e.target.value.split("$").at(-1));
 

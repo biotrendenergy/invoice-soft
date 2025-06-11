@@ -539,6 +539,119 @@ const page = async ({ params }: pageProps) => {
               <td className="s6"></td>
               <td className="s8" colSpan={5}></td>
             </tr>
+            <tr style={{ height: "20px" }}>
+              <th
+                id="0R22"
+                style={{ height: "20px" }}
+                className="row-headers-background"
+              >
+                <div
+                  className="row-header-wrapper"
+                  style={{ lineHeight: "20px" }}
+                ></div>
+              </th>
+              <td></td>
+              <td className="s9"></td>
+              <td className="s10" dir="ltr" colSpan={12}>
+                Technical Details
+              </td>
+            </tr>
+            <tr style={{ height: "20px" }}>
+              <th
+                id="0R23"
+                style={{ height: "20px" }}
+                className="row-headers-background"
+              >
+                <div
+                  className="row-header-wrapper"
+                  style={{ lineHeight: "20px" }}
+                ></div>
+              </th>
+              <td></td>
+              <td className="s9"></td>
+              <td className="s4" dir="ltr">
+                1
+              </td>
+              <td className="s5" dir="ltr" colSpan={5}>
+                Diameter of Pellet in MM
+              </td>
+              <td className="s5"></td>
+              <td className="s11" dir="ltr" colSpan={5}>
+                18MM with GCV 4000 Kcal/Kg
+              </td>
+            </tr>
+            <tr style={{ height: "20px" }}>
+              <th
+                id="0R24"
+                style={{ height: "20px" }}
+                className="row-headers-background"
+              >
+                <div
+                  className="row-header-wrapper"
+                  style={{ lineHeight: "20px" }}
+                ></div>
+              </th>
+              <td></td>
+              <td className="s9"></td>
+              <td className="s4" dir="ltr">
+                2
+              </td>
+              <td className="s5" dir="ltr" colSpan={5}>
+                Name of Base meterial and its %
+              </td>
+              <td className="s5"></td>
+              <td className="s11" dir="ltr" colSpan={5}>
+                Agro Residue Pellets - 80%
+              </td>
+            </tr>
+            <tr style={{ height: "20px" }}>
+              <th
+                id="0R25"
+                style={{ height: "20px" }}
+                className="row-headers-background"
+              >
+                <div
+                  className="row-header-wrapper"
+                  style={{ lineHeight: "20px" }}
+                ></div>
+              </th>
+              <td></td>
+              <td className="s9"></td>
+              <td className="s4" dir="ltr">
+                3
+              </td>
+              <td className="s5" dir="ltr" colSpan={5}>
+                Mixing Material and its %
+              </td>
+              <td className="s5"></td>
+              <td className="s11" dir="ltr" colSpan={5}>
+                Other Agro Residue Pellets - 20%
+              </td>
+            </tr>
+            <tr style={{ height: "20px" }}>
+              <th
+                id="0R26"
+                style={{ height: "20px" }}
+                className="row-headers-background"
+              >
+                <div
+                  className="row-header-wrapper"
+                  style={{ lineHeight: "20px" }}
+                ></div>
+              </th>
+              <td></td>
+              <td className="s9"></td>
+              <td className="s12" dir="ltr">
+                4
+              </td>
+              <td className="s13" dir="ltr" colSpan={5}>
+                Additive and its %
+              </td>
+              <td className="s13"></td>
+              <td className="s14" dir="ltr" colSpan={5}>
+                NIL
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

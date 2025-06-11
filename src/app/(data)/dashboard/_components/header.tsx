@@ -1,3 +1,7 @@
+"use client";
+import { logout } from "@/action/login";
+import { log } from "console";
+
 const Header = () => {
   return (
     <div className="navbar bg-base-200">
@@ -21,6 +25,17 @@ const Header = () => {
         <a className="btn btn-ghost text-xl">
           <img src="/logo.png" className="w-[100px] " />
         </a>
+      </div>
+      <div className="navbar-end">
+        <button
+          className="btn btn-accent"
+          onClick={async () => {
+            await logout();
+            window.location.href = "/auth/login";
+          }}
+        >
+          Log out
+        </button>
       </div>
     </div>
   );

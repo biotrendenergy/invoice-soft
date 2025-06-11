@@ -39,7 +39,8 @@ model ocr {
   date            DateTime
   created_at      DateTime       @default(now())
   e_way_bill      String         @default("")
-  vender          vendorDetail?  @relation(fields: [vendorDetailId], references: [id])
+  e_way_bill_date DateTime       @default(now())
+  vendor          vendorDetail?  @relation(fields: [vendorDetailId], references: [id])
   vendorDetailId  Int?
   company         companyDetail? @relation(fields: [companyDetailId], references: [id])
   companyDetailId Int?
@@ -56,9 +57,14 @@ model companyDetail {
   shotName        String // BTE
   name            String
   billingAddress  String
-  gstNo           String
+  billingState    String
+  billing_gstNo   String
+  shipping_gstNo  String
   shippingAddress String
-  ocr             ocr[]
+  shippingState   String
+  stringNumber    String
+
+  ocr ocr[]
 }
 
 model vendorDetail {
@@ -70,4 +76,8 @@ model vendorDetail {
 model mis {
   id       Int    @id @default(autoincrement())
   sheetURL String
+}
+
+model debitNote {
+  id Int @id @default(autoincrement())
 }

@@ -6,11 +6,33 @@ import {
   extractEWayBill_withIn,
   getFilePart,
 } from "@/action/ocr";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { parse, isValid } from "date-fns";
+import { companyDetail } from "@/generated/prisma";
+import { getAllCompany } from "@/action/company";
 
+const formats = [
+  "dd/MM/yyyy",
+  "MM-dd-yyyy",
+  "yyyy/MM/dd",
+  "yyyy-MM-dd",
+  "dd-MM-yyyy",
+  "MM/dd/yyyy",
+];
+
+function parseFlexibleDate(dateStr: string) {
+  for (const format of formats) {
+    const parsedDate = parse(dateStr, format, new Date());
+    if (isValid(parsedDate)) {
+      return parsedDate;
+    }
+  }
+  return null; // Couldn't parse with known formats
+}
 const DataComp = ({ index, entry }: { index: number; entry: any }) => {
   const [e_way_bill, setEwayBill] = useState<Number | null>(null);
+  const [e_way_bill_date, setEwayBill_date] = useState<Date | null>(null);
   const [invoice, setInvoice] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const handlePrintData = () => {
@@ -27,11 +49,37 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
       toast.error("No data to print!");
     }
   };
+  const [companies, setCompanies] = useState<companyDetail[] | null>(null);
+  const [company, setCompany] = useState<Number | null>(null);
+  useEffect(() => {
+    (async () => {
+      setCompanies(await getAllCompany());
+    })();
+  }, []);
   const [id, setId] = useState<null | number>(null);
   return (
     <div key={index} className="overflow-x-auto  rounded-xl shadow-md p-4">
-      <div className="text-lg font-semibold mb-2">
+      <div className="text-lg font-semibold mb-2 flex w-full justify-between">
         Vehicle Record #{index + 1}
+        <div>
+          <label className="text-sm">Company</label>
+          <select
+            className="select"
+            value={company?.toString()}
+            onChange={(e) => {
+              console.log("sss->", e.target.value.split("$").at(-1));
+
+              setCompany(Number(e.target.value));
+            }}
+          >
+            <option value="" disabled>
+              Select Invoice
+            </option>
+            {companies?.map((v, i) => (
+              <option value={v.id}>{v.name}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <table className="table table-zebra w-full">
         <tbody>
@@ -81,6 +129,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
             const e_way_bill = await extractEWayBill_withIn(file);
             setEwayBill(Number(e_way_bill.EWayBillNumber));
             setInvoice(e_way_bill.ChallanOrInvoiceNumber);
+            setEwayBill_date(parseFlexibleDate(e_way_bill.generated_date));
           }}
         />
         {!e_way_bill && (
@@ -109,7 +158,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   id: 0,
                   A_weight: safeNumber(entry["a weight"] ?? "0"),
                   B_weight: safeNumber(entry["b weight"] ?? "0"),
-                  challan: entry["invoice"] || "", // assuming challan is same as invoice
+                  challan: invoice || "", // assuming challan is same as invoice
                   address: "Default address or dynamic input",
                   map_url: "https://maps.google.com/?q=26.9124,75.7873", // optional
                   latitude: 26.9124, // dummy or dynamic
@@ -124,7 +173,8 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   created_at: new Date(),
                   e_way_bill: (e_way_bill ?? 0).toString(), // optional if you don’t have it
                   vendorDetailId: null,
-                  companyDetailId: null,
+                  companyDetailId: company?.valueOf() ?? null,
+                  e_way_bill_date: e_way_bill_date ?? new Date(),
                 });
                 if (!data || data instanceof Error) {
                   toast.error(data.message);
@@ -157,7 +207,6 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
 export default function Home() {
   const [input, setInput] = useState(`Date-06/03/25
 Vehicle no-RJ11GC8936
-Invoice  - 102
 Gross weight -58530
 Tare weight- 19000
 Net weight- 39530
@@ -166,7 +215,6 @@ B weight- 2860
 
 Date-06/03/25
 Vehicle no-RJ11GC8937
-Invoice  - 103
 Gross weight -60000
 Tare weight- 20000
 Net weight- 40000

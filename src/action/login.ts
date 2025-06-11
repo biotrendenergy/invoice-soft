@@ -33,3 +33,11 @@ export async function loginUser(username: string, password: string) {
     },
   };
 }
+
+export async function logout() {
+  const cookie = await cookies();
+  cookie.delete("token");
+  return {
+    message: "Logout successful",
+  };
+}

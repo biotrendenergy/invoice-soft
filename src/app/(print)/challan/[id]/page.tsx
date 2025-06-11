@@ -1,5 +1,6 @@
 import { getOcr } from "@/action/ocr";
 import "./style.css";
+import { getStateCode } from "@/utility/getStateCode";
 interface pageProps {
   params: Promise<{
     id: string;
@@ -224,7 +225,7 @@ const page = async ({ params }: pageProps) => {
               DELIVERY CHALLAN
             </td>
             <td className="s12" colSpan={3} rowSpan={2}>
-              23AAACN0255D4Z3
+              {data?.company?.billing_gstNo}
             </td>
             <td className="s0"></td>
             <td className="s3"></td>
@@ -293,13 +294,13 @@ const page = async ({ params }: pageProps) => {
               M/S
             </td>
             <td className="s15" colSpan={2}>
-              NTPC Limited
+              {data?.company?.name}
             </td>
             <td className="s16" colSpan={2} rowSpan={2}>
               State
             </td>
             <td className="s16" colSpan={3} rowSpan={2}>
-              Madhya Pradesh
+              {data?.company?.billingState}
             </td>
             <td className="s17" colSpan={2} rowSpan={2}>
               Code
@@ -324,8 +325,7 @@ const page = async ({ params }: pageProps) => {
             <td className="s0"></td>
             <td className="s4"></td>
             <td className="s18" colSpan={4} rowSpan={3}>
-              1054 KHARGONESTPP DISTT-KHARGONE VILLAGE-SELDA POST-KHEDI(BUJURG)
-              MADHYA PRADESH- 451113
+              {data?.company?.billingAddress}
             </td>
             <td className="s0"></td>
             <td className="s3"></td>
@@ -385,7 +385,7 @@ const page = async ({ params }: pageProps) => {
               GSTIN No. :
             </td>
             <td className="s13" colSpan={2}>
-              23AAACN0255D4Z3
+              {data?.company?.shipping_gstNo}
             </td>
             <td className="s16" colSpan={2} rowSpan={2}>
               Lorry No. :
@@ -413,7 +413,7 @@ const page = async ({ params }: pageProps) => {
               STATE :
             </td>
             <td className="s13" colSpan={2}>
-              MP Code : 23
+              Code : {getStateCode(data?.company?.shippingState as any)}
             </td>
             <td className="s0"></td>
             <td className="s3"></td>
@@ -535,7 +535,7 @@ const page = async ({ params }: pageProps) => {
             <td className="s0"></td>
             <td className="s4"></td>
             <td className="s13" colSpan={4}>
-              MADHYA PRADESH- 486885
+              {data?.company?.shippingState}- 486885
             </td>
             <td className="s13" colSpan={2}>
               Eway bill No.
@@ -563,7 +563,7 @@ const page = async ({ params }: pageProps) => {
               GSTIN No. :
             </td>
             <td className="s13" colSpan={2}>
-              23AAACN0255D4Z3
+              {data?.company?.shipping_gstNo}
             </td>
             <td className="s15" colSpan={8} rowSpan={2}></td>
             <td className="s0"></td>
@@ -586,7 +586,7 @@ const page = async ({ params }: pageProps) => {
               STATE :
             </td>
             <td className="s13" colSpan={2}>
-              MP Code : 23
+              Code : {getStateCode(data?.company?.shippingState as any)}
             </td>
             <td className="s0"></td>
             <td className="s3"></td>

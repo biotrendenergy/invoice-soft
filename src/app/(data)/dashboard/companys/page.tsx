@@ -11,15 +11,34 @@ import {
   getAllCompany,
   updateCompany,
 } from "@/action/company";
-import { slipDetailsSchema } from "../mis/_utils/schema";
+import { StateData } from "@/utility/getStateCode";
 
-// Schema
+// Schema with new stringNumber field
 const companySchema = z.object({
   shotName: z.string().min(2, "Short name is required"),
   name: z.string().min(2, "Name is required"),
   billingAddress: z.string().min(2, "Billing address is required"),
-  gstNo: z.string().min(2, "GST number is required"),
+  billingState: z.enum(
+    Object.keys(StateData).filter(
+      (k): k is string => typeof k === "string"
+    ) as [string, ...string[]],
+    {
+      errorMap: () => ({ message: "Billing state is required" }),
+    }
+  ),
+  shippingState: z.enum(
+    Object.keys(StateData).filter(
+      (k): k is string => typeof k === "string"
+    ) as [string, ...string[]],
+    {
+      errorMap: () => ({ message: "Shipping state is required" }),
+    }
+  ),
+  gstNo: z.string().min(2, "Billing GST number is required"),
   shippingAddress: z.string().min(2, "Shipping address is required"),
+  // shippingState: z.string().min(2, "Shipping state is required"),
+  shipping_gstNo: z.string().min(2, "Shipping GST number is required"),
+  stringNumber: z.string().min(1, "String number is required"),
 });
 
 type CompanyFormData = z.infer<typeof companySchema>;
@@ -47,17 +66,34 @@ export default function CompanyTable() {
     const data = await getAllCompany();
     setCompanies(data);
   };
+
   const openFormModal = (company: companyDetail | null = null) => {
     setIsEditing(!!company);
     setSelectedCompany(company);
     reset(
-      company ?? {
-        shotName: "",
-        name: "",
-        billingAddress: "",
-        gstNo: "",
-        shippingAddress: "",
-      }
+      company
+        ? {
+            shotName: company.shotName,
+            name: company.name,
+            billingAddress: company.billingAddress,
+            billingState: company.billingState,
+            gstNo: company.billing_gstNo,
+            shippingAddress: company.shippingAddress,
+            shippingState: company.shippingState,
+            shipping_gstNo: company.shipping_gstNo,
+            stringNumber: company.stringNumber,
+          }
+        : {
+            shotName: "",
+            name: "",
+            billingAddress: "",
+            billingState: "",
+            gstNo: "",
+            shippingAddress: "",
+            shippingState: "",
+            shipping_gstNo: "",
+            stringNumber: "",
+          }
     );
     setIsModalOpen(true);
   };
@@ -70,17 +106,26 @@ export default function CompanyTable() {
   const onSubmit = async (data: CompanyFormData) => {
     setLoading(true);
 
-    if (isEditing && selectedCompany) {
-      updateCompany(selectedCompany.id, data);
-      await updateData();
-    } else {
-      await AddCompany({
-        ...data,
-      });
-      await updateData();
-    }
-    setLoading(false);
+    const payload = {
+      shotName: data.shotName,
+      name: data.name,
+      billingAddress: data.billingAddress,
+      billingState: data.billingState,
+      billing_gstNo: data.gstNo,
+      shippingAddress: data.shippingAddress,
+      shippingState: data.shippingState,
+      shipping_gstNo: data.shipping_gstNo,
+      stringNumber: data.stringNumber,
+    };
 
+    if (isEditing && selectedCompany) {
+      await updateCompany(selectedCompany.id, payload);
+    } else {
+      await AddCompany(payload);
+    }
+
+    await updateData();
+    setLoading(false);
     closeModal();
   };
 
@@ -93,18 +138,16 @@ export default function CompanyTable() {
     if (selectedCompany) {
       await deleteCompany(selectedCompany.id);
       await updateData();
-      //   setCompanies((prev) => prev.filter((c) => c.id !== selectedCompany.id));
     }
     setIsDeleteConfirmOpen(false);
   };
+
   useEffect(() => {
-    (async () => {
-      await updateData();
-    })();
+    updateData();
   }, []);
+
   return (
     <div className="p-4">
-      {/* Header */}
       <div className="mb-4 flex justify-between items-center">
         <h1 className="text-xl font-bold">Companies</h1>
         <button className="btn btn-primary" onClick={() => openFormModal()}>
@@ -112,16 +155,19 @@ export default function CompanyTable() {
         </button>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto">
         <table className="table table-zebra w-full">
           <thead>
             <tr>
-              <th>Shot Name</th>
+              <th>Short Name</th>
               <th>Name</th>
               <th>Billing Address</th>
-              <th>GST No</th>
+              <th>Billing State</th>
+              <th>Billing GST No</th>
               <th>Shipping Address</th>
+              <th>Shipping State</th>
+              <th>Shipping GST No</th>
+              <th>String Number</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -131,8 +177,12 @@ export default function CompanyTable() {
                 <td>{company.shotName}</td>
                 <td>{company.name}</td>
                 <td>{company.billingAddress}</td>
-                <td>{company.gstNo}</td>
+                <td>{company.billingState}</td>
+                <td>{company.billing_gstNo}</td>
                 <td>{company.shippingAddress}</td>
+                <td>{company.shippingState}</td>
+                <td>{company.shipping_gstNo}</td>
+                <td>{company.stringNumber}</td>
                 <td>
                   <div className="flex gap-2">
                     <button
@@ -153,7 +203,7 @@ export default function CompanyTable() {
             ))}
             {companies.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center py-4 text-gray-500">
+                <td colSpan={10} className="text-center py-4 text-gray-500">
                   No companies found.
                 </td>
               </tr>
@@ -174,17 +224,35 @@ export default function CompanyTable() {
                 { name: "shotName", label: "Short Name" },
                 { name: "name", label: "Name" },
                 { name: "billingAddress", label: "Billing Address" },
-                { name: "gstNo", label: "GST Number" },
+                { name: "billingState", label: "Billing State" },
+                { name: "gstNo", label: "Billing GST Number" },
                 { name: "shippingAddress", label: "Shipping Address" },
+                { name: "shippingState", label: "Shipping State" },
+                { name: "shipping_gstNo", label: "Shipping GST Number" },
+                { name: "stringNumber", label: "String Number" },
               ].map(({ name, label }) => (
                 <div key={name} className="form-control">
                   <label className="label">
                     <span className="label-text">{label}</span>
                   </label>
-                  <input
-                    {...register(name as keyof CompanyFormData)}
-                    className="input input-bordered w-full"
-                  />
+                  {name === "billingState" || name === "shippingState" ? (
+                    <select
+                      {...register(name as keyof CompanyFormData)}
+                      className="select select-bordered w-full"
+                    >
+                      <option value="">Select State</option>
+                      {Object.keys(StateData).map((state) => (
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      {...register(name as keyof CompanyFormData)}
+                      className="input input-bordered w-full"
+                    />
+                  )}
                   {errors[name as keyof CompanyFormData] && (
                     <p className="text-red-500 text-sm mt-1">
                       {errors[name as keyof CompanyFormData]?.message}
