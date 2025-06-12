@@ -213,7 +213,7 @@ const Page = () => {
           </div>
 
           <fieldset className="fieldset mb-4">
-            <legend className="fieldset-legend">Invoice starting</legend>
+            <legend className="fieldset-legend">Short name</legend>
             <select
               className="select"
               value={company?.toString() ?? ""}

@@ -1,17 +1,13 @@
 "use client";
 
-import {
-  addOCRData,
-  extractEWayBill,
-  extractEWayBill_withIn,
-  getFilePart,
-} from "@/action/ocr";
+import { addOCRData, extractEWayBill_withIn, getFilePart } from "@/action/ocr";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { parse, isValid } from "date-fns";
 import { companyDetail } from "@/generated/prisma";
 import { getAllCompany } from "@/action/company";
 
+// Supported date formats
 const formats = [
   "dd/MM/yyyy",
   "MM-dd-yyyy",
@@ -28,37 +24,36 @@ function parseFlexibleDate(dateStr: string) {
       return parsedDate;
     }
   }
-  return null; // Couldn't parse with known formats
+  return null;
 }
+
 const DataComp = ({ index, entry }: { index: number; entry: any }) => {
   const [e_way_bill, setEwayBill] = useState<Number | null>(null);
   const [e_way_bill_date, setEwayBill_date] = useState<Date | null>(null);
   const [invoice, setInvoice] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const handlePrintData = () => {
-    if (id) {
-      window.open(`/data/${id}`, "popupWindow");
-    } else {
-      toast.error("No data to print!");
-    }
-  };
-  const handlePrintChallan = () => {
-    if (id) {
-      window.open(`/challan/${id}`, "popupWindow");
-    } else {
-      toast.error("No data to print!");
-    }
-  };
   const [companies, setCompanies] = useState<companyDetail[] | null>(null);
   const [company, setCompany] = useState<Number | null>(null);
+  const [id, setId] = useState<null | number>(null);
+
+  const handlePrintData = () => {
+    if (id) window.open(`/data/${id}`, "popupWindow");
+    else toast.error("No data to print!");
+  };
+
+  const handlePrintChallan = () => {
+    if (id) window.open(`/challan/${id}`, "popupWindow");
+    else toast.error("No data to print!");
+  };
+
   useEffect(() => {
     (async () => {
       setCompanies(await getAllCompany());
     })();
   }, []);
-  const [id, setId] = useState<null | number>(null);
+
   return (
-    <div key={index} className="overflow-x-auto  rounded-xl shadow-md p-4">
+    <div key={index} className="overflow-x-auto rounded-xl shadow-md p-4">
       <div className="text-lg font-semibold mb-2 flex w-full justify-between">
         Vehicle Record #{index + 1}
         <div>
@@ -66,21 +61,20 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
           <select
             className="select"
             value={company?.toString()}
-            onChange={(e) => {
-              console.log("sss->", e.target.value.split("$").at(-1));
-
-              setCompany(Number(e.target.value));
-            }}
+            onChange={(e) => setCompany(Number(e.target.value))}
           >
             <option value="" disabled>
               Select Invoice
             </option>
-            {companies?.map((v, i) => (
-              <option value={v.id}>{v.name}</option>
+            {companies?.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.name}
+              </option>
             ))}
           </select>
         </div>
       </div>
+
       <table className="table table-zebra w-full">
         <tbody>
           <tr>
@@ -117,6 +111,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
           </tr>
         </tbody>
       </table>
+
       <div className="flex gap-1.5 my-2">
         <input
           type="file"
@@ -126,22 +121,22 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
           onChange={async (e) => {
             if (!e.target.files) return;
             const file = await getFilePart(e.target.files[0]);
-            const e_way_bill = await extractEWayBill_withIn(file);
-            setEwayBill(Number(e_way_bill.EWayBillNumber));
-            setInvoice(e_way_bill.ChallanOrInvoiceNumber);
-            setEwayBill_date(parseFlexibleDate(e_way_bill.generated_date));
+            const eWayBillData = await extractEWayBill_withIn(file);
+            setEwayBill(Number(eWayBillData.EWayBillNumber));
+            setInvoice(eWayBillData.ChallanOrInvoiceNumber);
+            setEwayBill_date(parseFlexibleDate(eWayBillData.generated_date));
           }}
         />
+
         {!e_way_bill && (
           <button
             className="btn btn-active"
-            onClick={() => {
-              inputRef.current?.click();
-            }}
+            onClick={() => inputRef.current?.click()}
           >
-            add Eway bill
+            Add E-way Bill
           </button>
         )}
+
         {e_way_bill && !id && (
           <button
             className="btn btn-accent"
@@ -153,17 +148,18 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
 
               const safeNumber = (value: string) =>
                 Number(value.replace(/[^\d.-]/g, "") || 0);
+
               try {
                 const data = await addOCRData({
                   id: 0,
                   A_weight: safeNumber(entry["a weight"] ?? "0"),
                   B_weight: safeNumber(entry["b weight"] ?? "0"),
-                  challan: invoice || "", // assuming challan is same as invoice
+                  challan: invoice || "",
                   address: "Default address or dynamic input",
-                  map_url: "https://maps.google.com/?q=26.9124,75.7873", // optional
-                  latitude: 26.9124, // dummy or dynamic
-                  longitude: 75.7873, // dummy or dynamic
-                  delivery_date: new Date(), // or some parsed date
+                  map_url: "https://maps.google.com/?q=26.9124,75.7873",
+                  latitude: 26.9124,
+                  longitude: 75.7873,
+                  delivery_date: new Date(),
                   delivery_status: "Pending",
                   net_weight: safeNumber(entry["net weight"] ?? "0"),
                   tare_weight: safeNumber(entry["tare weight"] ?? "0"),
@@ -171,33 +167,37 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   vehicle_number: entry["vehicle no"] || "",
                   date: parseDate(entry["date"] || "01/01/00"),
                   created_at: new Date(),
-                  e_way_bill: (e_way_bill ?? 0).toString(), // optional if you don’t have it
+                  e_way_bill: (e_way_bill ?? 0).toString(),
                   vendorDetailId: null,
                   companyDetailId: company?.valueOf() ?? null,
                   e_way_bill_date: e_way_bill_date ?? new Date(),
                 });
+
                 if (!data || data instanceof Error) {
                   toast.error(data.message);
                   return;
                 }
+
                 setId(data.id);
+                localStorage.removeItem("ocr_input_text"); // Optional: clear saved text on submit
               } catch (e) {
-                console.log(e);
+                console.error(e);
               }
             }}
           >
-            Add data
+            Add Data
           </button>
         )}
+
         {id && e_way_bill && (
-          <button className="btn btn-accent" onClick={handlePrintData}>
-            Print annexure
-          </button>
-        )}
-        {id && e_way_bill && (
-          <button className="btn btn-accent" onClick={handlePrintChallan}>
-            Print challan
-          </button>
+          <>
+            <button className="btn btn-accent" onClick={handlePrintData}>
+              Print Annexure
+            </button>
+            <button className="btn btn-accent" onClick={handlePrintChallan}>
+              Print Challan
+            </button>
+          </>
         )}
       </div>
     </div>
@@ -205,27 +205,24 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
 };
 
 export default function Home() {
-  const [input, setInput] = useState(`Date-06/03/25
-Vehicle no-RJ11GC8936
-Gross weight -58530
-Tare weight- 19000
-Net weight- 39530
-A weight -36610
-B weight- 2860
+  const LOCAL_STORAGE_KEY = "ocr_input_text";
+  const [input, setInput] = useState("");
 
-Date-06/03/25
-Vehicle no-RJ11GC8937
-Gross weight -60000
-Tare weight- 20000
-Net weight- 40000
-A weight -37000
-B weight- 3000`);
+  // Load from localStorage on mount
+  useEffect(() => {
+    const savedInput = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (savedInput) setInput(savedInput);
+  }, []);
 
-  // Parse a single block of text into key-value object
+  // Save to localStorage whenever input changes
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, input);
+  }, [input]);
+
+  // Split input into entries
   const parseBlock = (block: string) => {
     const lines = block.trim().split("\n");
     const data: Record<string, string> = {};
-
     lines.forEach((line) => {
       const [keyPart, ...valueParts] = line.split("-");
       if (!keyPart || valueParts.length === 0) return;
@@ -233,20 +230,18 @@ B weight- 3000`);
       const value = valueParts.join("-").trim();
       data[key] = value;
     });
-
     return data;
   };
 
-  // Parse all blocks
   const entries = input
     .trim()
-    .split(/\n\s*\n/) // split by blank lines
+    .split(/\n\s*\n/)
     .map(parseBlock);
 
   return (
-    <main className="min-h-screen  p-6">
+    <main className="min-h-screen p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Textarea */}
+        {/* Textarea Input */}
         <div>
           <label className="label">
             <span className="label-text text-lg font-semibold">
@@ -260,10 +255,10 @@ B weight- 3000`);
           />
         </div>
 
-        {/* Tables for Each Entry */}
+        {/* Rendered Tables */}
         <div className="space-y-6">
           {entries.map((entry, index) => (
-            <DataComp entry={entry} index={index} key={index}></DataComp>
+            <DataComp entry={entry} index={index} key={index} />
           ))}
         </div>
       </div>
