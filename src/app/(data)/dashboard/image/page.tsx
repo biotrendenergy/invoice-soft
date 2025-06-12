@@ -228,7 +228,7 @@ const Page = () => {
                 Select short name
               </option>
               {companies?.map((v, i) => (
-                <option value={v.id}>{v.name}</option>
+                <option value={v.id}>{v.shotName}</option>
               ))}
               {/* <option
                 value={`SKILL FLARE TECHNOLOGIES$CT/${year
