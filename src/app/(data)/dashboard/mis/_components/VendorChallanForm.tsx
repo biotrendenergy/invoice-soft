@@ -158,6 +158,10 @@ export default function VendorChallanForm() {
     setValue("registrationState", "23-Madhya Pradesh");
     setValue("gstCode", "23");
     setValue("gstNumber", "23AAJCB9063A1ZZ");
+    setValue(
+      "ewayBillDate",
+      ocrData?.e_way_bill_date.toISOString().slice(0, 10) ?? ""
+    );
   }, [ocrData]);
 
   const onSubmit = async (data: VendorChallanFormValues) => {
