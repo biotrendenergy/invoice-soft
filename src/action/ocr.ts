@@ -632,3 +632,102 @@ export async function deleteOcr(id: number) {
     throw e;
   }
 }
+
+const PROMPT_All_WIGHT = `
+
+
+
+**Image Data Extraction Prompt**
+
+You are given three images.
+
+Extract the following properties:
+
+* **gross_weight** (Int)
+* **tare_weight** (Int)
+* **net_weight** (Int)
+* **vehicle_number** (String)
+* **address** (String)
+* **map_url** (Google Maps URL)
+* **latitude** (float)
+* **longitude** (float)
+* **date** (DateTime)
+
+If a field is not found in the image, set its value to \`null\`.
+
+**Return only JSON in the following format:**
+
+\`\`\`json
+{
+  "gross_weight": 1500,
+  "tare_weight": 500,
+  "net_weight": 1000,
+  "vehicle_number": "RJ-20GC-4556",
+  "address": "1234 Main St, Cityville, Country",
+  "map_url": "https://maps.google.com/?q=12.345678,-98.765432",
+  "latitude": 12.34567,
+  "longitude": -98.76543,
+  "date": "2025-04-25T15:30:00Z"
+}
+\`\`\`
+
+Example when some fields are missing:
+
+\`\`\`json
+{
+  "gross_weight": null,
+  "tare_weight": null,
+  "net_weight": null,
+  "vehicle_number": null,
+  "address": null,
+  "map_url": null,
+  "latitude": null,
+  "longitude": null,
+  "date": null
+}
+\`\`\`
+
+Return only JSON.
+`;
+
+export async function extractData_AllWight(
+  filePart: any,
+  maxRetries = 3
+): Promise<{
+  gross_weight: null | number;
+  tare_weight: null | number;
+  net_weight: null | number;
+  vehicle_number: null | string;
+  address: null | string;
+  map_url: null | string;
+  latitude: null | number;
+  longitude: null | number;
+  date: null | string;
+}> {
+  let attempt = 0;
+  while (attempt < maxRetries) {
+    try {
+      const result = await model.generateContent({
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: PROMPT_All_WIGHT }, filePart],
+          },
+        ],
+      });
+
+      const jsonText = await result.response.text();
+      const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
+      console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
+
+      return JSON.parse(jsonString);
+    } catch (error) {
+      console.error(`Attempt ${attempt + 1} failed:`, error);
+      attempt++;
+
+      // Optional: wait before retrying
+      await new Promise((res) => setTimeout(res, 500 * attempt));
+    }
+  }
+  throw new Error("Failed to extract data from image after multiple attempts.");
+}

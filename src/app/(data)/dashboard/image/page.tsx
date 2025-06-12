@@ -2,6 +2,7 @@
 import {
   addOCRData,
   extractData,
+  extractData_AllWight,
   ExtractDataJsonType,
   extractEWayBill,
   extractFromImages,
@@ -192,6 +193,7 @@ const Page = () => {
       <div className="flex p-6">
         <div className="flex-1 mr-6">
           <h2 className="text-2xl mb-4">Upload Images</h2>
+
           <div className="flex flex-col">
             <label>Vendor Name</label>
             <select
@@ -268,67 +270,149 @@ const Page = () => {
               </option> */}
             </select>
           </fieldset>
-          {/* Buffer Image File Input */}
-          <fieldset className="fieldset mb-4">
-            <legend className="fieldset-legend">Eway bill</legend>
+
+          {/* DaisyUI Tabs with radio inputs */}
+          <div className="tabs tabs-lifted mb-6">
             <input
-              type="file"
-              className="file-input"
-              onChange={(e) => handleFileChange(e, "e-way_bill")}
-              accept=".pdf"
+              type="radio"
+              name="upload_mode"
+              role="tab"
+              className="tab"
+              aria-label="Multi Upload"
+              defaultChecked
             />
-            <label className="label">Max size 2MB</label>
-          </fieldset>
-          <fieldset className="fieldset mb-4">
-            <legend className="fieldset-legend">Tare Image</legend>
+            <form
+              role="tabpanel"
+              className="tab-content bg-base-100 border-base-300 p-6"
+            >
+              {/* === Multi Upload Content === */}
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">Eway Bill (PDF)</legend>
+                <input
+                  type="file"
+                  className="file-input"
+                  onChange={(e) => handleFileChange(e, "e-way_bill")}
+                  accept=".pdf"
+                />
+              </fieldset>
+
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">Tare Image</legend>
+                <input
+                  type="file"
+                  className="file-input"
+                  onChange={(e) => handleFileChange(e, "tare")}
+                  accept="image/*"
+                />
+              </fieldset>
+
+              <div className="flex w-full gap-4">
+                <fieldset className="flex-1 mb-4">
+                  <legend className="fieldset-legend">Net Weight (A)</legend>
+                  <input
+                    type="file"
+                    className="file-input"
+                    onChange={(e) => handleFileChange(e, "net")}
+                    accept="image/*"
+                  />
+                </fieldset>
+                <fieldset className="flex-1 mb-4">
+                  <legend className="fieldset-legend">Net Weight (B)</legend>
+                  <input
+                    type="file"
+                    className="file-input"
+                    onChange={(e) => handleFileChange(e, "gross")}
+                    accept="image/*"
+                  />
+                </fieldset>
+              </div>
+            </form>
+
             <input
-              type="file"
-              className="file-input"
-              onChange={(e) => handleFileChange(e, "tare")}
-              accept="image/*"
+              type="radio"
+              name="upload_mode"
+              role="tab"
+              className="tab"
+              aria-label="Single Upload"
             />
-            <label className="label">Max size 2MB</label>
-          </fieldset>
-          <div className="flex w-full items-center gap-2">
-            <fieldset className="fieldset mb-4">
-              <legend className="fieldset-legend">
-                Net Weight for A Image
-              </legend>
-              <input
-                type="file"
-                className="file-input"
-                onChange={(e) => handleFileChange(e, "net")}
-                accept="image/*"
-              />
-              <label className="label">Max size 2MB</label>
-            </fieldset>
-            <fieldset className="fieldset mb-4">
-              <legend className="fieldset-legend">
-                Net Weight for B Image
-              </legend>
-              <input
-                type="file"
-                className="file-input"
-                onChange={(e) => handleFileChange(e, "gross")}
-                accept="image/*"
-              />
-              <label className="label">Max size 2MB</label>
-            </fieldset>
+            <div
+              role="tabpanel"
+              className="tab-content bg-base-100 border-base-300 p-6"
+            >
+              {/* === Single Upload Content === */}
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">Eway Bill (PDF)</legend>
+                <input
+                  type="file"
+                  className="file-input"
+                  onChange={(e) => handleFileChange(e, "e-way_bill")}
+                  accept=".pdf"
+                />
+              </fieldset>
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">
+                  All Weights in One Image
+                </legend>
+                <input
+                  type="file"
+                  className="file-input"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    if (!e.target.files || !e.target.files[0]) {
+                      toast("file not found!");
+                      return;
+                    }
+                    const part = await getFilePart(e.target.files[0]);
+                    const result = await extractData_AllWight(part);
+                    setGrossWeight({
+                      ...result,
+                      weight: result.gross_weight ?? 0,
+                      vehicle_number: result.vehicle_number ?? "",
+                      address: result.address ?? "",
+                      map_url: result.map_url ?? "",
+                      date: new Date(),
+                      latitude: result.latitude ?? 0,
+                      longitude: result.longitude ?? 0,
+                    });
+                    setNetWeight({
+                      ...result,
+                      weight: result.net_weight ?? 0,
+                      vehicle_number: result.vehicle_number ?? "",
+                      address: result.address ?? "",
+                      map_url: result.map_url ?? "",
+                      date: new Date(),
+                      latitude: result.latitude ?? 0,
+                      longitude: result.longitude ?? 0,
+                    });
+                    setTarWeight({
+                      ...result,
+                      weight: result.tare_weight ?? 0,
+                      vehicle_number: result.vehicle_number ?? "",
+                      address: result.address ?? "",
+                      map_url: result.map_url ?? "",
+                      date: new Date(),
+                      latitude: result.latitude ?? 0,
+                      longitude: result.longitude ?? 0,
+                    });
+                  }}
+                />
+              </fieldset>
+            </div>
           </div>
-          <fieldset className="fieldset mb-4">
-            <legend className="fieldset-legend"> Gross wight</legend>
+
+          {/* Gross weight (common field) */}
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">
+              Gross weight (Auto-filled)
+            </legend>
             <input
               type="text"
               disabled
-              className="input"
+              className="input input-bordered w-full"
               value={grossWeight?.weight || ""}
             />
-            <label className="label">
-              auto fill after click extract data button
-            </label>
           </fieldset>
 
-          <br />
           <div className="flex flex-col gap-4">
             <button
               onClick={handleExtractData}
@@ -341,6 +425,7 @@ const Page = () => {
           </div>
         </div>
       </div>
+
       <div className="flex p-6">
         {/* Right Column - Display Extracted Data */}
         <div className="flex-1">
