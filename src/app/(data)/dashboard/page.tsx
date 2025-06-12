@@ -1,7 +1,8 @@
 import React from "react";
 import { prisma } from "@/lib/db";
 import Link from "next/link";
-
+import EditButton from "./_components/editButton";
+import DeleteButton from "./_components/deleteButton";
 const Page = async () => {
   const ocrData = await prisma.ocr.findMany();
   return (
@@ -41,8 +42,8 @@ const Page = async () => {
                     </button>
                   </Link>
 
-                  <button className="btn btn-sm btn-warning">Edit</button>
-                  <button className="btn btn-sm btn-error">Delete</button>
+                  <EditButton {...ocr} />
+                  <DeleteButton {...ocr} />
                 </td>
               </tr>
             ))}

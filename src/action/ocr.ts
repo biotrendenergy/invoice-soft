@@ -620,3 +620,15 @@ export async function extractData_slipData(
   }
   throw new Error("Failed to extract data from image after multiple attempts.");
 }
+
+export async function deleteOcr(id: number) {
+  try {
+    await prisma.ocr.delete({
+      where: {
+        id,
+      },
+    });
+  } catch (e) {
+    throw e;
+  }
+}
