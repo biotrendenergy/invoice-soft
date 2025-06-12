@@ -515,7 +515,9 @@ const page = async ({ params }: pageProps) => {
                 Any Other Details as applicable
               </td>
               <td className="s4"></td>
-              <td className="s3" colSpan={5}></td>
+              <td className="s3" colSpan={5}>
+                NO
+              </td>
             </tr>
             <tr style={{ height: "20px" }}>
               <th
@@ -537,7 +539,9 @@ const page = async ({ params }: pageProps) => {
                 Any Other Details as applicable
               </td>
               <td className="s6"></td>
-              <td className="s8" colSpan={5}></td>
+              <td className="s8" colSpan={5}>
+                NO
+              </td>
             </tr>
             <tr style={{ height: "20px" }}>
               <th

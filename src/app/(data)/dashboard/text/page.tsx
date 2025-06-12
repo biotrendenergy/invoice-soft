@@ -35,7 +35,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
   const [companies, setCompanies] = useState<companyDetail[] | null>(null);
   const [company, setCompany] = useState<Number | null>(null);
   const [id, setId] = useState<null | number>(null);
-
+  const [loading, setLoading] = useState<boolean>(false);
   const handlePrintData = () => {
     if (id) window.open(`/data/${id}`, "popupWindow");
     else toast.error("No data to print!");
@@ -113,34 +113,43 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
       </table>
 
       <div className="flex gap-1.5 my-2">
-        <input
-          type="file"
-          accept=".pdf"
-          className="hidden"
-          ref={inputRef}
-          onChange={async (e) => {
-            if (!e.target.files) return;
-            const file = await getFilePart(e.target.files[0]);
-            const eWayBillData = await extractEWayBill_withIn(file);
-            setEwayBill(Number(eWayBillData.EWayBillNumber));
-            setInvoice(eWayBillData.ChallanOrInvoiceNumber);
-            setEwayBill_date(parseFlexibleDate(eWayBillData.generated_date));
-          }}
-        />
-
         {!e_way_bill && (
-          <button
-            className="btn btn-active"
-            onClick={() => inputRef.current?.click()}
-          >
-            Add E-way Bill
-          </button>
+          <div className="flex flex-col">
+            <label>Add e-way bill</label>
+            <input
+              type="file"
+              accept=".pdf"
+              className="input file-input"
+              ref={inputRef}
+              disabled={loading}
+              onChange={async (e) => {
+                setLoading(true);
+                if (!e.target.files) return;
+                const file = await getFilePart(e.target.files[0]);
+                const eWayBillData = await extractEWayBill_withIn(file);
+                setEwayBill(Number(eWayBillData.EWayBillNumber));
+                setInvoice(eWayBillData.ChallanOrInvoiceNumber);
+                setEwayBill_date(
+                  parseFlexibleDate(eWayBillData.generated_date)
+                );
+                setLoading(false);
+              }}
+            />
+            {/* <button
+              className="btn btn-active"
+              onClick={() => inputRef.current?.click()}
+            >
+              Add E-way Bill
+            </button> */}
+          </div>
         )}
 
         {e_way_bill && !id && (
           <button
             className="btn btn-accent"
+            disabled={loading}
             onClick={async () => {
+              setLoading(true);
               const parseDate = (d: string) => {
                 const [day, month, year] = d.split("/");
                 return new Date(`20${year}-${month}-${day}`);
@@ -182,6 +191,8 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                 localStorage.removeItem("ocr_input_text"); // Optional: clear saved text on submit
               } catch (e) {
                 console.error(e);
+              } finally {
+                setLoading(false);
               }
             }}
           >

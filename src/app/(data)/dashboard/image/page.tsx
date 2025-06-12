@@ -225,7 +225,7 @@ const Page = () => {
               }}
             >
               <option value="" disabled>
-                Select Invoice
+                Select short name
               </option>
               {companies?.map((v, i) => (
                 <option value={v.id}>{v.name}</option>

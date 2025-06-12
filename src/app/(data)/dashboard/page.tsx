@@ -33,7 +33,7 @@ const Page = async () => {
                 <td className="flex flex-wrap gap-2">
                   <Link href={`/data/${ocr.id}`}>
                     <button className="btn btn-sm btn-primary">
-                      Print Axxuers
+                      Print annexure
                     </button>
                   </Link>
                   <Link href={`/challan/${ocr.id}`}>
