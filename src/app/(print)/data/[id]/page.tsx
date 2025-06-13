@@ -1,5 +1,7 @@
 import { getOcr } from "@/action/ocr";
 import "./style.css";
+import EditButton from "../../_components/editButton";
+import PrintButton from "../../_components/printButton";
 interface pageProps {
   params: Promise<{
     id: string;
@@ -31,7 +33,11 @@ const page = async ({ params }: pageProps) => {
   const data = await getOcr(Number(id));
 
   return (
-    <>
+    <div>
+      <div className="bts">
+        <EditButton />
+        <PrintButton />
+      </div>
       <div className="ritz grid-container" dir="ltr">
         <table className="waffle" cellSpacing={0} cellPadding={0}>
           <thead>
@@ -659,7 +665,7 @@ const page = async ({ params }: pageProps) => {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 };
 export default page;

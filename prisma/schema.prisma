@@ -81,3 +81,9 @@ model mis {
 model debitNote {
   id Int @id @default(autoincrement())
 }
+
+model pdf {
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  richText Json
+}
