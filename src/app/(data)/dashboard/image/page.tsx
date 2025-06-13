@@ -116,7 +116,7 @@ const Page = () => {
       )[0];
       console.log(selectCompany, company);
 
-      const ocrCountValue = (await ocrCount()) + 1;
+      const ocrCountValue = (await ocrCount(company?.valueOf() ?? 0)) + 1;
       const getPre = incrementString(
         selectCompany?.stringNumber!,
         ocrCountValue
@@ -125,8 +125,8 @@ const Page = () => {
 
       const challanNumber = `${selectCompany?.shotName}${getPre?.prefix}${getPre?.number}`;
       const ocrPayload = {
-        A_weight: a_weight,
-        B_weight: b_weight,
+        A_weight: b_weight == tare ? 0 : a_weight,
+        B_weight: b_weight == tare ? 0 : b_weight,
         gross_weight: gross,
         tare_weight: tare,
         net_weight: net_weight,

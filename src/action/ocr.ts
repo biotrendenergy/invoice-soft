@@ -405,8 +405,14 @@ export async function getOcr(id: number) {
   });
 }
 
-export async function ocrCount() {
-  return await prisma.ocr.count();
+export async function ocrCount(companyID: number) {
+  return await prisma.ocr.count({
+    where: {
+      company: {
+        id: companyID,
+      },
+    },
+  });
 }
 
 const EXtractPrompt = `

@@ -167,7 +167,7 @@ export default function CompanyTable() {
               <th>Shipping Address</th>
               <th>Shipping State</th>
               <th>Shipping GST No</th>
-              <th>String Number</th>
+              <th>BTE challan series</th>
               <th>Actions</th>
             </tr>
           </thead>
