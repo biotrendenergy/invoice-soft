@@ -5,6 +5,7 @@ import {
   extractData_AllWight,
   ExtractDataJsonType,
   extractEWayBill,
+  extractEWayBill_withIn,
   extractFromImages,
   getFilePart,
   ocrCount,
@@ -48,6 +49,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false); // Loading state for the process
   const [ewayBill, setEwayBill] = useState<Number | null>(null);
   const [ewayBill_date, setEwayBill_date] = useState<Date | null>(null);
+  // const [invoiceString, setInvoiceString] = useState<string | null>(null);
   const [invoiceString, setInvoiceString] = useState<string | null>(null);
   const [vender, setVendor] = useState<number | null>(null);
   const [vendors, setVendors] = useState<vendorDetail[] | null>(null);
@@ -79,11 +81,12 @@ const Page = () => {
       return;
     } else if (type === "e-way_bill") {
       let dataPart = await getFilePart(e.target.files[0]);
-      const data = await extractEWayBill(dataPart);
+      const data = await extractEWayBill_withIn(dataPart);
       console.log(data);
 
-      setEwayBill(Number(data.eway_bill_no));
+      setEwayBill(Number(data.EWayBillNumber));
       setEwayBill_date(parseFlexibleDate(data.generated_date));
+      setInvoiceString(data.ChallanOrInvoiceNumber);
       return;
     }
   };
@@ -123,7 +126,7 @@ const Page = () => {
       );
       console.log(getPre);
 
-      const challanNumber = `${selectCompany?.shotName}${getPre?.prefix}${getPre?.number}`;
+      const challanNumber = invoiceString;
       const ocrPayload = {
         A_weight: b_weight == tare ? 0 : a_weight,
         B_weight: b_weight == tare ? 0 : b_weight,
@@ -222,7 +225,7 @@ const Page = () => {
               onChange={(e) => {
                 console.log("sss->", e.target.value.split("$").at(-1));
 
-                setInvoiceString(e.target.value.split("$").at(-1) || "");
+                // setInvoiceString(e.target.value.split("$").at(-1) || "");
                 setCompany(Number(e.target.value));
               }}
             >

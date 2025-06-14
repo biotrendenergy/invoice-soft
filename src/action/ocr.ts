@@ -225,6 +225,8 @@ You are provided with a PDF document that contains logistics or shipment informa
     * \`Challan Number:\`
     * \`Invoice No:\`
     * \`Invoice Number:\`
+    * \`Document Number:\`
+    * \`Document No.\`
   * It may be alphanumeric.
 * The **Generated Date** is usually in the format **DD/MM/YYYY** or **DD-MM-YYYY** and appears near the E-Way Bill Number.
 
