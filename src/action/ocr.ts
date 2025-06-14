@@ -222,6 +222,7 @@ You are provided with a PDF document that contains logistics or shipment informa
   * It is usually labeled as:
 
     * \`Challan No:\`
+    * \`Challan \`
     * \`Challan Number:\`
     * \`Invoice No:\`
     * \`Invoice Number:\`

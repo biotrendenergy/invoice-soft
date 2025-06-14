@@ -313,7 +313,7 @@ const page = async ({ params }: pageProps) => {
                 Code
               </td>
               <td className="s15" rowSpan={2}>
-                35
+                {getStateCode(data?.company?.shippingState as any)}
               </td>
               <td className="s0"></td>
               <td className="s3"></td>
