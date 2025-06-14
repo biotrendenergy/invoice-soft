@@ -473,7 +473,7 @@ const page = async ({ params }: pageProps) => {
                 P.O. No. :
               </td>
               <td className="s13" colSpan={6}>
-                CS-0011-112H-9-LOA-7398
+                {data?.company?.PONumber ?? "N/A"}
               </td>
               <td className="s0"></td>
               <td className="s3"></td>

@@ -63,6 +63,7 @@ model companyDetail {
   shippingAddress String
   shippingState   String
   stringNumber    String
+  PONumber        String @default("")
 
   ocr ocr[]
 }
