@@ -63,7 +63,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
             value={company?.toString()}
             onChange={(e) => setCompany(Number(e.target.value))}
           >
-            <option value="" disabled>
+            <option value="" selected disabled>
               Select Invoice
             </option>
             {companies?.map((v) => (
@@ -174,9 +174,10 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   tare_weight: safeNumber(entry["tare weight"] ?? "0"),
                   gross_weight: safeNumber(entry["gross weight"] ?? "0"),
                   vehicle_number: entry["vehicle no"] || "",
-                  date: parseDate(entry["date"] || "01/01/00"),
+                  date: parseDate(entry["date"] || new Date()),
                   created_at: new Date(),
                   e_way_bill: (e_way_bill ?? 0).toString(),
+
                   vendorDetailId: null,
                   companyDetailId: company?.valueOf() ?? null,
                   e_way_bill_date: e_way_bill_date ?? new Date(),
