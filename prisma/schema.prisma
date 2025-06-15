@@ -44,6 +44,7 @@ model ocr {
   vendorDetailId  Int?
   company         companyDetail? @relation(fields: [companyDetailId], references: [id])
   companyDetailId Int?
+  medias          media[]
 }
 
 model challan {
@@ -75,16 +76,27 @@ model vendorDetail {
 }
 
 model mis {
-  id       Int    @id @default(autoincrement())
-  sheetURL String
+  id        Int    @id @default(autoincrement())
+  sheetURL  String
+  rowNumber String
 }
 
 model debitNote {
   id Int @id @default(autoincrement())
 }
 
-model pdf {
-  id       Int    @id @default(autoincrement())
-  name     String @unique
-  richText Json
+model media {
+  id      Int    @id @default(autoincrement())
+  title   String
+  content String
+  type    String
+  ocr     ocr?   @relation(fields: [ocrId], references: [id])
+  ocrId   Int?
+}
+
+model audit {
+  id       Int      @id @default(autoincrement())
+  message  String
+  ip       String
+  createAt DateTime @default(now())
 }

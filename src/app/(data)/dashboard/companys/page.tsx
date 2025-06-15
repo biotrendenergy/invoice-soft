@@ -161,7 +161,7 @@ export default function CompanyTable() {
       <div className="overflow-x-auto">
         <table className="table table-zebra w-full">
           <thead>
-            <tr>
+            <tr className="uppercase">
               <th>Short Name</th>
               <th>Name</th>
               <th>Billing Address</th>

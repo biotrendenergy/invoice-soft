@@ -13,7 +13,7 @@ import { getAllVendor } from "@/action/vendores";
 import { companyDetail, ocr, vendorDetail } from "@/generated/prisma";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import EditButton from "../_components/editButton";
+import EditButton from "../../_components/editButton";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isValid, parse } from "date-fns";
