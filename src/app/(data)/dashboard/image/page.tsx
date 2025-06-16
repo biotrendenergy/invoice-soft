@@ -191,7 +191,7 @@ const page = () => {
         const tar_data = await extractData(dataPart);
         if (!vehicle_number) {
           setError("e_wayBill", {
-            message: "Fist upload E way bill",
+            message: "Please upload the e-way bill first.",
           });
           setLoading(false);
           return;
@@ -217,19 +217,19 @@ const page = () => {
           setLoading(false);
           return;
         }
-        if (net_data.vehicle_number != vehicle_number) {
+        if (net_data.vehicle_number !== vehicle_number) {
           setError("net_data", {
-            message: "vehicle number not mach to e way bill",
+            message: "Vehicle number does not match the e-way bill.",
           });
           setLoading(false);
-
           return;
         }
+
         console.log(getValues("tar_data"));
 
         if (!getValues("tar_data")) {
           setError("tar_file", {
-            message: "Fist upload tar wight",
+            message: "Please upload tare weight first.",
           });
           setLoading(false);
           return;
@@ -243,7 +243,7 @@ const page = () => {
         if (getValues("tar_data.weight") > net_data.weight) {
           setError("net_data", {
             message:
-              "A wight is not less than tar wight place check it and try again",
+              "Net weight / A weight must be greater than to the tare weight. Please check and try again.",
           });
           setLoading(false);
           return;
@@ -256,7 +256,7 @@ const page = () => {
         const gross_data = await extractData(dataPart);
         if (!vehicle_number) {
           setError("e_wayBill", {
-            message: "Fist upload E way bill",
+            message: "Please upload the e-way bill first.",
           });
           setLoading(false);
           return;
@@ -273,7 +273,7 @@ const page = () => {
 
         if (!getValues("net_data")) {
           setError("net_file", {
-            message: "Fist upload tar wight",
+            message: "Please upload Net weight first.",
           });
           setLoading(false);
           return;
@@ -282,7 +282,7 @@ const page = () => {
         if (getValues("net_data").weight > gross_data.weight) {
           setError("net_data", {
             message:
-              "A wight is not less than tar wight place check it and try again",
+              "Net weight / A weight cannot be greater than gross weight / B weight. Please check and try again.",
           });
           setLoading(false);
           return;
