@@ -794,3 +794,26 @@ export async function addMedia(title: string, content: File, ocrId: number) {
     },
   });
 }
+
+export async function getOcrByCompany(companyId?: number) {
+  const where = companyId ? { companyDetailId: companyId } : {};
+
+  return await prisma.ocr.findMany({
+    where,
+    include: {
+      company: true,
+      vendor: true,
+      medias: true,
+    },
+    orderBy: { created_at: "desc" },
+  });
+}
+export async function getCompanies() {
+  return await prisma.companyDetail.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+    orderBy: { name: "asc" },
+  });
+}

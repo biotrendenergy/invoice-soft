@@ -47,19 +47,37 @@ const extractDataSchema = z.object({
   date: z.coerce.date(), // Handles string-to-Date conversion
 });
 export const formSchema = z.object({
-  vendorId: z.number().min(1),
-  companyId: z.number().min(1),
-  e_wayBill: z.instanceof(File),
-  e_wayBill_data: z.number().min(1),
-  e_wayBill_date: z.coerce.date(),
-  tar_file: z.instanceof(File).optional(),
-  gross_file: z.instanceof(File).optional(),
-  net_file: z.instanceof(File).optional(),
-  challanNo: z.string().min(1),
+  vendorId: z
+    .number({ required_error: "Vendor is required" })
+    .min(1, "Select a valid vendor"),
+  companyId: z
+    .number({ required_error: "Company is required" })
+    .min(1, "Select a valid company"),
+  e_wayBill: z.instanceof(File, { message: "E-way Bill file is required" }),
+  e_wayBill_data: z
+    .number({ required_error: "E-way Bill value is required" })
+    .min(1, "E-way Bill value must be greater than 0"),
+  e_wayBill_date: z.coerce.date({
+    required_error: "E-way Bill date is required",
+  }),
+  tar_file: z
+    .instanceof(File, { message: "Tar file must be a file" })
+    .optional(),
+  gross_file: z
+    .instanceof(File, { message: "Gross file must be a file" })
+    .optional(),
+  net_file: z
+    .instanceof(File, { message: "Net file must be a file" })
+    .optional(),
+  challanNo: z
+    .string({ required_error: "Challan number is required" })
+    .min(1, "Challan number cannot be empty"),
   tar_data: extractDataSchema,
   gross_data: extractDataSchema,
   net_data: extractDataSchema,
-  multi_file: z.instanceof(File).optional(),
+  multi_file: z
+    .instanceof(File, { message: "Multi-file must be a valid file" })
+    .optional(),
 });
 type formType = z.infer<typeof formSchema>;
 const page = () => {
@@ -88,11 +106,19 @@ const page = () => {
   }, []);
   useEffect(() => {}, []);
   const onSubmit = async (data: formType) => {
-    if (
-      !(data.net_file && data.tar_file && data.gross_file) ||
-      !data.multi_file
-    ) {
-      toast.error("upload file");
+    if (!data.net_file) {
+      setError("net_file", { message: "Net image not uploaded" });
+    }
+    if (!data.gross_file) {
+      setError("gross_file", { message: "Gross image not uploaded" });
+    }
+    if (!data.tar_file) {
+      setError("tar_file", { message: "Tar image not uploaded" });
+    }
+
+    // Show a toast if *any* file is missing
+    if (!data.net_file || !data.gross_file || !data.tar_file) {
+      toast.error("Please upload all required files.");
     }
     try {
       /**
