@@ -10,25 +10,21 @@ export default function OcrDashboard() {
   const [companies, setCompanies] = useState<{ id: number; name: string }[]>(
     []
   );
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const load = async () => {
-      const [ocr, comps] = await Promise.all([
-        getOcrByCompany(companyId ? parseInt(companyId) : undefined),
-        getCompanies(),
-      ]);
-      setOcrData(ocr);
-      setCompanies(comps);
-    };
-    load();
-  }, [companyId]);
-
-  useEffect(() => {
-    const load = async () => {
-      const data = await getOcrByCompany(
-        companyId ? parseInt(companyId) : undefined
-      );
-      setOcrData(data);
+      setLoading(true);
+      try {
+        const [ocr, comps] = await Promise.all([
+          getOcrByCompany(companyId ? parseInt(companyId) : undefined),
+          getCompanies(),
+        ]);
+        setOcrData(ocr);
+        setCompanies(comps);
+      } finally {
+        setLoading(false);
+      }
     };
     load();
   }, [companyId]);
@@ -54,45 +50,54 @@ export default function OcrDashboard() {
         </select>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="table table-zebra">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Challan</th>
-              <th>Company</th>
-              <th>Vendor</th>
-              <th>Date</th>
-              <th>Media Count</th>
-              <th>Download</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ocrData.map((ocr) => (
-              <tr key={ocr.id}>
-                <td>{ocr.id}</td>
-                <td>{ocr.challan}</td>
-                <td>{ocr.company?.name}</td>
-                <td>{ocr.vendor?.name}</td>
-                <td>{new Date(ocr.created_at).toLocaleString()}</td>
-                <td>{ocr.medias.length}</td>
-                <td>
-                  {ocr.medias.length > 0 && (
-                    <button
-                      className="btn btn-sm btn-primary"
-                      onClick={() =>
-                        handleDownload(ocr.company?.name || "media", ocr.medias)
-                      }
-                    >
-                      Download ZIP
-                    </button>
-                  )}
-                </td>
+      {loading ? (
+        <div className="text-center py-10 text-lg font-semibold">
+          Loading...
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="table table-zebra">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Challan</th>
+                <th>Company</th>
+                <th>Vendor</th>
+                <th>Date</th>
+                <th>Media Count</th>
+                <th>Download</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {ocrData.map((ocr) => (
+                <tr key={ocr.id}>
+                  <td>{ocr.id}</td>
+                  <td>{ocr.challan}</td>
+                  <td>{ocr.company?.name}</td>
+                  <td>{ocr.vendor?.name}</td>
+                  <td>{new Date(ocr.created_at).toLocaleString()}</td>
+                  <td>{ocr.medias.length}</td>
+                  <td>
+                    {ocr.medias.length > 0 && (
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() =>
+                          handleDownload(
+                            ocr.company?.name || "media",
+                            ocr.medias
+                          )
+                        }
+                      >
+                        Download ZIP
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
