@@ -273,7 +273,7 @@ const page = () => {
 
         if (!getValues("net_data")) {
           setError("net_file", {
-            message: "Please upload Net weight first.",
+            message: "Please upload Net weight / A weight first.",
           });
           setLoading(false);
           return;
