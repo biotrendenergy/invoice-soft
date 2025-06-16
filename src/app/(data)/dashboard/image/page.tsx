@@ -46,7 +46,7 @@ const extractDataSchema = z.object({
   longitude: z.number(),
   date: z.coerce.date(), // Handles string-to-Date conversion
 });
-export const formSchema = z.object({
+const formSchema = z.object({
   vendorId: z
     .number({ required_error: "Vendor is required" })
     .min(1, "Select a valid vendor"),
