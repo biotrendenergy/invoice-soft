@@ -18,68 +18,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isValid, parse } from "date-fns";
 import { toast } from "sonner";
+import {
+  formSchema,
+  formType,
+  parseFlexibleDate,
+} from "@/lib/validation/imageForm";
 
-const formats = [
-  "dd/MM/yyyy",
-  "MM-dd-yyyy",
-  "yyyy/MM/dd",
-  "yyyy-MM-dd",
-  "dd-MM-yyyy",
-  "MM/dd/yyyy",
-];
-
-function parseFlexibleDate(dateStr: string) {
-  for (const format of formats) {
-    const parsedDate = parse(dateStr, format, new Date());
-    if (isValid(parsedDate)) {
-      return parsedDate;
-    }
-  }
-  return null; // Couldn't parse with known formats
-}
-const extractDataSchema = z.object({
-  weight: z.number(),
-  vehicle_number: z.string(),
-  address: z.string(),
-  map_url: z.string().url(),
-  latitude: z.number(),
-  longitude: z.number(),
-  date: z.coerce.date(), // Handles string-to-Date conversion
-});
-const formSchema = z.object({
-  vendorId: z
-    .number({ required_error: "Vendor is required" })
-    .min(1, "Select a valid vendor"),
-  companyId: z
-    .number({ required_error: "Company is required" })
-    .min(1, "Select a valid company"),
-  e_wayBill: z.instanceof(File, { message: "E-way Bill file is required" }),
-  e_wayBill_data: z
-    .number({ required_error: "E-way Bill value is required" })
-    .min(1, "E-way Bill value must be greater than 0"),
-  e_wayBill_date: z.coerce.date({
-    required_error: "E-way Bill date is required",
-  }),
-  tar_file: z
-    .instanceof(File, { message: "Tar file must be a file" })
-    .optional(),
-  gross_file: z
-    .instanceof(File, { message: "Gross file must be a file" })
-    .optional(),
-  net_file: z
-    .instanceof(File, { message: "Net file must be a file" })
-    .optional(),
-  challanNo: z
-    .string({ required_error: "Challan number is required" })
-    .min(1, "Challan number cannot be empty"),
-  tar_data: extractDataSchema,
-  gross_data: extractDataSchema,
-  net_data: extractDataSchema,
-  multi_file: z
-    .instanceof(File, { message: "Multi-file must be a valid file" })
-    .optional(),
-});
-type formType = z.infer<typeof formSchema>;
 const page = () => {
   const {
     register,
