@@ -45,7 +45,7 @@ export type ExtractDataJsonType = {
 };
 export const getFilePart = async (file: File) => {
   const headerList = await headers();
-  prisma.audit.create({
+  await prisma.audit.create({
     data: {
       ip: headerList.get("x-forwarded-for") ?? "0.0.0.0",
       message: "File upload",
@@ -131,7 +131,7 @@ export async function addOCRData(data: ocr) {
   try {
     const headerList = await headers();
 
-    prisma.audit.create({
+    await prisma.audit.create({
       data: {
         ip: headerList.get("x-forwarded-for") ?? "0.0.0.0",
         message: "create bill",
@@ -774,7 +774,7 @@ export async function extractData_AllWight(
 export async function addMedia(title: string, content: File, ocrId: number) {
   const headerList = await headers();
 
-  prisma.audit.create({
+  await prisma.audit.create({
     data: {
       ip: headerList.get("x-forwarded-for") ?? "0.0.0.0",
       message: `${title} - File upload`,

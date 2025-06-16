@@ -53,7 +53,7 @@ export const formSchema = z.object({
   tar_data: extractDataSchema,
   gross_data: extractDataSchema,
   net_data: extractDataSchema,
-  multi_file: z.instanceof(File).optional(),
+  multi_file: z.any().optional(),
 });
 
 export type formType = z.infer<typeof formSchema>;

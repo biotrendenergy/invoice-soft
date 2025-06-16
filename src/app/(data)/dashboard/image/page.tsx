@@ -48,8 +48,12 @@ const page = () => {
       setCompanies(await getAllCompany());
     })();
   }, []);
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
   const onSubmit = async (data: formType) => {
+    console.log(data);
+
     if (!data.net_file) {
       setError("net_file", { message: "Net image not uploaded" });
     }
@@ -107,7 +111,7 @@ const page = () => {
         vehicle_number: data.gross_data.vehicle_number,
         created_at: new Date(),
         date: new Date(),
-        e_way_bill: data.e_wayBill?.toString() ?? "",
+        e_way_bill: data.e_wayBill_data?.toString() ?? "",
         companyDetailId: data.companyId ?? undefined,
         vendorDetailId: data.vendorId ?? undefined,
         e_way_bill_date: data.e_wayBill_date,
@@ -168,9 +172,11 @@ const page = () => {
       });
       return;
     }
+    setValue(name, e.target.files[0]);
     let dataPart = await getFilePart(e.target.files[0]);
     switch (name) {
       case "e_wayBill":
+        setValue("e_wayBill", e.target.files[0]);
         const e_way_bill_data = await extractEWayBill_withIn(dataPart);
         setValue("e_wayBill_data", Number(e_way_bill_data.EWayBillNumber));
         setValue(
@@ -228,8 +234,13 @@ const page = () => {
           setLoading(false);
           return;
         }
+        console.log(
+          getValues("tar_data.weight"),
+          net_data.weight,
+          getValues("tar_data.weight") > net_data.weight
+        );
 
-        if (getValues("tar_data.weight") < net_data.weight) {
+        if (getValues("tar_data.weight") > net_data.weight) {
           setError("net_data", {
             message:
               "A wight is not less than tar wight place check it and try again",
@@ -238,6 +249,8 @@ const page = () => {
           return;
         }
         setValue("net_data", net_data);
+        setLoading(false);
+
         return;
       case "gross_file":
         const gross_data = await extractData(dataPart);
@@ -266,7 +279,7 @@ const page = () => {
           return;
         }
 
-        if (getValues("net_data").weight < gross_data.weight) {
+        if (getValues("net_data").weight > gross_data.weight) {
           setError("net_data", {
             message:
               "A wight is not less than tar wight place check it and try again",
@@ -274,6 +287,8 @@ const page = () => {
           setLoading(false);
           return;
         }
+        // setValue("gross_data.weight", g ?? 0);
+
         setValue("gross_data", gross_data);
         setLoading(false);
         return;
@@ -525,6 +540,7 @@ const page = () => {
                       latitude: result.latitude ?? 0,
                       longitude: result.longitude ?? 0,
                     });
+                    setValue("gross_data.weight", result.gross_weight ?? 0);
                     setValue("net_data", {
                       ...result,
                       weight: result.net_weight ?? 0,
@@ -565,12 +581,17 @@ const page = () => {
               type="text"
               disabled
               className="input input-bordered w-full"
+              {...register("gross_data.weight")}
             />
           </fieldset>
           <br />
 
           <div className="flex flex-col gap-4">
-            <button className="btn btn-primary" disabled={loading}>
+            <button
+              className="btn btn-primary"
+              type="submit"
+              disabled={loading}
+            >
               {loading ? "Processing..." : "Extract Data"}
             </button>
             {data && <EditButton {...data} />}
