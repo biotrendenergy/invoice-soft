@@ -8,14 +8,17 @@ const DeleteButton = (data: ocr) => {
 
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const handleDelete = async () => {
+    setLoading(true);
     await deleteOcr(data.id);
     setIsDeleteConfirmOpen(false);
     window.location.reload();
+    setLoading(false);
   };
   return (
     <div>
       <button
         className="btn btn-error"
+        disabled={loading}
         onClick={() => {
           setIsDeleteConfirmOpen(true);
         }}

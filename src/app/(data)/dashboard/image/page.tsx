@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import EditButton from "../_components/editButton";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isValid, parse } from "date-fns";
+import { isValid, parse, set } from "date-fns";
 import { toast } from "sonner";
 import {
   formSchema,
@@ -172,6 +172,22 @@ const page = () => {
       });
       return;
     }
+    setError(name, {
+      message: "",
+    });
+    setError("e_wayBill", {
+      message: "",
+    });
+    setError("gross_data", {
+      message: "",
+    });
+    setError("net_data", {
+      message: "",
+    });
+    setError("tar_data", {
+      message: "",
+    });
+
     setValue(name, e.target.files[0]);
     let dataPart = await getFilePart(e.target.files[0]);
     switch (name) {
@@ -312,6 +328,7 @@ const page = () => {
       toast.error("No data to print!");
     }
   };
+
   return (
     <div className="flex">
       {/* Left Column - File Upload */}
@@ -385,6 +402,9 @@ const page = () => {
               accept=".pdf"
               name={"e_wayBill" as keyof formType}
               onChange={handleFileChange}
+              onFocus={() => {
+                setError("e_wayBill", { message: "" });
+              }}
               // {...register("e_wayBill")}
             />
             {errors.e_wayBill && (
@@ -407,15 +427,37 @@ const page = () => {
             >
               <fieldset className="fieldset">
                 <legend className="fieldset-legend">Tare Image</legend>
-                <input
-                  disabled={loading}
-                  type="file"
-                  className="file-input"
-                  accept=".pdf"
-                  name={"tar_file" as keyof formType}
-                  onChange={handleFileChange}
-                  // {...register("e_wayBill")}
-                />
+                <div className="flex  gap-2">
+                  <input
+                    // Display file name
+                    disabled={
+                      loading ||
+                      getValues("e_wayBill") == undefined ||
+                      getValues("e_wayBill_data") == undefined
+                    }
+                    type="file"
+                    className="file-input"
+                    accept="image/*"
+                    name={"tar_file" as keyof formType}
+                    onChange={handleFileChange}
+                    // {...register("e_wayBill")}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-error"
+                    onClick={() => {
+                      resetField("tar_file");
+                      resetField("tar_data");
+                    }}
+                    disabled={
+                      loading ||
+                      getValues("multi_file") == undefined ||
+                      getValues("e_wayBill") == undefined
+                    }
+                  >
+                    reset
+                  </button>
+                </div>
                 {(errors.tar_data || errors.tar_file) && (
                   <p className="text-error">
                     {(errors.tar_data ?? errors.tar_file)?.message}
@@ -425,14 +467,38 @@ const page = () => {
               <div className="flex w-full gap-4">
                 <fieldset className="flex-1 mb-4">
                   <legend className="fieldset-legend">Net Weight (A)</legend>
-                  <input
-                    type="file"
-                    disabled={loading}
-                    className="file-input"
-                    onChange={handleFileChange}
-                    accept="image/*"
-                    name={"net_file" as keyof formType}
-                  />
+                  <div className="flex  gap-2">
+                    <input
+                      type="file"
+                      disabled={
+                        loading ||
+                        getValues("multi_file") == undefined ||
+                        getValues("e_wayBill") == undefined ||
+                        getValues("tar_file") == undefined
+                      }
+                      className="file-input"
+                      onChange={handleFileChange}
+                      accept="image/*"
+                      name={"net_file" as keyof formType}
+                      value={getValues("net_file")?.name || ""} // Display file name
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-error"
+                      onClick={() => {
+                        resetField("net_file");
+                        resetField("net_data");
+                      }}
+                      disabled={
+                        loading ||
+                        getValues("multi_file") == undefined ||
+                        getValues("e_wayBill") == undefined ||
+                        getValues("tar_file") == undefined
+                      }
+                    >
+                      reset
+                    </button>
+                  </div>
                   {(errors.net_data || errors.net_file) && (
                     <p className="text-error">
                       {(errors.net_data ?? errors.net_file)?.message}
@@ -444,14 +510,40 @@ const page = () => {
                 </fieldset>
                 <fieldset className="flex-1 mb-4">
                   <legend className="fieldset-legend">Net Weight (B)</legend>
-                  <input
-                    type="file"
-                    className="file-input"
-                    onChange={handleFileChange}
-                    accept="image/*"
-                    disabled={loading}
-                    name={"gross_file" as keyof formType}
-                  />
+                  <div className="flex  gap-2">
+                    <input
+                      type="file"
+                      className="file-input"
+                      onChange={handleFileChange}
+                      accept="image/*"
+                      value={getValues("gross_file")?.name || ""} // Display file name
+                      disabled={
+                        loading ||
+                        getValues("multi_file") == undefined ||
+                        getValues("e_wayBill") == undefined ||
+                        getValues("tar_file") == undefined ||
+                        getValues("net_file") == undefined
+                      }
+                      name={"gross_file" as keyof formType}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-error"
+                      disabled={
+                        loading ||
+                        getValues("multi_file") == undefined ||
+                        getValues("e_wayBill") == undefined ||
+                        getValues("tar_file") == undefined ||
+                        getValues("net_file") == undefined
+                      }
+                      onClick={() => {
+                        resetField("gross_file");
+                        resetField("gross_data");
+                      }}
+                    >
+                      reset
+                    </button>
+                  </div>
                   {(errors.gross_data || errors.gross_file) && (
                     <p className="text-error">
                       {(errors.gross_data ?? errors.gross_file)?.message}
@@ -479,7 +571,13 @@ const page = () => {
                 <input
                   type="file"
                   className="file-input"
-                  disabled={loading}
+                  disabled={
+                    loading ||
+                    getValues("multi_file") == undefined ||
+                    getValues("gross_file") !== undefined ||
+                    getValues("net_file") !== undefined ||
+                    getValues("tar_file") !== undefined
+                  }
                   accept="image/*"
                   {...register("multi_file")}
                   onChange={async (e) => {
