@@ -681,7 +681,7 @@ export async function deleteOcr(id: number | undefined) {
     throw new Error(`Record with id ${id} does not exist.`);
   }
 
-  await prisma.ocr.delete({ where: { id } });
+  return await prisma.ocr.delete({ where: { id } });
 }
 
 const PROMPT_All_WIGHT = `
