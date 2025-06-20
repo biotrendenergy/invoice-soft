@@ -6,6 +6,12 @@ import { headers } from "next/headers";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 export async function deleteMultipleOCR(ids: number[]) {
   if (!Array.isArray(ids) || ids.length === 0) return;
+  await prisma.audit.create({
+    data: {
+      ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
+      message: `delete ocr with ids: ${ids.join(", ")} - ${ids.length} records`,
+    },
+  });
 
   await prisma.ocr.deleteMany({
     where: {
@@ -88,9 +94,22 @@ export const extractData = async (
       const jsonText = await result.response.text();
       const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
       console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
-
+      await prisma.audit.create({
+        data: {
+          ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
+          message: `Extracted data from image: ${jsonString}`,
+        },
+      });
       return JSON.parse(jsonString);
     } catch (error) {
+      await prisma.audit.create({
+        data: {
+          ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
+          message: `Error extracting data from image: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        },
+      });
       console.error(`Attempt ${attempt + 1} failed:`, error);
       attempt++;
 
@@ -213,10 +232,23 @@ export const extractEWayBill = async (
       const jsonText = await result.response.text();
       const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
       console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
-
+      await prisma.audit.create({
+        data: {
+          ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
+          message: `Extracted E-Way Bill data: ${jsonString}`,
+        },
+      });
       return JSON.parse(jsonString);
     } catch (error) {
       console.error(`Attempt ${attempt + 1} failed:`, error);
+      await prisma.audit.create({
+        data: {
+          ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
+          message: `Error extracting E-Way Bill data: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        },
+      });
       attempt++;
 
       // Optional: wait before retrying
