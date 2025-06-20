@@ -670,8 +670,10 @@ export async function extractData_slipData(
   throw new Error("Failed to extract data from image after multiple attempts.");
 }
 
-export async function deleteOcr(id: number) {
-  if (!id) return;
+export async function deleteOcr(id: number | undefined) {
+  if (typeof id !== "number" || isNaN(id)) {
+    throw new Error("A valid id must be provided.");
+  }
 
   const existing = await prisma.ocr.findUnique({ where: { id } });
 
