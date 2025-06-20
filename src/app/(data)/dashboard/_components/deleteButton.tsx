@@ -1,30 +1,32 @@
 "use client";
 import { deleteOcr } from "@/action/ocr";
 import { ocr } from "@/generated/prisma";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 const DeleteButton = (data: ocr) => {
-  const [loading, setLoading] = useState<boolean>(false);
-
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const handleDelete = async () => {
-    setLoading(true);
-    await deleteOcr(data.id);
-    setIsDeleteConfirmOpen(false);
-    window.location.reload();
-    setLoading(false);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const handleDelete = () => {
+    startTransition(async () => {
+      await deleteOcr(data.id);
+      setIsDeleteConfirmOpen(false);
+      router.refresh(); // prefer this over full reload
+    });
   };
+
   return (
     <div>
       <button
         className="btn btn-error"
-        disabled={loading}
-        onClick={() => {
-          setIsDeleteConfirmOpen(true);
-        }}
+        disabled={isPending}
+        onClick={() => setIsDeleteConfirmOpen(true)}
       >
         Delete
       </button>
+
       {isDeleteConfirmOpen && (
         <dialog open className="modal modal-open">
           <div className="modal-box">
@@ -36,9 +38,9 @@ const DeleteButton = (data: ocr) => {
               <button
                 className="btn btn-error"
                 onClick={handleDelete}
-                disabled={loading}
+                disabled={isPending}
               >
-                Delete
+                {isPending ? "Deleting..." : "Delete"}
               </button>
               <button
                 className="btn"
