@@ -1,27 +1,33 @@
 "use client";
 import { deleteOcr } from "@/action/ocr";
 import { ocr } from "@/generated/prisma";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const DeleteButton = (data: ocr) => {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
 
-  const handleDelete = () => {
-    startTransition(async () => {
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
       await deleteOcr(data.id);
       setIsDeleteConfirmOpen(false);
-      window.location.reload(); // prefer this over full reload
-    });
+      router.refresh(); // Preferred in Next.js over full reload
+    } catch (err) {
+      console.error("Failed to delete:", err);
+      // optionally show an error toast or message here
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
     <div>
       <button
         className="btn btn-error"
-        disabled={isPending}
+        disabled={isDeleting}
         onClick={() => setIsDeleteConfirmOpen(true)}
       >
         Delete
@@ -38,13 +44,14 @@ const DeleteButton = (data: ocr) => {
               <button
                 className="btn btn-error"
                 onClick={handleDelete}
-                disabled={isPending}
+                disabled={isDeleting}
               >
-                {isPending ? "Deleting..." : "Delete"}
+                {isDeleting ? "Deleting..." : "Delete"}
               </button>
               <button
                 className="btn"
                 onClick={() => setIsDeleteConfirmOpen(false)}
+                disabled={isDeleting}
               >
                 Cancel
               </button>
