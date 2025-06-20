@@ -5,6 +5,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const DeleteButton = (data: ocr) => {
+  if (!data || !data.id) {
+    return null; // or handle error case
+  }
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
