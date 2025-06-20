@@ -89,7 +89,7 @@ const RecordTable = ({ data }: { data: Record[] }) => {
                     </button>
                   </Link>
                   <EditButton {...ocr} />
-                  <DeleteButton {...ocr} />
+                  {/* <DeleteButton {...ocr} /> */}
                 </td>
               </tr>
             ))}
