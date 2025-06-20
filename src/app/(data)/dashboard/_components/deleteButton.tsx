@@ -13,7 +13,7 @@ const DeleteButton = (data: ocr) => {
     startTransition(async () => {
       await deleteOcr(data.id);
       setIsDeleteConfirmOpen(false);
-      router.refresh(); // prefer this over full reload
+      window.location.reload(); // prefer this over full reload
     });
   };
 

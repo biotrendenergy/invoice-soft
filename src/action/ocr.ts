@@ -671,16 +671,15 @@ export async function extractData_slipData(
 }
 
 export async function deleteOcr(id: number) {
-  try {
-    await prisma.ocr.delete({
-      where: {
-        id,
-      },
-    });
-    return { success: true, message: "OCR record deleted successfully." };
-  } catch (e) {
-    throw e;
+  if (!id) return;
+
+  const existing = await prisma.ocr.findUnique({ where: { id } });
+
+  if (!existing) {
+    throw new Error(`Record with id ${id} does not exist.`);
   }
+
+  await prisma.ocr.delete({ where: { id } });
 }
 
 const PROMPT_All_WIGHT = `
