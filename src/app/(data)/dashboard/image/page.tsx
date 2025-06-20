@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import EditButton from "../_components/editButton";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isValid, parse, set } from "date-fns";
+
 import { toast } from "sonner";
 import {
   formSchema,
@@ -28,7 +28,7 @@ const page = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     setValue,
     setError,
     getValues,
@@ -49,8 +49,8 @@ const page = () => {
     })();
   }, []);
   useEffect(() => {
-    console.log(errors);
-  }, [errors]);
+    console.log(errors, isValid);
+  }, [errors, isValid]);
   const onSubmit = async (data: formType) => {
     console.log(data);
 
@@ -69,12 +69,6 @@ const page = () => {
       toast.error("Please upload all required files.");
     }
     try {
-      /**
-       *
-       * tare weight is empty track
-       * a weight = net_weight - tare weight
-       * b weight =
-       */
       const tare = data.tar_data.weight;
       const a_weight = Math.abs(data.net_data.weight - data.tar_data.weight);
       const b_weight = Math.abs(data.net_data.weight - data.gross_data.weight);
@@ -86,13 +80,6 @@ const page = () => {
         (v) => v.id == Number(data.companyId)
       )[0];
       console.log(selectCompany, data.companyId);
-
-      // const ocrCountValue = (await ocrCount(company?.valueOf() ?? 0)) + 1;
-      // const getPre = incrementString(
-      //   selectCompany?.stringNumber!,
-      //   ocrCountValue
-      // );
-      // console.log(getPre);
 
       const challanNumber = data.challanNo;
       const ocrPayload = {
@@ -172,26 +159,14 @@ const page = () => {
       });
       return;
     }
-    setError(name, {
-      message: "",
-    });
-    setError("e_wayBill", {
-      message: "",
-    });
-    setError("gross_data", {
-      message: "",
-    });
-    setError("net_data", {
-      message: "",
-    });
-    setError("tar_data", {
-      message: "",
-    });
 
     setValue(name, e.target.files[0]);
     let dataPart = await getFilePart(e.target.files[0]);
     switch (name) {
       case "e_wayBill":
+        setError("e_wayBill", {
+          message: "",
+        });
         setValue("e_wayBill", e.target.files[0]);
         const e_way_bill_data = await extractEWayBill_withIn(dataPart);
         setValue("e_wayBill_data", Number(e_way_bill_data.EWayBillNumber));
@@ -204,6 +179,25 @@ const page = () => {
         setLoading(false);
         return;
       case "tar_file":
+        setError("tar_file", {
+          message: "",
+        });
+        setError("tar_data", {
+          message: "",
+        });
+        setError("net_data", {
+          message: "",
+        });
+        setError("net_file", {
+          message: "",
+        });
+        setError("gross_data", {
+          message: "",
+        });
+
+        setError("gross_file", {
+          message: "",
+        });
         const tar_data = await extractData(dataPart);
         if (!vehicle_number) {
           setError("e_wayBill", {
@@ -220,11 +214,50 @@ const page = () => {
 
           return;
         }
+
+        setError("tar_file", {
+          message: "",
+        });
+        setError("tar_data", {
+          message: "",
+        });
+        setError("net_data", {
+          message: "",
+        });
+        setError("net_file", {
+          message: "",
+        });
+        setError("gross_data", {
+          message: "",
+        });
+
+        setError("gross_file", {
+          message: "",
+        });
         setValue("tar_data", tar_data);
 
         setLoading(false);
         return;
       case "net_file":
+        setError("tar_file", {
+          message: "",
+        });
+        setError("tar_data", {
+          message: "",
+        });
+        setError("net_data", {
+          message: "",
+        });
+        setError("net_file", {
+          message: "",
+        });
+        setError("gross_data", {
+          message: "",
+        });
+
+        setError("gross_file", {
+          message: "",
+        });
         const net_data = await extractData(dataPart);
         if (!vehicle_number) {
           setError("e_wayBill", {
@@ -241,8 +274,6 @@ const page = () => {
           return;
         }
 
-        console.log(getValues("tar_data"));
-
         if (!getValues("tar_data")) {
           setError("tar_file", {
             message: "Please upload tare weight first.",
@@ -250,11 +281,6 @@ const page = () => {
           setLoading(false);
           return;
         }
-        console.log(
-          getValues("tar_data.weight"),
-          net_data.weight,
-          getValues("tar_data.weight") > net_data.weight
-        );
 
         if (getValues("tar_data.weight") > net_data.weight) {
           setError("net_data", {
@@ -264,11 +290,49 @@ const page = () => {
           setLoading(false);
           return;
         }
+        setError("tar_file", {
+          message: "",
+        });
+        setError("tar_data", {
+          message: "",
+        });
+        setError("net_data", {
+          message: "",
+        });
+        setError("net_file", {
+          message: "",
+        });
+        setError("gross_data", {
+          message: "",
+        });
+
+        setError("gross_file", {
+          message: "",
+        });
         setValue("net_data", net_data);
         setLoading(false);
 
         return;
       case "gross_file":
+        setError("tar_file", {
+          message: "",
+        });
+        setError("tar_data", {
+          message: "",
+        });
+        setError("net_data", {
+          message: "",
+        });
+        setError("net_file", {
+          message: "",
+        });
+        setError("gross_data", {
+          message: "",
+        });
+
+        setError("gross_file", {
+          message: "",
+        });
         const gross_data = await extractData(dataPart);
         if (!vehicle_number) {
           setError("e_wayBill", {
@@ -304,7 +368,25 @@ const page = () => {
           return;
         }
         // setValue("gross_data.weight", g ?? 0);
+        setError("tar_file", {
+          message: "",
+        });
+        setError("tar_data", {
+          message: "",
+        });
+        setError("net_data", {
+          message: "",
+        });
+        setError("net_file", {
+          message: "",
+        });
+        setError("gross_data", {
+          message: "",
+        });
 
+        setError("gross_file", {
+          message: "",
+        });
         setValue("gross_data", gross_data);
         setLoading(false);
         return;
@@ -442,7 +524,7 @@ const page = () => {
                     onChange={handleFileChange}
                     // {...register("e_wayBill")}
                   />
-                  <button
+                  {/* <button
                     type="button"
                     className="btn btn-error"
                     onClick={() => {
@@ -456,7 +538,7 @@ const page = () => {
                     }
                   >
                     reset
-                  </button>
+                  </button> */}
                 </div>
                 {(errors.tar_data || errors.tar_file) && (
                   <p className="text-error">
@@ -480,9 +562,9 @@ const page = () => {
                       onChange={handleFileChange}
                       accept="image/*"
                       name={"net_file" as keyof formType}
-                      value={getValues("net_file")?.name || ""} // Display file name
+                      // value={getValues("net_file")?.name || ""} // Display file name
                     />
-                    <button
+                    {/* <button
                       type="button"
                       className="btn btn-error"
                       onClick={() => {
@@ -497,7 +579,7 @@ const page = () => {
                       }
                     >
                       reset
-                    </button>
+                    </button> */}
                   </div>
                   {(errors.net_data || errors.net_file) && (
                     <p className="text-error">
@@ -516,7 +598,7 @@ const page = () => {
                       className="file-input"
                       onChange={handleFileChange}
                       accept="image/*"
-                      value={getValues("gross_file")?.name || ""} // Display file name
+                      // value={getValues("gross_file")?.name || ""} // Display file name
                       disabled={
                         loading ||
                         getValues("multi_file") == undefined ||
@@ -526,7 +608,7 @@ const page = () => {
                       }
                       name={"gross_file" as keyof formType}
                     />
-                    <button
+                    {/* <button
                       type="button"
                       className="btn btn-error"
                       disabled={
@@ -542,7 +624,7 @@ const page = () => {
                       }}
                     >
                       reset
-                    </button>
+                    </button> */}
                   </div>
                   {(errors.gross_data || errors.gross_file) && (
                     <p className="text-error">

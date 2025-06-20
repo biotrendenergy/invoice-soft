@@ -4,7 +4,17 @@ import { prisma } from "@/lib/db";
 import { ocr } from "@/generated/prisma";
 import { headers } from "next/headers";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+export async function deleteMultipleOCR(ids: number[]) {
+  if (!Array.isArray(ids) || ids.length === 0) return;
 
+  await prisma.ocr.deleteMany({
+    where: {
+      id: {
+        in: ids,
+      },
+    },
+  });
+}
 const PROMPT = `
 Image Data Extraction Prompt
 
@@ -667,6 +677,7 @@ export async function deleteOcr(id: number) {
         id,
       },
     });
+    return { success: true, message: "OCR record deleted successfully." };
   } catch (e) {
     throw e;
   }
