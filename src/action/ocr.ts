@@ -6,7 +6,12 @@ import { headers } from "next/headers";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 export async function deleteMultipleOCR(ids: number[]) {
   try {
-    if (!Array.isArray(ids) || ids.length === 0) return;
+    if (!Array.isArray(ids) || ids.length === 0) {
+      console.log("Invalid input: ids must be a non-empty array.");
+      return {
+        error: "Invalid input: ids must be a non-empty array."
+      };
+    }
     // await prisma.audit.create({
     //   data: {
     //     ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
