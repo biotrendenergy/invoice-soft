@@ -16,6 +16,12 @@ const Page = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  if (!ocrData) {
+    return <div className="text-center text-gray-500">Loading...</div>;
+  }
+  if (!ocrData || ocrData.length === 0) {
+    return <div className="text-center text-gray-500">No records found.</div>;
+  }
 
   return (
     <>
