@@ -22,8 +22,12 @@ const RecordTable = ({ data }: { data: Record[] }) => {
     if (!confirm("Are you sure you want to delete selected records?")) return;
 
     startTransition(async () => {
-      await deleteMultipleOCR(selected.map((v) => Number(v))); // directly calls server function
-      window.location.reload(); // OR trigger refresh using router if needed
+      await deleteMultipleOCR(selected.map((v) => Number(v))).then(() => {
+        // Optionally, you can show a success message or update the UI
+        alert("Selected records deleted successfully.");
+        setSelected([]); // Clear selection after deletion
+      }); // directly calls server function
+      // window.location.reload(); // OR trigger refresh using router if needed
     });
   };
   return (
