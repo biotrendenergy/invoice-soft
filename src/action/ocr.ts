@@ -5,21 +5,34 @@ import { ocr } from "@/generated/prisma";
 import { headers } from "next/headers";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 export async function deleteMultipleOCR(ids: number[]) {
-  if (!Array.isArray(ids) || ids.length === 0) return;
-  await prisma.audit.create({
-    data: {
-      ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
-      message: `delete ocr with ids: ${ids.join(", ")} - ${ids.length} records`,
-    },
-  });
-
-  await prisma.ocr.deleteMany({
-    where: {
-      id: {
-        in: ids,
+  try {
+    if (!Array.isArray(ids) || ids.length === 0) return;
+    // await prisma.audit.create({
+    //   data: {
+    //     ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
+    //     message: `delete ocr with ids: ${ids.join(", ")} - ${ids.length} records`,
+    //   },
+    // });
+    let s = await prisma.ocr.deleteMany({
+      where: {
+        id: {
+          in: ids,
+        },
       },
-    },
-  });
+    });
+    console.log(s);
+
+    return s;
+  } catch (error) {
+    // throw error;
+    await prisma.audit.create({
+      data: {
+        ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
+        message: `Error deleting ocr with ids: ${ids.join(", ")} - ${ids.length} records`,
+      },
+    });
+    return new Error(`Error deleting records: ${error instanceof Error ? error.message : String(error)}`);
+  }
 }
 const PROMPT = `
 Image Data Extraction Prompt
@@ -105,9 +118,8 @@ export const extractData = async (
       await prisma.audit.create({
         data: {
           ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
-          message: `Error extracting data from image: ${
-            error instanceof Error ? error.message : String(error)
-          }`,
+          message: `Error extracting data from image: ${error instanceof Error ? error.message : String(error)
+            }`,
         },
       });
       console.error(`Attempt ${attempt + 1} failed:`, error);
@@ -244,9 +256,8 @@ export const extractEWayBill = async (
       await prisma.audit.create({
         data: {
           ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
-          message: `Error extracting E-Way Bill data: ${
-            error instanceof Error ? error.message : String(error)
-          }`,
+          message: `Error extracting E-Way Bill data: ${error instanceof Error ? error.message : String(error)
+            }`,
         },
       });
       attempt++;
