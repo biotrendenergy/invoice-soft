@@ -25,7 +25,8 @@ const RecordTable = ({ data }: { data: Record[] }) => {
       await deleteMultipleOCR(selected.map((v) => Number(v))).then(() => {
         // Optionally, you can show a success message or update the UI
         alert("Selected records deleted successfully.");
-        setSelected([]); // Clear selection after deletion
+        setSelected([]);
+        window.location.reload(); // Clear selection after deletion
       }); // directly calls server function
       // window.location.reload(); // OR trigger refresh using router if needed
     });
