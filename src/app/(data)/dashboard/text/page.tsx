@@ -69,18 +69,18 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
       <div className="text-lg font-semibold mb-2 flex w-full justify-between">
         Vehicle Record #{index + 1}
         <div>
-          <label className="text-sm">Company</label>
+          <label className="text-sm">Company (short name)</label>
           <select
             className="select"
             value={company?.toString()}
             onChange={(e) => setCompany(Number(e.target.value))}
           >
             <option value="" selected disabled>
-              Select Invoice
+              Select Invoice (short name)
             </option>
             {companies?.map((v) => (
               <option key={v.id} value={v.id}>
-                {v.name}
+                {v.shotName}
               </option>
             ))}
           </select>

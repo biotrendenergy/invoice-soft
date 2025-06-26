@@ -148,6 +148,7 @@ export default function CompanyTable() {
   useEffect(() => {
     updateData();
   }, []);
+  console.log(errors);
 
   return (
     <div className="p-4">
@@ -235,7 +236,7 @@ export default function CompanyTable() {
                 { name: "shippingState", label: "Shipping State" },
                 { name: "shipping_gstNo", label: "Shipping GST Number" },
                 { name: "stringNumber", label: "String Number" },
-                { name: "ponumber", label: "Po Number" },
+                { name: "PONumber", label: "Po Number" },
               ].map(({ name, label }) => (
                 <div key={name} className="form-control">
                   <label className="label">
