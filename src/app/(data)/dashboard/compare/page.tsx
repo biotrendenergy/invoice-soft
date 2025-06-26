@@ -217,6 +217,7 @@ const Page = () => {
               disabled={loading}
               className="btn  ml-auto btn-error"
               onClick={async () => {
+                setLoading(true);
                 if (rightFile) {
                   let data = await getChallanNumber(
                     await Promise.all(
@@ -231,6 +232,7 @@ const Page = () => {
                     JSON.stringify(data)
                   );
                 }
+                setLoading(false);
               }}
             >
               Accept?
