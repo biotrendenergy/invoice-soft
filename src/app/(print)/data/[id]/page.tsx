@@ -269,7 +269,19 @@ const page = async ({ params }: pageProps) => {
               </th>
               <td></td>
               <td className="s2"></td>
-              <td className="s3" colSpan={12} rowSpan={2}></td>
+              <td
+                className="s3"
+                colSpan={12}
+                rowSpan={2}
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  verticalAlign: "middle",
+                  fontSize: "16px",
+                }}
+              >
+                Annexure
+              </td>
             </tr>
             <tr style={{ height: "20px" }}>
               <th

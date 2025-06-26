@@ -1310,7 +1310,8 @@ const page = async ({ params }: pageProps) => {
               <td className="s0"></td>
               <td className="s4"></td>
               <td className="s4" colSpan={6}>
-                3) Our responsibility ceases soon after the goods leave
+                3) Our responsibility ceases soon after the goods leave from our
+                premises
               </td>
               <td className="s0"></td>
               <td className="s0"></td>

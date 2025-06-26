@@ -1,9 +1,9 @@
 "use client";
 
 import { addOCRData, extractEWayBill_withIn, getFilePart } from "@/action/ocr";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { parse, isValid } from "date-fns";
+import { parse, isValid, set } from "date-fns";
 import { companyDetail } from "@/generated/prisma";
 import { getAllCompany } from "@/action/company";
 
@@ -29,6 +29,7 @@ function parseFlexibleDate(dateStr: string) {
 
 const DataComp = ({ index, entry }: { index: number; entry: any }) => {
   const [e_way_bill, setEwayBill] = useState<Number | null>(null);
+  const [entryData, setEntryData] = useState<any>(entry);
   const [e_way_bill_date, setEwayBill_date] = useState<Date | null>(null);
   const [invoice, setInvoice] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -51,6 +52,17 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
       setCompanies(await getAllCompany());
     })();
   }, []);
+  useEffect(() => {
+    setEntryData(() => {
+      if (Number(entry["tare weight"]) > Number(entry["net weight"])) {
+        entry = { ...entry, "tare weight": `❌ ${entry["tare weight"]}` };
+      }
+      if (Number(entry["net weight"]) > Number(entry["gross weight"])) {
+        entry = { ...entry, "net weight": `❌ ${entry["net weight"]}` };
+      }
+      return entry;
+    });
+  }, [entry]);
 
   return (
     <div key={index} className="overflow-x-auto rounded-xl shadow-md p-4">
@@ -79,11 +91,11 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
         <tbody>
           <tr>
             <th>Date</th>
-            <td>{entry["date"] || "-"}</td>
+            <td>{entryData["date"] || "-"}</td>
           </tr>
           <tr>
             <th>Vehicle Number</th>
-            <td>{entry["vehicle no"] || "-"}</td>
+            <td>{entryData["vehicle no"] || "-"}</td>
           </tr>
           <tr>
             <th>Invoice Number</th>
@@ -91,23 +103,23 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
           </tr>
           <tr>
             <th>Gross Weight (kg)</th>
-            <td>{entry["gross weight"] || "-"}</td>
+            <td>{entryData["gross weight"] || "-"}</td>
           </tr>
           <tr>
             <th>Tare Weight (kg)</th>
-            <td>{entry["tare weight"] || "-"}</td>
+            <td>{entryData["tare weight"] || "-"}</td>
           </tr>
           <tr>
             <th>Net Weight (kg)</th>
-            <td>{entry["net weight"] || "-"}</td>
+            <td>{entryData["net weight"] || "-"}</td>
           </tr>
           <tr>
             <th>Section A Weight (kg)</th>
-            <td>{entry["a weight"] || "-"}</td>
+            <td>{entryData["a weight"] || "-"}</td>
           </tr>
           <tr>
             <th>Section B Weight (kg)</th>
-            <td>{entry["b weight"] || "-"}</td>
+            <td>{entryData["b weight"] || "-"}</td>
           </tr>
         </tbody>
       </table>
@@ -127,6 +139,17 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                 if (!e.target.files) return;
                 const file = await getFilePart(e.target.files[0]);
                 const eWayBillData = await extractEWayBill_withIn(file);
+                if (eWayBillData.vehicle_number !== entryData["vehicle no"]) {
+                  setEntryData((prev: any) => ({
+                    ...prev,
+                    "vehicle no": `❌ ${entryData["vehicle no"]} (E-way bill has ${eWayBillData.vehicle_number})`,
+                  }));
+                  console.log(entryData);
+                  setLoading(false);
+
+                  return;
+                }
+
                 setEwayBill(Number(eWayBillData.EWayBillNumber));
                 setInvoice(eWayBillData.ChallanOrInvoiceNumber);
                 setEwayBill_date(
@@ -161,8 +184,8 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
               try {
                 const data = await addOCRData({
                   id: 0,
-                  A_weight: safeNumber(entry["a weight"] ?? "0"),
-                  B_weight: safeNumber(entry["b weight"] ?? "0"),
+                  A_weight: safeNumber(entryData["a weight"] ?? "0"),
+                  B_weight: safeNumber(entryData["b weight"] ?? "0"),
                   challan: invoice || "",
                   address: "Default address or dynamic input",
                   map_url: "https://maps.google.com/?q=26.9124,75.7873",
@@ -170,11 +193,11 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   longitude: 75.7873,
                   delivery_date: new Date(),
                   delivery_status: "Pending",
-                  net_weight: safeNumber(entry["net weight"] ?? "0"),
-                  tare_weight: safeNumber(entry["tare weight"] ?? "0"),
-                  gross_weight: safeNumber(entry["gross weight"] ?? "0"),
-                  vehicle_number: entry["vehicle no"] || "",
-                  date: parseDate(entry["date"] || new Date()),
+                  net_weight: safeNumber(entryData["net weight"] ?? "0"),
+                  tare_weight: safeNumber(entryData["tare weight"] ?? "0"),
+                  gross_weight: safeNumber(entryData["gross weight"] ?? "0"),
+                  vehicle_number: entryData["vehicle no"] || "",
+                  date: parseDate(entryData["date"] || new Date()),
                   created_at: new Date(),
                   e_way_bill: (e_way_bill ?? 0).toString(),
 
