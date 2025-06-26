@@ -3,7 +3,7 @@ import { z } from "zod";
 export const vendorChallanSchema = z.object({
   vendorName: z.string().min(1, "Required"),
   vendorChallanDate: z.string(),
-  vendorChallanNo: z.string().min(1, "Required"),
+  vendorChallanNo: z.string().optional(),
   vendorEwayBillDate: z.string(),
   vendorEwayBill: z.string(),
   biomeChallanNo: z.string(),

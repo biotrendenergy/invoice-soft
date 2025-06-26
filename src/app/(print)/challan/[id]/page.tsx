@@ -492,7 +492,7 @@ const page = async ({ params }: pageProps) => {
               <td className="s0"></td>
               <td className="s4"></td>
               <td className="s4" colSpan={4}>
-                FINANCE DEPARTMENT ADMISTRATIVE
+                {data?.company?.billingAddress.split(",")[0]},
               </td>
               <td className="s4" colSpan={2}>
                 Reverse Charge
@@ -517,7 +517,7 @@ const page = async ({ params }: pageProps) => {
               <td className="s0"></td>
               <td className="s4"></td>
               <td className="s4" colSpan={4}>
-                BUILDING, VINDHYANAGAR
+                {data?.company?.billingAddress.split(",")[1]},
               </td>
               <td className="s4" colSpan={2}>
                 Vendor code:
@@ -542,7 +542,7 @@ const page = async ({ params }: pageProps) => {
               <td className="s0"></td>
               <td className="s4"></td>
               <td className="s13" colSpan={4}>
-                {data?.company?.shippingState}- 486885
+                {data?.company?.billingAddress.split(",").slice(2)}
               </td>
               <td className="s13" colSpan={2}>
                 Eway bill No.

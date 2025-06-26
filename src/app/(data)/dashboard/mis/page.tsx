@@ -36,7 +36,7 @@ const ChallanForm = () => {
   const [selectedTab, setSelectedTab] = useState("vendor");
 
   return (
-    <div className="tabs tabs-border">
+    <div className="tabs tabs-border ">
       {/* Radio input for Vendor Tab */}
       <input
         type="radio"
@@ -49,7 +49,7 @@ const ChallanForm = () => {
       />
 
       <div
-        className={`tab-content border-base-300 bg-base-100 p-10 ${
+        className={`tab-content border-base-300 bg-base-100 p-10 h-[80vh] ${
           selectedTab === "vendor" ? "block" : "hidden"
         }`}
       >

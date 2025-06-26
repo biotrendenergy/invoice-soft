@@ -31,12 +31,14 @@ const normalizeWeight = (value: string | null) => {
 };
 
 const Page = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [rightFile, setRightFile] = useState<File[] | null>(null);
   const [resultMessage, setResultMessage] = useState<string | null>(null);
 
   const rightInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async () => {
+    setLoading(true);
     let leftData = {};
     let rightData = {};
     if (rightFile && ocrData) {
@@ -110,7 +112,7 @@ const Page = () => {
       resultMessage = "Comparison failed: Data format error.";
     }
     setResultMessage(resultMessage);
-
+    setLoading(false);
     console.log(leftData, rightData);
   };
 
@@ -203,14 +205,39 @@ const Page = () => {
       <div className="text-center">
         <button
           className="btn btn-primary mt-6"
-          disabled={!rightFile}
+          disabled={!rightFile || loading}
           onClick={handleSubmit}
         >
           Compare
         </button>
+
         {resultMessage && (
-          <div className="mt-4 p-4 rounded bg-base-200 text-base-content whitespace-pre-wrap border border-base-300">
-            {resultMessage}
+          <div className="flex flex-col gap-2 mt-2.5">
+            <button
+              disabled={loading}
+              className="btn  ml-auto btn-error"
+              onClick={async () => {
+                if (rightFile) {
+                  let data = await getChallanNumber(
+                    await Promise.all(
+                      rightFile.map(async (e) => {
+                        const filePart = await getFilePart(e);
+                        return filePart;
+                      })
+                    )
+                  );
+                  localStorage.setItem(
+                    `data_for_mis_${ocrData?.id}`,
+                    JSON.stringify(data)
+                  );
+                }
+              }}
+            >
+              Accept?
+            </button>
+            <div className="mt-4 p-4 rounded bg-base-200 text-base-content whitespace-pre-wrap border border-base-300">
+              {resultMessage}
+            </div>
           </div>
         )}
       </div>
