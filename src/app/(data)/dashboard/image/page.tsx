@@ -655,7 +655,6 @@ const page = () => {
                   className="file-input"
                   disabled={
                     loading ||
-                    getValues("multi_file") == undefined ||
                     getValues("gross_file") !== undefined ||
                     getValues("net_file") !== undefined ||
                     getValues("tar_file") !== undefined
@@ -694,7 +693,7 @@ const page = () => {
 
                       return;
                     }
-                    if (result.tare_weight! < result.net_weight!) {
+                    if ((result.tare_weight ?? 0) > (result.net_weight ?? 0)) {
                       setError("multi_file", {
                         message:
                           "A wight is not less than tar wight place check it and try again",
@@ -702,7 +701,7 @@ const page = () => {
                       setLoading(false);
                       return;
                     }
-                    if (result.net_weight! < result.gross_weight!) {
+                    if ((result.net_weight ?? 0) > (result.gross_weight ?? 0)) {
                       setError("multi_file", {
                         message:
                           "A wight is not less than tar wight place check it and try again",
@@ -744,9 +743,11 @@ const page = () => {
                     setLoading(false);
                   }}
                 />
-                {(errors.gross_data || errors.multi_file) && (
+                {errors.multi_file && (
                   <p className="text-error">
-                    {(errors.gross_data ?? errors.gross_file)?.message}
+                    {typeof errors.multi_file?.message === "string"
+                      ? errors.multi_file.message
+                      : null}
                   </p>
                 )}
               </fieldset>
