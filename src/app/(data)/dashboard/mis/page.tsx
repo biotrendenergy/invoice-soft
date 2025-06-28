@@ -49,7 +49,7 @@ const ChallanForm = () => {
       />
 
       <div
-        className={`tab-content border-base-300 bg-base-100 p-10 h-[80vh] ${
+        className={`tab-content border-base-300 bg-base-100 p-10  ${
           selectedTab === "vendor" ? "block" : "hidden"
         }`}
       >

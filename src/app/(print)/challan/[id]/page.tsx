@@ -420,7 +420,8 @@ const page = async ({ params }: pageProps) => {
                 STATE :
               </td>
               <td className="s13" colSpan={2}>
-                Code : {getStateCode(data?.company?.shippingState as any)}
+                {data?.company?.shippingState} Code :{" "}
+                {getStateCode(data?.company?.shippingState as any)}
               </td>
               <td className="s0"></td>
               <td className="s3"></td>
@@ -593,7 +594,8 @@ const page = async ({ params }: pageProps) => {
                 STATE :
               </td>
               <td className="s13" colSpan={2}>
-                Code : {getStateCode(data?.company?.shippingState as any)}
+                {data?.company?.billingState} Code :{" "}
+                {getStateCode(data?.company?.billingState as any)}
               </td>
               <td className="s0"></td>
               <td className="s3"></td>

@@ -53,65 +53,67 @@ const FileUploadModal = ({
     }
   };
   return (
-    <dialog open className="modal">
-      <div className="modal-box">
-        <h3 className="font-bold text-lg mb-4">Upload Files</h3>
-        <div className="flex flex-col gap-4">
-          <label>challan</label>
-          <select
-            className="select select-bordered"
-            defaultValue=""
-            onChange={(v) =>
-              selectOcrData(
-                ocrData.filter((xx) => xx.id == Number(v.target.value))[0]
-              )
-            }
-          >
-            <option value="" disabled>
-              Select Challan
-            </option>
-            {ocrData?.map((ocr) => (
-              <option key={ocr.id} value={ocr.id}>
-                {ocr.challan || `OCR #${ocr.id}`}
+    open && (
+      <dialog open className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg mb-4">Upload Files</h3>
+          <div className="flex flex-col gap-4">
+            <label>challan</label>
+            <select
+              className="select select-bordered"
+              defaultValue=""
+              onChange={(v) =>
+                selectOcrData(
+                  ocrData.filter((xx) => xx.id == Number(v.target.value))[0]
+                )
+              }
+            >
+              <option value="" disabled>
+                Select Challan
               </option>
-            ))}
-          </select>
-          <label>Vendor challan</label>
-          <input
-            onChange={(e) => {
-              if (!e.target.files) return;
-              setChallan(e.target.files[0]);
-            }}
-            type="file"
-            className="file-input file-input-bordered"
-          />
-          <label>Vendor E-way bill</label>
-          <input
-            onChange={(e) => {
-              if (!e.target.files) return;
-              setEwayBill(e.target.files[0]);
-            }}
-            type="file"
-            className="file-input file-input-bordered"
-          />
+              {ocrData?.map((ocr) => (
+                <option key={ocr.id} value={ocr.id}>
+                  {ocr.challan || `OCR #${ocr.id}`}
+                </option>
+              ))}
+            </select>
+            <label>Vendor challan</label>
+            <input
+              onChange={(e) => {
+                if (!e.target.files) return;
+                setChallan(e.target.files[0]);
+              }}
+              type="file"
+              className="file-input file-input-bordered"
+            />
+            <label>Vendor E-way bill</label>
+            <input
+              onChange={(e) => {
+                if (!e.target.files) return;
+                setEwayBill(e.target.files[0]);
+              }}
+              type="file"
+              className="file-input file-input-bordered"
+            />
+          </div>
+          <div className="modal-action">
+            <button className="btn" onClick={onClose}>
+              Close
+            </button>
+            <button
+              className="btn"
+              disabled={!ewayBill || !challan}
+              onClick={onsubmit}
+            >
+              Submit
+            </button>
+          </div>
         </div>
-        <div className="modal-action">
-          <button className="btn" onClick={onClose}>
-            Close
-          </button>
-          <button
-            className="btn"
-            disabled={!ewayBill || !challan}
-            onClick={onsubmit}
-          >
-            Submit
-          </button>
-        </div>
-      </div>
-      <form method="dialog" className="modal-backdrop">
-        <button onClick={onClose}>close</button>
-      </form>
-    </dialog>
+        <form method="dialog" className="modal-backdrop">
+          <button onClick={onClose}>close</button>
+        </form>
+      </dialog>
+    )
   );
 };
 type VendorChallanFormValues = z.infer<typeof vendorChallanSchema>;
@@ -354,6 +356,7 @@ export default function VendorChallanForm() {
           Submit
         </button>
       </form>
+
       <FileUploadModal
         selectOcrData={setOcrData}
         open={modalOpen}

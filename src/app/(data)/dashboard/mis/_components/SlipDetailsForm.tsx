@@ -69,87 +69,89 @@ const FileUploadModal = ({
   const [slipFile, setSlipFile] = useState<null | File>(null);
   const [ocr, setOcr] = useState<null | ocr>(null);
   return (
-    <dialog open className="modal">
-      <div className="modal-box">
-        <h3 className="font-bold text-lg mb-4">Upload Files</h3>
-        <div className="flex flex-col gap-4">
-          <label>challan</label>
-          <select
-            className="select select-bordered"
-            defaultValue=""
-            onChange={(v) => {
-              selectOcrData(
-                ocrData.filter((xx) => xx.id == Number(v.target.value))[0]
-              );
-              setOcr(
-                ocrData.filter((xx) => xx.id == Number(v.target.value))[0]
-              );
-            }}
-          >
-            <option value="" disabled>
-              Select Challan
-            </option>
-            {ocrData?.map((ocr) => (
-              <option key={ocr.id} value={ocr.id}>
-                {ocr.challan || `OCR #${ocr.id}`}
+    open ?? (
+      <dialog open={open} className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg mb-4">Upload Files</h3>
+          <div className="flex flex-col gap-4">
+            <label>challan</label>
+            <select
+              className="select select-bordered"
+              defaultValue=""
+              onChange={(v) => {
+                selectOcrData(
+                  ocrData.filter((xx) => xx.id == Number(v.target.value))[0]
+                );
+                setOcr(
+                  ocrData.filter((xx) => xx.id == Number(v.target.value))[0]
+                );
+              }}
+            >
+              <option value="" disabled>
+                Select Challan
               </option>
-            ))}
-          </select>
-          <label>Upload Slip</label>
-          <input
-            onChange={(e) => {
-              if (!e.target.files) return;
-              setSlipFile(e.target.files[0]);
-            }}
-            type="file"
-            className="file-input file-input-bordered"
-          />
+              {ocrData?.map((ocr) => (
+                <option key={ocr.id} value={ocr.id}>
+                  {ocr.challan || `OCR #${ocr.id}`}
+                </option>
+              ))}
+            </select>
+            <label>Upload Slip</label>
+            <input
+              onChange={(e) => {
+                if (!e.target.files) return;
+                setSlipFile(e.target.files[0]);
+              }}
+              type="file"
+              className="file-input file-input-bordered"
+            />
+          </div>
+          <div className="modal-action">
+            <button className="btn" onClick={onClose}>
+              Close
+            </button>
+            <button
+              className="btn"
+              onClick={async () => {
+                try {
+                  if (!slipFile) return;
+                  const file = await getFilePart(slipFile);
+                  const data = await extractData_slipData(file);
+                  setValue("grossWeight", data.gross_weight);
+                  setValue("netWeight", data.net_weight);
+                  setValue("slipInDate", convertToHtmlDate(data.date_in));
+                  setValue("slipOut", convertToHtmlDate(data.date_out));
+                  setValue("tareWeight", data.tare_weight);
+                  setValue(
+                    "stayDuration",
+                    getDurationInWords(
+                      data.date_in,
+                      data.date_out,
+                      data.time_in,
+                      data.time_out
+                    )
+                  );
+                  setValue(
+                    "weightDiff",
+                    Math.abs(
+                      parseInt(data.net_weight) - (ocr?.net_weight ?? 0)
+                    ).toString() + " kgs"
+                  );
+                } catch (e) {
+                } finally {
+                  onClose();
+                }
+              }}
+            >
+              Submit
+            </button>
+          </div>
         </div>
-        <div className="modal-action">
-          <button className="btn" onClick={onClose}>
-            Close
-          </button>
-          <button
-            className="btn"
-            onClick={async () => {
-              try {
-                if (!slipFile) return;
-                const file = await getFilePart(slipFile);
-                const data = await extractData_slipData(file);
-                setValue("grossWeight", data.gross_weight);
-                setValue("netWeight", data.net_weight);
-                setValue("slipInDate", convertToHtmlDate(data.date_in));
-                setValue("slipOut", convertToHtmlDate(data.date_out));
-                setValue("tareWeight", data.tare_weight);
-                setValue(
-                  "stayDuration",
-                  getDurationInWords(
-                    data.date_in,
-                    data.date_out,
-                    data.time_in,
-                    data.time_out
-                  )
-                );
-                setValue(
-                  "weightDiff",
-                  Math.abs(
-                    parseInt(data.net_weight) - (ocr?.net_weight ?? 0)
-                  ).toString() + " kgs"
-                );
-              } catch (e) {
-              } finally {
-                onClose();
-              }
-            }}
-          >
-            Submit
-          </button>
-        </div>
-      </div>
-      <form method="dialog" className="modal-backdrop">
-        <button onClick={onClose}>close</button>
-      </form>
-    </dialog>
+        <form method="dialog" className="modal-backdrop">
+          <button onClick={onClose}>close</button>
+        </form>
+      </dialog>
+    )
   );
 };
 export default function SlipDetailsForm() {
