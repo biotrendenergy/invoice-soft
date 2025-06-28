@@ -24,7 +24,7 @@ export const extractDataSchema = z.object({
   weight: z.number(),
   vehicle_number: z.string(),
   address: z.string(),
-  map_url: z.string().url(),
+  map_url: z.string(),
   latitude: z.number(),
   longitude: z.number(),
   date: z.coerce.date(),

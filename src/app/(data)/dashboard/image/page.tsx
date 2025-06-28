@@ -132,6 +132,9 @@ const page = () => {
             result.id
           );
         } else if (data.multi_file) {
+          console.log(data.multi_file[0]);
+          console.log(getValues("multi_file"));
+
           await addMedia(
             `all wight file - ${data.challanNo}`,
             data.multi_file,
@@ -660,7 +663,8 @@ const page = () => {
                     getValues("tar_file") !== undefined
                   }
                   accept="image/*"
-                  {...register("multi_file")}
+                  name={"multi_file" as keyof formType}
+                  // {...register("multi_file")}
                   onChange={async (e) => {
                     setLoading(true);
                     if (!e.target.files) {
@@ -674,7 +678,10 @@ const page = () => {
                     //   toast("file not found!");
                     //   return;
                     // }
+
                     const part = await getFilePart(e.target.files[0]);
+                    console.log(part);
+                    setValue("multi_file", e.target.files[0]);
                     const result = await extractData_AllWight(part);
                     if (!vehicle_number) {
                       setError("e_wayBill", {
