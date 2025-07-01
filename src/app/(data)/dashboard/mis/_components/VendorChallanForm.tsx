@@ -192,6 +192,7 @@ export default function VendorChallanForm() {
         });
     } catch (error) {
       console.error("Error submitting form:", error);
+      alert(error);
     }
   };
   const [vendors, setVendors] = useState<vendorDetail[] | null>(null);
