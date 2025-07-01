@@ -1,7 +1,7 @@
 import { getDebitNote } from "@/action/note";
 import "./style.css";
 import { format } from "date-fns";
-import ToWords from "to-words";
+import { ToWords } from "to-words";
 import { getStateCode } from "@/utility/getStateCode";
 import EditButton from "../../_components/editButton";
 import PrintButton from "../../_components/printButton";
@@ -10,7 +10,7 @@ interface pageProps {
     id: string;
   }>;
 }
-const toWords = new ToWords.ToWords({
+const toWords = new ToWords({
   localeCode: "en-IN",
   converterOptions: {
     currency: true,
