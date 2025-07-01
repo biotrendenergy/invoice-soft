@@ -30,4 +30,7 @@ export const slipDetailsSchema = z.object({
   tareWeight: z.string(),
   netWeight: z.string(),
   weightDiff: z.string(),
+  bteChallanNo: z.string()
+
+
 });

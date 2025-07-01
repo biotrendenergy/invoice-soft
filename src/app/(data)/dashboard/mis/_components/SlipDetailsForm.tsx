@@ -69,8 +69,8 @@ const FileUploadModal = ({
   const [slipFile, setSlipFile] = useState<null | File>(null);
   const [ocr, setOcr] = useState<null | ocr>(null);
   return (
-    open ?? (
-      <dialog open={open} className="modal">
+    open && (
+      <dialog open className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg mb-4">Upload Files</h3>
           <div className="flex flex-col gap-4">
@@ -158,14 +158,38 @@ export default function SlipDetailsForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setValue,
+    getValues,
   } = useForm<SlipDetailsFormValues>({
     resolver: zodResolver(slipDetailsSchema),
   });
   const [modalOpen, setModalOpen] = useState(true);
-  const onSubmit = (data: SlipDetailsFormValues) =>
-    console.log("Slip data", data);
+  const onSubmit = async (data: SlipDetailsFormValues) => {
+    console.log("Form submitted:", data);
+    try {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "text/plain;charset=utf-8");
+
+      const raw = JSON.stringify({
+        type: "S",
+        data,
+        sheetURl:
+          "https://docs.google.com/spreadsheets/d/1ogzjBE0ne8v4UXRaH0kDxcE_-A6evO4XGAgKwrLW8bg/edit?usp=sharing",
+      });
+
+      await fetch(process.env.NEXT_PUBLIC_GS_URL ?? "", {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      })
+        .then((data) => data.json())
+        .then((data) => console.log("Response data:", data));
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
   const [ocr, setOcr] = useState<ocr[]>();
   const [ocrData, setOcrData] = useState<ocr>();
   useEffect(() => {
@@ -173,6 +197,9 @@ export default function SlipDetailsForm() {
       setOcr(await getAllOcr());
     })();
   }, []);
+  useEffect(() => {
+    setValue("bteChallanNo", ocrData?.challan ?? "");
+  }, [ocrData]);
 
   return (
     <>
@@ -235,14 +262,20 @@ export default function SlipDetailsForm() {
           inputClass="input"
         />
 
-        <button type="submit" className="btn btn-primary col-span-full mt-4">
-          Submit
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="btn btn-primary col-span-full mt-4"
+        >
+          {isSubmitting ? "Processing" : "Submit"}
         </button>
-        <Link href={"/debit-note/id"} target="__black">
-          <button type="button" className="btn btn-active">
-            create Debit note
-          </button>
-        </Link>
+        {Number(getValues("weightDiff")) != 0 && (
+          <Link href={"/debit-note/id"} target="__black">
+            <button type="button" className="btn btn-active">
+              create Debit note
+            </button>
+          </Link>
+        )}
       </form>
       <FileUploadModal
         selectOcrData={setOcrData}

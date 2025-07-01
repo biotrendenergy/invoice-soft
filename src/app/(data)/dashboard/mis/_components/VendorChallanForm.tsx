@@ -122,7 +122,8 @@ export default function VendorChallanForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
+
     setValue,
   } = useForm<VendorChallanFormValues>({
     resolver: zodResolver(vendorChallanSchema),
@@ -169,20 +170,24 @@ export default function VendorChallanForm() {
   const onSubmit = async (data: VendorChallanFormValues) => {
     console.log("Form submitted:", data);
     try {
-      const url =
-        "https://script.google.com/macros/s/AKfycbytf3rPFnhfBqDH-HvL6Xhduo0UmdA5zW7ySUCR1ZyU4MlJ1VQXKbn48z7pDBAwK7w3Lg/exec";
-      const response = await fetch(url, {
-        method: "POST",
-        mode: "no-cors",
-        cache: "no-cache",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        redirect: "follow",
-        body: JSON.stringify(data),
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "text/plain;charset=utf-8");
+
+      const raw = JSON.stringify({
+        type: "V",
+        data: { ...data, status: ocrData?.delivery_status },
+        sheetURl:
+          "https://docs.google.com/spreadsheets/d/1ogzjBE0ne8v4UXRaH0kDxcE_-A6evO4XGAgKwrLW8bg/edit?usp=sharing",
       });
 
-      console.log("Response data:", response.json());
+      await fetch(process.env.NEXT_PUBLIC_GS_URL ?? "", {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      })
+        .then((data) => data.json())
+        .then((data) => console.log("Response data:", data));
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -193,6 +198,8 @@ export default function VendorChallanForm() {
       setVendors(await getAllVendor());
     })();
   }, []);
+  console.log(errors);
+
   return (
     <>
       <button className="btn btn-accent" onClick={() => setModalOpen(true)}>
@@ -352,8 +359,12 @@ export default function VendorChallanForm() {
           error={errors.biomeChallanNo}
           inputClass="input"
         />
-        <button type="submit" className="btn btn-primary col-span-full mt-4">
-          Submit
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="btn btn-primary col-span-full mt-4"
+        >
+          {isSubmitting ? "Possessing..." : "Submit"}
         </button>
       </form>
 
