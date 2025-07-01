@@ -1,12 +1,15 @@
 import { useForm, UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { slipDetailsSchema } from "../_utils/schema";
+import { DebitNoteFormValues, slipDetailsSchema } from "../_utils/schema";
 import type { z } from "zod";
 import { Field } from "./Field";
 import { useEffect, useState } from "react";
 import { extractData_slipData, getAllOcr, getFilePart } from "@/action/ocr";
 import Link from "next/link";
-import { ocr } from "@/generated/prisma";
+import { companyDetail, ocr } from "@/generated/prisma";
+import { toast } from "sonner";
+import { CreateDebitNoteModal } from "./CreateDebitNoteModal";
+import { createDebitNote } from "@/action/note";
 function getDurationInWords(
   date_in: string,
   date_out: string,
@@ -60,8 +63,8 @@ const FileUploadModal = ({
 }: {
   open: boolean;
   onClose: () => void;
-  ocrData: ocr[] | undefined;
-  selectOcrData: React.Dispatch<React.SetStateAction<ocr | undefined>>;
+  ocrData: Awaited<ReturnType<typeof getAllOcr>> | undefined;
+  selectOcrData: React.Dispatch<React.SetStateAction<Ocr | undefined>>;
   setValue: UseFormSetValue<z.infer<typeof slipDetailsSchema>>;
 }) => {
   if (!open) return null;
@@ -79,12 +82,16 @@ const FileUploadModal = ({
               className="select select-bordered"
               defaultValue=""
               onChange={(v) => {
-                selectOcrData(
-                  ocrData.filter((xx) => xx.id == Number(v.target.value))[0]
+                const selected = ocrData.find(
+                  (xx) =>
+                    xx.id === Number(v.target.value) && xx.company !== null
                 );
-                setOcr(
-                  ocrData.filter((xx) => xx.id == Number(v.target.value))[0]
-                );
+                if (selected && selected.company) {
+                  // Type assertion is safe here because of the check above
+                  selectOcrData(selected as Ocr);
+                } else {
+                  selectOcrData(undefined);
+                }
               }}
             >
               <option value="" disabled>
@@ -154,12 +161,17 @@ const FileUploadModal = ({
     )
   );
 };
+
+interface Ocr extends ocr {
+  company: companyDetail;
+}
 export default function SlipDetailsForm() {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setValue,
+    watch,
     getValues,
   } = useForm<SlipDetailsFormValues>({
     resolver: zodResolver(slipDetailsSchema),
@@ -174,8 +186,7 @@ export default function SlipDetailsForm() {
       const raw = JSON.stringify({
         type: "S",
         data,
-        sheetURl:
-          "https://docs.google.com/spreadsheets/d/1ogzjBE0ne8v4UXRaH0kDxcE_-A6evO4XGAgKwrLW8bg/edit?usp=sharing",
+        sheetURl: sheetUrl,
       });
 
       await fetch(process.env.NEXT_PUBLIC_GS_URL ?? "", {
@@ -185,13 +196,17 @@ export default function SlipDetailsForm() {
         redirect: "follow",
       })
         .then((data) => data.json())
-        .then((data) => console.log("Response data:", data));
+        .then((data) => {
+          alert(data.massage ?? data.message);
+        });
     } catch (error) {
       console.error("Error submitting form:", error);
     }
   };
-  const [ocr, setOcr] = useState<ocr[]>();
-  const [ocrData, setOcrData] = useState<ocr>();
+  const [ocr, setOcr] = useState<Awaited<ReturnType<typeof getAllOcr>>>();
+  const [ocrData, setOcrData] = useState<Ocr>();
+  const [sheetUrl, setSheetUrl] = useState<string | null>(null);
+
   useEffect(() => {
     (async () => {
       setOcr(await getAllOcr());
@@ -201,6 +216,48 @@ export default function SlipDetailsForm() {
     setValue("bteChallanNo", ocrData?.challan ?? "");
   }, [ocrData]);
 
+  useEffect(() => {
+    if (!ocrData) {
+      return;
+    }
+    if (ocrData?.company.sheetUrl == null) {
+      toast.warning(`${ocrData?.company.name} does not have a sheet URL.`);
+    }
+    setSheetUrl(ocrData?.company.sheetUrl ?? null);
+  }, [ocrData]);
+
+  const handleDebitNoteSubmit = (noteData: DebitNoteFormValues) => {
+    console.log("Debit note data:", noteData);
+    createDebitNote({
+      reference_challan: noteData.referenceChallan,
+      party_challan: noteData.partyChallan,
+      bte_challan: noteData.bteChallan,
+      venderChallan: noteData.vendorChallan,
+      rate: noteData.rate,
+      quntity: noteData.quantity,
+      amount: noteData.amount,
+      sgst: noteData.sgst ?? 0,
+      cgst: noteData.cgst ?? 0,
+      isIgst: noteData.isIgst ?? false,
+      igst: noteData.igst ?? 0,
+      billTo: {
+        connect: {
+          id: noteData.vendorDetailId,
+        },
+      },
+      shipTo: {
+        connect: {
+          id: noteData.companyDetailId,
+        },
+      },
+    }).then((data) => {
+      console.log(data);
+
+      // handle success
+    });
+    // You can post this to an API or store it as needed
+  };
+  const [showDebitModal, setShowDebitModal] = useState(false);
   return (
     <>
       <button className="btn btn-accent" onClick={() => setModalOpen(true)}>
@@ -269,14 +326,31 @@ export default function SlipDetailsForm() {
         >
           {isSubmitting ? "Processing" : "Submit"}
         </button>
-        {Number(getValues("weightDiff")) != 0 && (
-          <Link href={"/debit-note/id"} target="__black">
-            <button type="button" className="btn btn-active">
-              create Debit note
+
+        {watch("weightDiff") &&
+          parseInt(getValues("weightDiff")) !== 0 &&
+          !isNaN(parseInt(getValues("weightDiff"))) && (
+            <button
+              type="button"
+              className="btn btn-active"
+              onClick={() => setShowDebitModal(true)}
+            >
+              Create Debit Note
             </button>
-          </Link>
-        )}
+          )}
       </form>
+      <CreateDebitNoteModal
+        open={showDebitModal}
+        onClose={() => setShowDebitModal(false)}
+        onSubmit={handleDebitNoteSubmit}
+        defaultValues={{
+          bteChallan: getValues("bteChallanNo"),
+          quantity: parseInt(getValues("weightDiff")),
+
+          // rate: 1, // set default or calculate
+        }}
+        // you can add vendor info if available
+      />
       <FileUploadModal
         selectOcrData={setOcrData}
         open={modalOpen}

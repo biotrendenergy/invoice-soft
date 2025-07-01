@@ -152,6 +152,9 @@ export default function VendorChallanForm() {
   }, []);
 
   useEffect(() => {
+    if (!ocrData) {
+      return;
+    }
     if (ocrData?.company.sheetUrl == null) {
       toast.warning(`${ocrData?.company.name} does not have a sheet URL.`);
     }

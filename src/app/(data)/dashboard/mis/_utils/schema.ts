@@ -34,3 +34,21 @@ export const slipDetailsSchema = z.object({
 
 
 });
+
+export const debitNoteSchema = z.object({
+  bteChallan: z.string().min(1),
+  referenceChallan: z.string().min(1),
+  partyChallan: z.string().min(1),
+  vendorChallan: z.string().min(1),
+  rate: z.coerce.number().min(0.01),
+  quantity: z.coerce.number().min(1),
+  amount: z.coerce.number(),
+  sgst: z.coerce.number().min(0).optional(),
+  cgst: z.coerce.number().min(0).optional(),
+  isIgst: z.boolean().optional(),
+  igst: z.coerce.number().optional(),
+  companyDetailId: z.coerce.number().min(1),
+  vendorDetailId: z.coerce.number().min(1),
+});
+
+export type DebitNoteFormValues = z.infer<typeof debitNoteSchema>;

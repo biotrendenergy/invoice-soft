@@ -93,6 +93,7 @@ model debitNote {
   venderChallan     String
   createAt          DateTime      @default(now())
   isIgst            Boolean
+  igst              Float
   sgst              Float
   cgst              Float
   rate              Int
