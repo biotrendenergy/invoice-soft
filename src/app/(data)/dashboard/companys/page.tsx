@@ -40,6 +40,7 @@ const companySchema = z.object({
   shipping_gstNo: z.string().min(2, "Shipping GST number is required"),
   stringNumber: z.string().min(1, "String number is required"),
   PONumber: z.string().min(1, "PO Number is required"),
+  sheetUrl: z.string().min(1, "PO Number is required"),
 });
 
 type CompanyFormData = z.infer<typeof companySchema>;
@@ -84,6 +85,7 @@ export default function CompanyTable() {
             shipping_gstNo: company.shipping_gstNo,
             stringNumber: company.stringNumber,
             PONumber: company.PONumber,
+            sheetUrl: company.sheetUrl ?? "",
           }
         : {
             shotName: "",
@@ -119,7 +121,9 @@ export default function CompanyTable() {
       shippingState: data.shippingState,
       shipping_gstNo: data.shipping_gstNo,
       stringNumber: data.stringNumber,
-    };
+      PONumber: data.PONumber,
+      sheetUrl: data.sheetUrl,
+    } as companyDetail;
 
     if (isEditing && selectedCompany) {
       await updateCompany(selectedCompany.id, payload);
@@ -173,6 +177,7 @@ export default function CompanyTable() {
               <th>Shipping GST No</th>
               <th>BTE challan series</th>
               <th>Po Number</th>
+              <th>Sheet Url</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -189,6 +194,14 @@ export default function CompanyTable() {
                 <td>{company.shipping_gstNo}</td>
                 <td>{company.stringNumber}</td>
                 <td>{company.PONumber}</td>
+                <td>
+                  <a
+                    href={company.sheetUrl ?? ""}
+                    target={`_blank_${company.id}`}
+                  >
+                    Link
+                  </a>
+                </td>
                 <td>
                   <div className="flex gap-2">
                     <button
@@ -236,6 +249,7 @@ export default function CompanyTable() {
                 { name: "shippingState", label: "Shipping State" },
                 { name: "shipping_gstNo", label: "Shipping GST Number" },
                 { name: "stringNumber", label: "String Number" },
+                { name: "sheetUrl", label: "sheet URL" },
                 { name: "PONumber", label: "Po Number" },
               ].map(({ name, label }) => (
                 <div key={name} className="form-control">
