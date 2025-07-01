@@ -187,7 +187,9 @@ export default function VendorChallanForm() {
         redirect: "follow",
       })
         .then((data) => data.json())
-        .then((data) => console.log("Response data:", data));
+        .then((data) => {
+          alert(data.message);
+        });
     } catch (error) {
       console.error("Error submitting form:", error);
     }
