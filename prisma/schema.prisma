@@ -68,13 +68,15 @@ model companyDetail {
   PONumber        String  @default("")
   sheetUrl        String?
 
-  ocr ocr[]
+  ocr       ocr[]
+  debitNote debitNote[]
 }
 
 model vendorDetail {
-  id   Int    @id @default(autoincrement())
-  name String
-  ocr  ocr[]
+  id        Int         @id @default(autoincrement())
+  name      String
+  ocr       ocr[]
+  debitNote debitNote[]
 }
 
 model mis {
@@ -84,7 +86,22 @@ model mis {
 }
 
 model debitNote {
-  id Int @id @default(autoincrement())
+  id                Int           @id @default(autoincrement())
+  reference_challan String
+  party_challan     String
+  bte_challan       String
+  venderChallan     String
+  createAt          DateTime      @default(now())
+  isIgst            Boolean
+  sgst              Float
+  cgst              Float
+  rate              Int
+  quntity           Int
+  amount            Float
+  shipTo            companyDetail @relation(fields: [companyDetailId], references: [id])
+  billTo            vendorDetail  @relation(fields: [vendorDetailId], references: [id])
+  companyDetailId   Int
+  vendorDetailId    Int
 }
 
 model media {

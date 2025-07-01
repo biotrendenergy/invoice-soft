@@ -191,8 +191,7 @@ export default function VendorChallanForm() {
       const raw = JSON.stringify({
         type: "V",
         data: { ...data, status: ocrData?.delivery_status },
-        sheetURl:
-          "https://docs.google.com/spreadsheets/d/1ogzjBE0ne8v4UXRaH0kDxcE_-A6evO4XGAgKwrLW8bg/edit?usp=sharing",
+        sheetURl: sheetUrl,
       });
 
       await fetch(process.env.NEXT_PUBLIC_GS_URL ?? "", {
