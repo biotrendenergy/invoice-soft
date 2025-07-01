@@ -227,6 +227,9 @@ export default function VendorChallanForm() {
               </option>
             ))}
           </select>
+          {errors.vendorName && (
+            <p className="text-error">{errors.vendorName.message}</p>
+          )}
         </div>
         <Field
           label="Vendor Challan Date"
