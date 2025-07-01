@@ -188,7 +188,7 @@ export default function VendorChallanForm() {
       })
         .then((data) => data.json())
         .then((data) => {
-          alert(data.message);
+          alert(data.massage ?? data.message);
         });
     } catch (error) {
       console.error("Error submitting form:", error);
