@@ -4,7 +4,8 @@ import { vendorChallanSchema } from "../_utils/schema";
 import type { z } from "zod";
 import { Field } from "./Field";
 import { useEffect, useState } from "react";
-import { ocr, vendorDetail } from "@/generated/prisma";
+import { companyDetail, ocr, Prisma } from "@/generated/prisma";
+import { vendorDetail } from "@/generated/prisma";
 import { extractData_msi, getAllOcr, getFilePart } from "@/action/ocr";
 import { toast } from "sonner";
 import { getAllVendor } from "@/action/vendores";
@@ -12,6 +13,11 @@ const convertToHtmlDate = (dateStr: string) => {
   const [day, month, year] = dateStr.split("-");
   return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 };
+
+interface Ocr extends ocr {
+  company: companyDetail;
+}
+
 const FileUploadModal = ({
   open,
   onClose,
@@ -21,8 +27,8 @@ const FileUploadModal = ({
 }: {
   open: boolean;
   onClose: () => void;
-  ocrData: ocr[] | undefined;
-  selectOcrData: React.Dispatch<React.SetStateAction<ocr | undefined>>;
+  ocrData: Awaited<ReturnType<typeof getAllOcr>> | undefined;
+  selectOcrData: React.Dispatch<React.SetStateAction<Ocr | undefined>>;
   setValue: UseFormSetValue<z.infer<typeof vendorChallanSchema>>;
 }) => {
   if (!open) return null;
@@ -62,11 +68,18 @@ const FileUploadModal = ({
             <select
               className="select select-bordered"
               defaultValue=""
-              onChange={(v) =>
-                selectOcrData(
-                  ocrData.filter((xx) => xx.id == Number(v.target.value))[0]
-                )
-              }
+              onChange={(v) => {
+                const selected = ocrData.find(
+                  (xx) =>
+                    xx.id === Number(v.target.value) && xx.company !== null
+                );
+                if (selected && selected.company) {
+                  // Type assertion is safe here because of the check above
+                  selectOcrData(selected as Ocr);
+                } else {
+                  selectOcrData(undefined);
+                }
+              }}
             >
               <option value="" disabled>
                 Select Challan
@@ -123,21 +136,23 @@ export default function VendorChallanForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-
     setValue,
   } = useForm<VendorChallanFormValues>({
     resolver: zodResolver(vendorChallanSchema),
   });
 
   const [modalOpen, setModalOpen] = useState(true);
-  const [ocr, setOcr] = useState<ocr[]>();
-  const [ocrData, setOcrData] = useState<ocr>();
+  const [sheetUrl, setSheetUrl] = useState<string | null>(null);
+  const [ocr, setOcr] = useState<Awaited<ReturnType<typeof getAllOcr>>>();
+  const [ocrData, setOcrData] = useState<Ocr>();
   useEffect(() => {
     (async () => {
       setOcr(await getAllOcr());
     })();
   }, []);
+
   useEffect(() => {
+    setSheetUrl(ocrData?.company.sheetUrl ?? null);
     const data = localStorage.getItem(`data_for_mis_${ocrData?.id}`);
 
     if (!data) {
@@ -152,9 +167,6 @@ export default function VendorChallanForm() {
     setValue("tareWeight", ocrData?.tare_weight.toString() ?? "");
     setValue("vehicleNo", ocrData?.vehicle_number.toString() ?? "");
     setValue("netWeightVendor", ocrData?.A_weight.toString() ?? "");
-    // setValue('',ocrData?.gross_weight.toString() ?? "");
-    // setValue("grossWeight", ocrData?.gross_weight.toString() ?? "");
-    // setValue("grossWeight", ocrData?.gross_weight.toString() ?? "");
     setValue("bteChallanNo", ocrData?.challan.toString() ?? "");
     setValue("ewayBillNo", ocrData?.e_way_bill.toString() ?? "");
     setValue("hsnCode", "440110");
@@ -201,7 +213,6 @@ export default function VendorChallanForm() {
       setVendors(await getAllVendor());
     })();
   }, []);
-  console.log(errors);
 
   return (
     <>

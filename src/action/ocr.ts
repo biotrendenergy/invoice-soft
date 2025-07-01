@@ -482,6 +482,9 @@ export async function getAllOcr() {
     orderBy: {
       created_at: "desc",
     },
+    include: {
+      company: true
+    }
   });
 }
 

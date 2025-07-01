@@ -55,7 +55,7 @@ model challan {
 }
 
 model companyDetail {
-  id              Int    @id @default(autoincrement())
+  id              Int     @id @default(autoincrement())
   shotName        String // BTE
   name            String
   billingAddress  String
@@ -65,7 +65,8 @@ model companyDetail {
   shippingAddress String
   shippingState   String
   stringNumber    String
-  PONumber        String @default("")
+  PONumber        String  @default("")
+  sheetUrl        String?
 
   ocr ocr[]
 }
