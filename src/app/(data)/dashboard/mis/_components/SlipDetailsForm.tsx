@@ -252,6 +252,7 @@ export default function SlipDetailsForm() {
       },
     }).then((data) => {
       console.log(data);
+      window.location.href = "/debit-note/" + data.id;
 
       // handle success
     });
