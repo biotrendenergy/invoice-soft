@@ -31,6 +31,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
   const [e_way_bill, setEwayBill] = useState<Number | null>(null);
   const [entryData, setEntryData] = useState<any>(entry);
   const [e_way_bill_date, setEwayBill_date] = useState<Date | null>(null);
+  const [e_way_bill_gst, setEwayBill_gst] = useState<string | null>(null);
   const [invoice, setInvoice] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [companies, setCompanies] = useState<companyDetail[] | null>(null);
@@ -155,6 +156,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                 setEwayBill_date(
                   parseFlexibleDate(eWayBillData.generated_date)
                 );
+                setEwayBill_gst(eWayBillData.gst_no);
                 setLoading(false);
               }}
             />
@@ -200,7 +202,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   date: parseDate(entryData["date"] || new Date()),
                   created_at: new Date(),
                   e_way_bill: (e_way_bill ?? 0).toString(),
-
+                  e_way_bill_gst: e_way_bill_gst ?? "",
                   vendorDetailId: null,
                   companyDetailId: company?.valueOf() ?? null,
                   e_way_bill_date: e_way_bill_date ?? new Date(),
