@@ -2,16 +2,16 @@
 "use server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { signToken, verifyToken } from "@/lib/jwt";
+import { verifyToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
-import { prisma } from "@/lib/db"; // Adjust the import based on your db setup
+// import { prisma } from "@/lib/db"; // Adjust the import based on your db setup
 
 export async function middleware(request: NextRequest) {
   const token = (await cookies()).get("token");
   if (!token) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
-  console.log("Token found:", token.value);
+  // console.log("Token found:", token.value);
 
   const decoded = await verifyToken(token.value);
 
@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
 
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
-  console.log("Token decoded successfully:", decoded);
+  // console.log("Token decoded successfully:", decoded);
 
   //   const userId = (decoded.payload as any).userId;
   //   if (!userId) {
@@ -42,5 +42,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"], // secure routes
+  matcher: ["/dashboard/:path*", "/challan/:path*", "/data/:path*", "/debit-note/:path*"], // secure routes
 };
