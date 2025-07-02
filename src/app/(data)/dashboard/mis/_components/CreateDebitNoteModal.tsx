@@ -20,6 +20,7 @@ export const CreateDebitNoteModal = ({
   onSubmit,
   defaultValues,
 }: Props) => {
+  if (!open) return null;
   const {
     register,
     handleSubmit,
@@ -89,8 +90,6 @@ export const CreateDebitNoteModal = ({
       setValue("amount", parseFloat(total.toFixed(2)));
     }
   }, [rate, quantity, sgst, cgst, setValue]);
-
-  if (!open) return null;
 
   return (
     open && (

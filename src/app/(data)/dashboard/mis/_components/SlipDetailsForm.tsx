@@ -67,12 +67,14 @@ const FileUploadModal = ({
   selectOcrData: React.Dispatch<React.SetStateAction<Ocr | undefined>>;
   setValue: UseFormSetValue<z.infer<typeof slipDetailsSchema>>;
 }) => {
-  if (!open) return null;
+  console.log(open);
+
+  // if (!open) return null;
   if (!ocrData) return null;
   const [slipFile, setSlipFile] = useState<null | File>(null);
   const [ocr, setOcr] = useState<null | ocr>(null);
   return (
-    open && (
+    open == true && (
       <dialog open className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg mb-4">Upload Files</h3>
@@ -176,7 +178,7 @@ export default function SlipDetailsForm() {
   } = useForm<SlipDetailsFormValues>({
     resolver: zodResolver(slipDetailsSchema),
   });
-  const [modalOpen, setModalOpen] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
   const onSubmit = async (data: SlipDetailsFormValues) => {
     console.log("Form submitted:", data);
     try {
