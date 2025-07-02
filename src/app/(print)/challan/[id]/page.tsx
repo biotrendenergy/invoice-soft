@@ -1266,7 +1266,8 @@ const page = async ({ params }: pageProps) => {
               <td className="s0"></td>
               <td className="s4"></td>
               <td className="s4" colSpan={6}>
-                1) 24 % interest will be charged on invoice not paid within
+                1) 24 % interest will be charged on invoice not paid <br />
+                within 30 days from the date invoice
               </td>
               <td className="s0"></td>
               <td className="s0"></td>
@@ -1291,7 +1292,7 @@ const page = async ({ params }: pageProps) => {
               <td className="s0"></td>
               <td className="s4"></td>
               <td className="s4" colSpan={6}>
-                2) Goods once sold will not be taken back or exchanged.
+                2) Goods once sold will not be taken back <br /> or exchanged.
               </td>
               <td className="s0"></td>
               <td className="s0"></td>
@@ -1316,8 +1317,8 @@ const page = async ({ params }: pageProps) => {
               <td className="s0"></td>
               <td className="s4"></td>
               <td className="s4" colSpan={6}>
-                3) Our responsibility ceases soon after the goods leave from our
-                premises
+                3) Our responsibility ceases soon after the goods leave <br />{" "}
+                from our premises
               </td>
               <td className="s0"></td>
               <td className="s0"></td>
