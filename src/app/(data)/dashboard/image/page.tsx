@@ -86,6 +86,7 @@ const page = () => {
       const ocrPayload = {
         A_weight: b_weight == tare ? 0 : a_weight,
         B_weight: b_weight == tare ? 0 : b_weight,
+        e_way_bill_gst: data.e_way_bill_gst,
         gross_weight: gross,
         tare_weight: tare,
         net_weight: net_weight,
@@ -174,6 +175,7 @@ const page = () => {
         setValue("e_wayBill", e.target.files[0]);
         const e_way_bill_data = await extractEWayBill_withIn(dataPart);
         setValue("e_wayBill_data", Number(e_way_bill_data.EWayBillNumber));
+        setValue("e_way_bill_gst", e_way_bill_data.gst_no);
         setValue(
           "e_wayBill_date",
           parseFlexibleDate(e_way_bill_data.generated_date) ?? new Date()

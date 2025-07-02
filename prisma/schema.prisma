@@ -41,6 +41,7 @@ model ocr {
   created_at      DateTime       @default(now())
   e_way_bill      String         @default("")
   e_way_bill_date DateTime       @default(now())
+  e_way_bill_gst  String         @default("")
   vendor          vendorDetail?  @relation(fields: [vendorDetailId], references: [id])
   vendorDetailId  Int?
   company         companyDetail? @relation(fields: [companyDetailId], references: [id])
