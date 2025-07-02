@@ -88,9 +88,12 @@ const FileUploadModal = ({
                   (xx) =>
                     xx.id === Number(v.target.value) && xx.company !== null
                 );
+                console.log(selected);
+
                 if (selected && selected.company) {
                   // Type assertion is safe here because of the check above
                   selectOcrData(selected as Ocr);
+                  setOcr(selected);
                 } else {
                   selectOcrData(undefined);
                 }
@@ -140,6 +143,8 @@ const FileUploadModal = ({
                       data.time_out
                     )
                   );
+                  console.log(data.net_weight, ocr);
+
                   setValue(
                     "weightDiff",
                     Math.abs(
