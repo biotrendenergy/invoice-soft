@@ -1221,8 +1221,9 @@ const page = async ({ params }: pageProps) => {
               <td className="s0"></td>
               <td className="s4"></td>
               <td className="s33" colSpan={6}>
-                Certified that the particulars given above are true and correct
-                and
+                Certified that the particulars given above are true and <br />{" "}
+                correct and the amount represents the price actully charged from
+                the buyer...
               </td>
               <td className="s15" colSpan={6}></td>
               <td className="s0"></td>

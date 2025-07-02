@@ -40,5 +40,6 @@ export const StateData = {
 };
 
 export const getStateCode = (state: keyof typeof StateData) => {
-  return StateData[state].toString().padStart(2, "0");
+
+  return StateData[state] ? StateData[state].toString().padStart(2, "0") : "";
 };
