@@ -237,9 +237,9 @@ export default function SlipDetailsForm() {
     console.log("Debit note data:", noteData);
     createDebitNote({
       reference_challan: noteData.referenceChallan,
-      party_challan: noteData.partyChallan,
+      party_challan: noteData.partyChallan ?? "",
       bte_challan: noteData.bteChallan,
-      venderChallan: noteData.vendorChallan,
+      venderChallan: noteData.vendorChallan ?? "",
       rate: noteData.rate,
       quntity: noteData.quantity,
       amount: noteData.amount,
@@ -354,6 +354,10 @@ export default function SlipDetailsForm() {
         defaultValues={{
           bteChallan: getValues("bteChallanNo"),
           quantity: parseInt(getValues("weightDiff")),
+          companyDetailId: ocrData?.company.id,
+          partyChallan: ocrData?.challan,
+          referenceChallan: ocrData?.challan,
+          vendorChallan: ocrData?.challan,
 
           // rate: 1, // set default or calculate
         }}

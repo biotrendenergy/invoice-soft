@@ -35,6 +35,8 @@ const page = async ({ params }: pageProps) => {
   if (!data) {
     return "Null";
   }
+  const amount_with_out_tex =
+    data.amount - (data.amount / data.sgst + data.amount / data.cgst);
   return (
     <div>
       <div className="bts">
@@ -619,7 +621,7 @@ const page = async ({ params }: pageProps) => {
                 KG
               </td>
               <td className="s12" dir="ltr" colSpan={2}>
-                {data.amount / (data.sgst + data.cgst)}
+                {data.amount}
               </td>
             </tr>
             <tr style={{ height: 20 }}>
@@ -744,9 +746,11 @@ const page = async ({ params }: pageProps) => {
               <td className="s2" />
               <td className="s12" colSpan={2}>
                 {data.amount * (data.cgst / 100) +
+                  data.amount * (data.igst / 100) +
                   data.amount * (data.sgst / 100) -
                   Math.floor(
                     data.amount * (data.sgst / 100) +
+                      data.amount * (data.igst / 100) +
                       data.amount * (data.cgst / 100)
                   )}
               </td>
@@ -1054,7 +1058,16 @@ const page = async ({ params }: pageProps) => {
               <td className="s5" />
               <td className="s5" />
               <td className="s14" dir="ltr" colSpan={2}>
-                {data.amount}
+                {Math.floor(
+                  data.isIgst
+                    ? data.amount * (data.igst / 100) +
+                        data.amount +
+                        data.amount * (data.sgst / 100) +
+                        data.amount * (data.cgst / 100)
+                    : data.amount +
+                        data.amount * (data.sgst / 100) +
+                        data.amount * (data.cgst / 100)
+                )}
               </td>
             </tr>
             <tr style={{ height: 20 }}>
@@ -1089,7 +1102,18 @@ const page = async ({ params }: pageProps) => {
               </th>
               <td className="s1" />
               <td className="s8" dir="ltr" colSpan={5}>
-                {toWords.convert(data.amount)}
+                {toWords.convert(
+                  Math.floor(
+                    data.isIgst
+                      ? data.amount * (data.igst / 100) +
+                          data.amount +
+                          data.amount * (data.sgst / 100) +
+                          data.amount * (data.cgst / 100)
+                      : data.amount +
+                          data.amount * (data.sgst / 100) +
+                          data.amount * (data.cgst / 100)
+                  )
+                )}
               </td>
             </tr>
             <tr style={{ height: 20 }}>

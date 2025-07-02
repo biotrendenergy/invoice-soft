@@ -21,6 +21,8 @@ export const CreateDebitNoteModal = ({
   defaultValues,
 }: Props) => {
   if (!open) return null;
+  console.log(defaultValues);
+
   const {
     register,
     handleSubmit,
@@ -33,6 +35,8 @@ export const CreateDebitNoteModal = ({
     resolver: zodResolver(debitNoteSchema),
     defaultValues,
   });
+
+  console.log(watch("companyDetailId"));
 
   const [vendors, setVendors] = useState<vendorDetail[]>([]);
   const [companies, setCompanies] = useState<companyDetail[]>([]);
@@ -64,32 +68,10 @@ export const CreateDebitNoteModal = ({
       reset(defaultValues);
     }
   }, [defaultValues, reset]);
-  const sgst = watch("sgst");
-  const cgst = watch("cgst");
 
   useEffect(() => {
-    const r = Number(rate);
-    const q = Number(quantity);
-    const s = Number(sgst);
-    const c = Number(cgst);
-
-    if (!isNaN(r) && !isNaN(q)) {
-      const base = r * q;
-      const tax = (base * (s + c)) / 100;
-      const total = base + tax;
-      setValue("amount", parseFloat(total.toFixed(2)));
-    }
-  }, [rate, quantity, sgst, cgst, setValue]);
-  useEffect(() => {
-    if (!sgst || !cgst) return;
-    const base = rate * quantity;
-    const tax = (base * (sgst + cgst)) / 100;
-    const total = base + tax;
-
-    if (!isNaN(total)) {
-      setValue("amount", parseFloat(total.toFixed(2)));
-    }
-  }, [rate, quantity, sgst, cgst, setValue]);
+    setValue("amount", getValues("quantity") * getValues("rate"));
+  }, [setValue, watch("rate")]);
 
   return (
     open && (
@@ -110,7 +92,11 @@ export const CreateDebitNoteModal = ({
               >
                 <option value="">Select Company</option>
                 {companies.map((c) => (
-                  <option key={c.id} value={c.id}>
+                  <option
+                    key={c.id}
+                    selected={c.id == defaultValues?.companyDetailId}
+                    value={c.id}
+                  >
                     {c.name}
                   </option>
                 ))}
@@ -234,7 +220,9 @@ export const CreateDebitNoteModal = ({
 
             {/* Amount (auto-calculated) */}
             <div>
-              <label className="label font-semibold">Amount</label>
+              <label className="label font-semibold">
+                Amount (without tex)
+              </label>
               <input
                 type="number"
                 {...register("amount")}
@@ -274,7 +262,7 @@ export const CreateDebitNoteModal = ({
               )}
             </div>
             {/* {watch("isIgst")?.valueOf()} */}
-            {getValues("isIgst") == true && (
+            {watch("isIgst") && getValues("isIgst") == true && (
               <div>
                 <label className="label font-semibold">IGST %</label>
                 <input
