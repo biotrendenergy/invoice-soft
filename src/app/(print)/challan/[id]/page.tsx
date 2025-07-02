@@ -11,6 +11,7 @@ interface pageProps {
 const page = async ({ params }: pageProps) => {
   const { id } = await params;
   const data = await getOcr(Number(id));
+  if (!data) return "challan not found";
   // console.log(data);
 
   return (
