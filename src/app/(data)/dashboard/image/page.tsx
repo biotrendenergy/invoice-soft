@@ -53,6 +53,7 @@ const page = () => {
   }, [errors, isValid]);
   const onSubmit = async (data: formType) => {
     console.log(data);
+    setLoading(true);
 
     if (!data.net_file) {
       setError("net_file", { message: "Net image not uploaded" });
@@ -557,7 +558,7 @@ const page = () => {
                       type="file"
                       disabled={
                         loading ||
-                        getValues("multi_file") == undefined ||
+                        getValues("multi_file") !== undefined ||
                         getValues("e_wayBill") == undefined ||
                         getValues("tar_file") == undefined
                       }
@@ -604,7 +605,7 @@ const page = () => {
                       // value={getValues("gross_file")?.name || ""} // Display file name
                       disabled={
                         loading ||
-                        getValues("multi_file") == undefined ||
+                        getValues("multi_file") !== undefined ||
                         getValues("e_wayBill") == undefined ||
                         getValues("tar_file") == undefined ||
                         getValues("net_file") == undefined

@@ -11,6 +11,8 @@ interface pageProps {
 const page = async ({ params }: pageProps) => {
   const { id } = await params;
   const data = await getOcr(Number(id));
+  // console.log(data);
+
   return (
     <div>
       <div className="bts">
@@ -307,7 +309,7 @@ const page = async ({ params }: pageProps) => {
                 State
               </td>
               <td className="s16" colSpan={3} rowSpan={2}>
-                {data?.company?.billingState}
+                {data?.company?.shippingState}
               </td>
               <td className="s17" colSpan={2} rowSpan={2}>
                 Code
@@ -332,7 +334,7 @@ const page = async ({ params }: pageProps) => {
               <td className="s0"></td>
               <td className="s4"></td>
               <td className="s18" colSpan={4} rowSpan={3}>
-                {data?.company?.billingAddress}
+                {data?.company?.shippingAddress}
               </td>
               <td className="s0"></td>
               <td className="s3"></td>
@@ -571,7 +573,7 @@ const page = async ({ params }: pageProps) => {
                 GSTIN No. :
               </td>
               <td className="s13" colSpan={2}>
-                {data?.company?.shipping_gstNo}
+                {data?.company?.billing_gstNo}
               </td>
               <td className="s15" colSpan={8} rowSpan={2}></td>
               <td className="s0"></td>
