@@ -40,7 +40,7 @@ const companySchema = z.object({
   shipping_gstNo: z.string().min(2, "Shipping GST number is required"),
   stringNumber: z.string().min(1, "String number is required"),
   PONumber: z.string().min(1, "PO Number is required"),
-  sheetUrl: z.string().min(1, "PO Number is required"),
+  sheetUrl: z.string().min(1, "sheet url is required"),
 });
 
 type CompanyFormData = z.infer<typeof companySchema>;
