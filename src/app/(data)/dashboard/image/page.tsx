@@ -34,6 +34,7 @@ const page = () => {
     getValues,
     resetField,
     reset,
+    watch,
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -393,6 +394,8 @@ const page = () => {
         setError("gross_file", {
           message: "",
         });
+        console.log(gross_data);
+
         setValue("gross_data", gross_data);
         setLoading(false);
         return;

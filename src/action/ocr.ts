@@ -40,32 +40,91 @@ export async function deleteMultipleOCR(ids: number[]) {
   }
 }
 const PROMPT = `
-Image Data Extraction Prompt
+**🖼️ Image Data Extraction Prompt (GPS Camera Format)**
 
-You are given three images.
+You are provided with an image that contains logistics or shipment data, including a **weighing machine display** and a **GPS Camera overlay**.
 
-Props to extract:
-- weight (Int)
-- vehicle_number (String)
-- address (String)
-- map_url (Google Maps URL)
-- latitude (float)
-- longitude (float)
-- date (DateTime)
+---
 
-Example JSON output:
+### **🔍 Your task is to extract the following fields:**
 
+---
+
+#### **1. weight**
+
+* A large numeric value displayed on the **scaling (weighing) machine screen**.
+* Typically **5 to 6 digits**, **no units** displayed.
+* Extract only the **numeric part**, as an **integer**.
+
+---
+
+#### **2. vehicle_number**
+
+* An Indian vehicle registration number.
+* Common format: \`CG10BV0674\`, \`MH - 12AB - 1234\`, etc.
+* Appears near or after:
+
+  * \`Note: \`, \`Vehicle No: \`, \`Truck No: \`
+  * Or may appear in free text near the GPS box.
+
+---
+
+#### **3. address**
+
+* A complete textual address from the **GPS overlay section**.
+* Often appears at the top of the overlay.
+* May include: street/road name, locality, city, state, pin code, country.
+
+---
+
+#### **4. map_url**
+
+* Construct a valid **Google Maps URL** using extracted latitude and longitude.
+* Format:
+
+  * \`https://maps.google.com/?q=<latitude>,<longitude>\`
+
+---
+
+#### ** 5. latitude ** & ** 6. longitude **
+
+* Extract these from the ** GPS overlay **.
+* Format: float numbers.
+* Appear as:
+
+  * \`Latitude: 22.936331\`
+  * \`Longitude: 78.846788\`
+
+---
+
+#### ** 7. date **
+
+* Appears in the ** GPS overlay ** under\`Date\`.
+* Convert the date and time(GMT) to ** ISO 8601 UTC format **.
+* Format: \`"YYYY-MM-DDTHH:MM:SSZ"\`
+
+  * Example: \`07-05-2025 GMT 10:18:15 AM\` → \`"2025-07-05T10:18:15Z"\`
+
+---
+
+### ✅ ** Return Format **
+
+  Return the ** first valid occurrence ** of each value in the following ** pure JSON ** structure:
+
+\`\`\`json
 {
-  "weight": 1500,
-  "vehicle_number": "RJ-20GC-4556",
-  "address": "1234 Main St, Cityville, Country",
-  "map_url": "https://maps.google.com/?q=12.345678,-98.765432",
-  "latitude": 12.34567,
-  "longitude": -98.76543,
-  "date": "2025-04-25T15:30:00Z"
+  "weight": 59500,
+  "vehicle_number": "CG10BV0674",
+  "address": "Kaudiya Road Chirah Kurdh, Madhya Pradesh 487555, India",
+  "map_url": "https://maps.google.com/?q=22.936331,78.846788",
+  "latitude": 22.936331,
+  "longitude": 78.846788,
+  "date": "2025-07-05T10:18:15Z"
 }
+\`\`\`
 
-Return only JSON.
+  > ✅ Return ** only the JSON output **, no explanation or extra text.
+
 `;
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 export type ExtractDataJsonType = {
