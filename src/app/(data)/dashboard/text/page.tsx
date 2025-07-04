@@ -199,7 +199,11 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   tare_weight: safeNumber(entryData["tare weight"] ?? "0"),
                   gross_weight: safeNumber(entryData["gross weight"] ?? "0"),
                   vehicle_number: entryData["vehicle no"] || "",
-                  date: parseDate(entryData["date"] || new Date()),
+                  date: parseDate(
+                    entryData["date"] && entryData["date"] !== ""
+                      ? entryData["date"]
+                      : new Date() || new Date()
+                  ),
                   created_at: new Date(),
                   e_way_bill: (e_way_bill ?? 0).toString(),
                   e_way_bill_gst: e_way_bill_gst ?? "",
