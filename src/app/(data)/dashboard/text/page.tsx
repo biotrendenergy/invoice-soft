@@ -202,7 +202,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   date: parseDate(
                     entryData["date"] && entryData["date"] !== ""
                       ? entryData["date"]
-                      : new Date() || new Date()
+                      : new Date() ?? new Date()
                   ),
                   created_at: new Date(),
                   e_way_bill: (e_way_bill ?? 0).toString(),
