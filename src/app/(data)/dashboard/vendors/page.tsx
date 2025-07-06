@@ -14,6 +14,7 @@ import {
 // Zod schema for validation
 const vendorSchema = z.object({
   name: z.string().min(2, "Vendor name is required"),
+  address: z.string().nullable(),
 });
 
 type VendorFormData = z.infer<typeof vendorSchema>;
@@ -21,6 +22,7 @@ type VendorFormData = z.infer<typeof vendorSchema>;
 interface Vendor {
   id: number;
   name: string;
+  address: string | null;
 }
 
 export default function VendorTable() {
@@ -48,7 +50,7 @@ export default function VendorTable() {
   const openFormModal = (vendor: Vendor | null = null) => {
     setIsEditing(!!vendor);
     setSelectedVendor(vendor);
-    reset(vendor ?? { name: "" });
+    reset(vendor ?? { name: "", address: "" });
     setIsModalOpen(true);
   };
 
@@ -105,6 +107,7 @@ export default function VendorTable() {
           <thead>
             <tr>
               <th>Name</th>
+              <th>Address</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -112,6 +115,7 @@ export default function VendorTable() {
             {vendors.map((vendor) => (
               <tr key={vendor.id}>
                 <td>{vendor.name}</td>
+                <td>{vendor.address}</td>
                 <td>
                   <div className="flex gap-2">
                     <button
@@ -162,6 +166,20 @@ export default function VendorTable() {
                 {errors.name && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.name.message}
+                  </p>
+                )}
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Vendor address</span>
+                </label>
+                <input
+                  {...register("address")}
+                  className="input input-bordered w-full"
+                />
+                {errors.address && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.address.message}
                   </p>
                 )}
               </div>

@@ -32,6 +32,9 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
   const [entryData, setEntryData] = useState<any>(entry);
   const [e_way_bill_date, setEwayBill_date] = useState<Date | null>(null);
   const [e_way_bill_gst, setEwayBill_gst] = useState<string | null>(null);
+  const [e_way_bill_ship_to, setEwayBill_ship_to] = useState<string | null>(
+    null
+  );
   const [invoice, setInvoice] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [companies, setCompanies] = useState<companyDetail[] | null>(null);
@@ -157,6 +160,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   parseFlexibleDate(eWayBillData.generated_date)
                 );
                 setEwayBill_gst(eWayBillData.gst_no);
+                setEwayBill_ship_to(eWayBillData.shipping_address);
                 setLoading(false);
               }}
             />
@@ -210,6 +214,8 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   vendorDetailId: null,
                   companyDetailId: company?.valueOf() ?? null,
                   e_way_bill_date: e_way_bill_date ?? new Date(),
+                  e_way_bill_ship_to: e_way_bill_ship_to,
+                  e_way_bill_bill_to: "",
                 });
 
                 if (!data || data instanceof Error) {

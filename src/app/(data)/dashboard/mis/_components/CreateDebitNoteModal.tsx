@@ -97,7 +97,7 @@ export const CreateDebitNoteModal = ({
                     selected={c.id == defaultValues?.companyDetailId}
                     value={c.id}
                   >
-                    {c.name}
+                    {c.shotName}
                   </option>
                 ))}
               </select>
@@ -130,7 +130,7 @@ export const CreateDebitNoteModal = ({
             </div>
 
             {/* Reference Challan */}
-            <div>
+            {/* <div>
               <label className="label font-semibold">Reference Challan</label>
               <input
                 type="text"
@@ -143,7 +143,7 @@ export const CreateDebitNoteModal = ({
                   {errors.referenceChallan.message}
                 </p>
               )}
-            </div>
+            </div> */}
             <div>
               <label className="label font-semibold">Party Challan</label>
               <input
@@ -160,7 +160,9 @@ export const CreateDebitNoteModal = ({
             </div>
             {/* BTE Challan */}
             <div>
-              <label className="label font-semibold">BTE Challan</label>
+              <label className="label font-semibold">
+                Reference BTE Challan
+              </label>
               <input
                 type="text"
                 {...register("bteChallan")}

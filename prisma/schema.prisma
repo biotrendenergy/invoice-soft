@@ -22,31 +22,33 @@ model user {
 }
 
 model ocr {
-  id              Int            @id @default(autoincrement())
+  id                 Int            @id @default(autoincrement())
   //add vendor name 
-  A_weight        Int
-  B_weight        Int
-  challan         String
-  address         String
-  map_url         String
-  latitude        Float
-  longitude       Float
-  delivery_date   DateTime
-  delivery_status String
-  net_weight      Int
-  tare_weight     Int
-  gross_weight    Int
-  vehicle_number  String
-  date            DateTime
-  created_at      DateTime       @default(now())
-  e_way_bill      String         @default("")
-  e_way_bill_date DateTime       @default(now())
-  e_way_bill_gst  String         @default("")
-  vendor          vendorDetail?  @relation(fields: [vendorDetailId], references: [id])
-  vendorDetailId  Int?
-  company         companyDetail? @relation(fields: [companyDetailId], references: [id])
-  companyDetailId Int?
-  medias          media[]
+  A_weight           Int
+  B_weight           Int
+  challan            String
+  address            String
+  map_url            String
+  latitude           Float
+  longitude          Float
+  delivery_date      DateTime
+  delivery_status    String
+  net_weight         Int
+  tare_weight        Int
+  gross_weight       Int
+  vehicle_number     String
+  date               DateTime
+  created_at         DateTime       @default(now())
+  e_way_bill         String         @default("")
+  e_way_bill_date    DateTime       @default(now())
+  e_way_bill_gst     String         @default("")
+  e_way_bill_bill_to String?
+  e_way_bill_ship_to String?
+  vendor             vendorDetail?  @relation(fields: [vendorDetailId], references: [id])
+  vendorDetailId     Int?
+  company            companyDetail? @relation(fields: [companyDetailId], references: [id])
+  companyDetailId    Int?
+  medias             media[]
 }
 
 model challan {
@@ -76,6 +78,7 @@ model companyDetail {
 model vendorDetail {
   id        Int         @id @default(autoincrement())
   name      String
+  address   String?
   ocr       ocr[]
   debitNote debitNote[]
 }
@@ -87,23 +90,23 @@ model mis {
 }
 
 model debitNote {
-  id                Int           @id @default(autoincrement())
-  reference_challan String
-  party_challan     String
-  bte_challan       String
-  venderChallan     String
-  createAt          DateTime      @default(now())
-  isIgst            Boolean
-  igst              Float
-  sgst              Float
-  cgst              Float
-  rate              Int
-  quntity           Int
-  amount            Float
-  shipTo            companyDetail @relation(fields: [companyDetailId], references: [id])
-  billTo            vendorDetail  @relation(fields: [vendorDetailId], references: [id])
-  companyDetailId   Int
-  vendorDetailId    Int
+  id                 Int           @id @default(autoincrement())
+  party_challan      String
+  bte_challan        String
+  venderChallan      String
+  createAt           DateTime      @default(now())
+  e_way_bill_ship_to String?
+  isIgst             Boolean
+  igst               Float
+  sgst               Float
+  cgst               Float
+  rate               Int
+  quntity            Int
+  amount             Float
+  shipTo             companyDetail @relation(fields: [companyDetailId], references: [id])
+  billTo             vendorDetail  @relation(fields: [vendorDetailId], references: [id])
+  companyDetailId    Int
+  vendorDetailId     Int
 }
 
 model media {

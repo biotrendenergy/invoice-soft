@@ -236,7 +236,7 @@ export default function SlipDetailsForm() {
   const handleDebitNoteSubmit = (noteData: DebitNoteFormValues) => {
     console.log("Debit note data:", noteData);
     createDebitNote({
-      reference_challan: noteData.referenceChallan,
+      e_way_bill_ship_to: noteData.e_way_bill_ship_to,
       party_challan: noteData.partyChallan ?? "",
       bte_challan: noteData.bteChallan,
       venderChallan: noteData.vendorChallan ?? "",
@@ -356,7 +356,7 @@ export default function SlipDetailsForm() {
           quantity: parseInt(getValues("weightDiff")),
           companyDetailId: ocrData?.company.id,
           partyChallan: ocrData?.challan,
-          referenceChallan: ocrData?.challan,
+          e_way_bill_ship_to: ocrData?.e_way_bill_ship_to ?? undefined,
           vendorChallan: ocrData?.challan,
 
           // rate: 1, // set default or calculate

@@ -269,10 +269,10 @@ const page = async ({ params }: pageProps) => {
                 07AAJCB9063A1ZT
               </td>
               <td className="s9" dir="ltr" colSpan={3} rowSpan={2}>
-                Reference of challan No.
+                Reference BTE challan No.
               </td>
               <td className="s9 s5" dir="ltr" colSpan={3} rowSpan={2}>
-                {data.reference_challan}
+                {data.bte_challan}
               </td>
             </tr>
             <tr style={{ height: 20 }}>
@@ -344,7 +344,9 @@ const page = async ({ params }: pageProps) => {
                 />
               </th>
               <td className="s1" />
-              <td className="s2" colSpan={6} />
+              <td className="s2" colSpan={6}>
+                {data.e_way_bill_ship_to}
+              </td>
               <td className="s9" dir="ltr" colSpan={3} rowSpan={2}>
                 BTE Challan No
               </td>
@@ -390,10 +392,23 @@ const page = async ({ params }: pageProps) => {
                 {data.shipTo.billingState}, Code{" "}
                 {getStateCode(data.shipTo.billingState as any)}
               </td>
-              <td className="s9" dir="ltr" colSpan={3} rowSpan={2}>
-                Vendar challan No
-              </td>
-              <td className="s5" colSpan={3} rowSpan={2} />
+              <td
+                className="s9"
+                style={{
+                  borderBottomColor: "transparent",
+                }}
+                dir="ltr"
+                colSpan={3}
+                rowSpan={2}
+              ></td>
+              <td
+                className="s5"
+                style={{
+                  borderBottomColor: "transparent",
+                }}
+                colSpan={3}
+                rowSpan={2}
+              />
             </tr>
             <tr style={{ height: 20 }}>
               <th
@@ -422,7 +437,7 @@ const page = async ({ params }: pageProps) => {
               </th>
               <td className="s1" />
               <td className="s2" dir="ltr" colSpan={6}>
-                Buyer (Bill to)
+                {data.billTo.name}
               </td>
               <td />
               <td />
@@ -444,7 +459,7 @@ const page = async ({ params }: pageProps) => {
               </th>
               <td className="s1" />
               <td className="s2" dir="ltr" colSpan={6}>
-                {data.billTo.name}
+                {data.billTo.address}
               </td>
               <td />
               <td />
@@ -658,18 +673,18 @@ const page = async ({ params }: pageProps) => {
               <td className="s1" />
               <td className="s2" />
               <td className="s12" dir="ltr" colSpan={5}>
-                SGST @{data.sgst}%
+                {!data.isIgst ? `SGST @${data.sgst}%` : ""}
               </td>
               <td className="s2" />
               <td className="s1" />
               <td className="s12" dir="ltr">
-                {data.sgst}
+                {!data.isIgst && data.sgst}
               </td>
               <td className="s2" dir="ltr">
-                %
+                {!data.isIgst && "%"}
               </td>
               <td className="s12" dir="ltr" colSpan={2}>
-                {data.amount * (data.sgst / 100)}
+                {!data.isIgst && data.amount * (data.sgst / 100)}
               </td>
             </tr>
             <tr style={{ height: 20 }}>
@@ -686,18 +701,18 @@ const page = async ({ params }: pageProps) => {
               <td className="s1" />
               <td className="s2" />
               <td className="s12" dir="ltr" colSpan={5}>
-                CGST @{data.cgst}%
+                {!data.isIgst ? `CGST @${data.cgst}%` : ""}
               </td>
               <td className="s2" />
               <td className="s1" />
               <td className="s12" dir="ltr">
-                {data.cgst}
+                {!data.isIgst && data.cgst}
               </td>
               <td className="s2" dir="ltr">
-                %
+                {!data.isIgst && "%"}
               </td>
               <td className="s12" dir="ltr" colSpan={2}>
-                {data.amount * (data.cgst / 100)}
+                {!data.isIgst && data.amount * (data.cgst / 100)}
               </td>
             </tr>
             <tr style={{ height: 20 }}>
@@ -721,7 +736,7 @@ const page = async ({ params }: pageProps) => {
               <td className="s2" />
               <td className="s2" />
               <td className="s12" dir="ltr" colSpan={2}>
-                {data.amount * (data.igst / 100)}
+                {data.isIgst && data.amount * (data.igst / 100)}
               </td>
             </tr>
             <tr style={{ height: 20 }}>

@@ -37,7 +37,7 @@ export const slipDetailsSchema = z.object({
 
 export const debitNoteSchema = z.object({
   bteChallan: z.string().min(1),
-  referenceChallan: z.string().min(1),
+  e_way_bill_ship_to: z.string().min(1),
   partyChallan: z.string().optional(),
   vendorChallan: z.string().optional(),
   rate: z.coerce.number().min(0.01),
