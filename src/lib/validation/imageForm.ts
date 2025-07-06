@@ -45,6 +45,7 @@ export const formSchema = z.object({
     required_error: "E-way Bill date is required",
   }),
   e_way_bill_gst: z.string().optional(),
+  e_way_bill_ship_to: z.string().optional(),
   tar_file: z.instanceof(File).optional(),
   gross_file: z.instanceof(File).optional(),
   net_file: z.instanceof(File).optional(),

@@ -105,6 +105,7 @@ const page = () => {
         companyDetailId: data.companyId ?? undefined,
         vendorDetailId: data.vendorId ?? undefined,
         e_way_bill_date: data.e_wayBill_date,
+        e_way_bill_ship_to: data.e_way_bill_ship_to,
       };
 
       const result = await addOCRData(ocrPayload as any);
@@ -181,6 +182,7 @@ const page = () => {
           "e_wayBill_date",
           parseFlexibleDate(e_way_bill_data.generated_date) ?? new Date()
         );
+        setValue("e_way_bill_ship_to", e_way_bill_data.shipping_address);
         setValue("challanNo", e_way_bill_data.ChallanOrInvoiceNumber);
         setVehicle(e_way_bill_data.vehicle_number);
         setLoading(false);
