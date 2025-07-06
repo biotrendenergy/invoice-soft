@@ -345,7 +345,12 @@ const page = async ({ params }: pageProps) => {
               </th>
               <td className="s1" />
               <td className="s2" colSpan={6}>
-                {data.e_way_bill_ship_to?.split(",").join("\n")}
+                {data.e_way_bill_ship_to?.split(",").map((v) => (
+                  <>
+                    {v}
+                    <br />
+                  </>
+                ))}
               </td>
               <td className="s9" dir="ltr" colSpan={3} rowSpan={2}>
                 BTE Challan No
