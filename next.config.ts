@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 const { PrismaPlugin } = require('@prisma/nextjs-monorepo-workaround-plugin')
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "5mb"
+    }
+  },
   /* config options here */
   redirects: async () => [
     {
