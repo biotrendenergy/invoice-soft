@@ -1087,7 +1087,7 @@ const page = async ({ params }: pageProps) => {
                     : data.amount +
                         data.amount * (data.sgst / 100) +
                         data.amount * (data.cgst / 100)
-                )}
+                ).toFixed(3)}
               </td>
             </tr>
             <tr style={{ height: 20 }}>
@@ -1123,15 +1123,17 @@ const page = async ({ params }: pageProps) => {
               <td className="s1" />
               <td className="s8" dir="ltr" colSpan={5}>
                 {toWords.convert(
-                  Math.floor(
-                    data.isIgst
-                      ? data.amount * (data.igst / 100) +
-                          data.amount +
-                          data.amount * (data.sgst / 100) +
-                          data.amount * (data.cgst / 100)
-                      : data.amount +
-                          data.amount * (data.sgst / 100) +
-                          data.amount * (data.cgst / 100)
+                  Number(
+                    Math.floor(
+                      data.isIgst
+                        ? data.amount * (data.igst / 100) +
+                            data.amount +
+                            data.amount * (data.sgst / 100) +
+                            data.amount * (data.cgst / 100)
+                        : data.amount +
+                            data.amount * (data.sgst / 100) +
+                            data.amount * (data.cgst / 100)
+                    ).toFixed(3)
                   )
                 )}
               </td>

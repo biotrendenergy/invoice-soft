@@ -79,6 +79,7 @@ model vendorDetail {
   id        Int         @id @default(autoincrement())
   name      String
   address   String?
+  gst       String?
   ocr       ocr[]
   debitNote debitNote[]
 }
