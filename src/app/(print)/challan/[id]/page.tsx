@@ -281,9 +281,9 @@ const page = async ({ params }: pageProps) => {
               <td className="s14" colSpan={2}>
                 Date :
               </td>
-              <td className="s14">{`${
+              <td className="s14">{`${data?.date?.getDate().toString()}/${
                 (data?.date?.getMonth() ?? 0) + 1
-              }/${data?.date?.getDate()}/${data?.date?.getFullYear()}`}</td>
+              }/${data?.date?.getFullYear()}`}</td>
               <td className="s0"></td>
               <td className="s3"></td>
             </tr>
