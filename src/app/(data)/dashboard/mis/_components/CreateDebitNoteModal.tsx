@@ -214,7 +214,7 @@ export const CreateDebitNoteModal = ({
                 {...register("rate")}
                 className="input input-bordered w-full"
                 placeholder="Rate"
-                step={0.1}
+                step={0.001}
               />
               {errors.rate && (
                 <p className="text-red-500 text-sm">{errors.rate.message}</p>
