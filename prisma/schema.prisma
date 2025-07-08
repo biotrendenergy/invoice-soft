@@ -49,6 +49,8 @@ model ocr {
   company            companyDetail? @relation(fields: [companyDetailId], references: [id])
   companyDetailId    Int?
   medias             media[]
+
+  mis mis?
 }
 
 model challan {
@@ -80,14 +82,15 @@ model vendorDetail {
   name      String
   address   String?
   gst       String?
+  state     String?
   ocr       ocr[]
   debitNote debitNote[]
 }
 
 model mis {
-  id        Int    @id @default(autoincrement())
-  sheetURL  String
-  rowNumber String
+  id    Int @id @default(autoincrement())
+  ocr   ocr @relation(fields: [ocrId], references: [id])
+  ocrId Int @unique
 }
 
 model debitNote {

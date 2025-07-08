@@ -509,7 +509,7 @@ const page = async ({ params }: pageProps) => {
                 GSTIN/UIN
               </td>
               <td className="s2" dir="ltr" colSpan={3}>
-                07AAJCB9063A1ZT
+                {data.billTo.gst}
               </td>
               <td />
               <td />
@@ -534,7 +534,8 @@ const page = async ({ params }: pageProps) => {
                 State Name
               </td>
               <td className="s2" dir="ltr" colSpan={3}>
-                Delhi, Code 07
+                {data.billTo.state}, Code{" "}
+                {getStateCode(data.billTo.state as any)}
               </td>
               <td />
               <td />

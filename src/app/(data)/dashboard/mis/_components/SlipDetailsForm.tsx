@@ -355,9 +355,9 @@ export default function SlipDetailsForm() {
           bteChallan: getValues("bteChallanNo"),
           quantity: parseInt(getValues("weightDiff")),
           companyDetailId: ocrData?.company.id,
-          partyChallan: ocrData?.challan,
+          partyChallan:
+            localStorage.getItem(`data_for_mis_${ocrData?.id}`) ?? "",
           e_way_bill_ship_to: ocrData?.e_way_bill_ship_to ?? undefined,
-          vendorChallan: ocrData?.challan,
 
           // rate: 1, // set default or calculate
         }}
