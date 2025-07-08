@@ -689,7 +689,7 @@ const page = async ({ params }: pageProps) => {
                 {!data.isIgst && "%"}
               </td>
               <td className="s12" dir="ltr" colSpan={2}>
-                {!data.isIgst && data.amount * (data.sgst / 100)}
+                {!data.isIgst && (data.amount * (data.sgst / 100)).toFixed(3)}
               </td>
             </tr>
             <tr style={{ height: 20 }}>
@@ -717,7 +717,7 @@ const page = async ({ params }: pageProps) => {
                 {!data.isIgst && "%"}
               </td>
               <td className="s12" dir="ltr" colSpan={2}>
-                {!data.isIgst && data.amount * (data.cgst / 100)}
+                {!data.isIgst && (data.amount * (data.cgst / 100)).toFixed(3)}
               </td>
             </tr>
             <tr style={{ height: 20 }}>
@@ -741,7 +741,7 @@ const page = async ({ params }: pageProps) => {
               <td className="s2" />
               <td className="s2" />
               <td className="s12" dir="ltr" colSpan={2}>
-                {data.isIgst && data.amount * (data.igst / 100)}
+                {data.isIgst && (data.amount * (data.igst / 100)).toFixed(3)}
               </td>
             </tr>
             <tr style={{ height: 20 }}>
@@ -765,14 +765,16 @@ const page = async ({ params }: pageProps) => {
               <td className="s2" />
               <td className="s2" />
               <td className="s12" colSpan={2}>
-                {data.amount * (data.cgst / 100) +
+                {(
+                  data.amount * (data.cgst / 100) +
                   data.amount * (data.igst / 100) +
                   data.amount * (data.sgst / 100) -
                   Math.floor(
                     data.amount * (data.sgst / 100) +
                       data.amount * (data.igst / 100) +
                       data.amount * (data.cgst / 100)
-                  )}
+                  )
+                ).toFixed(3)}
               </td>
             </tr>
             <tr style={{ height: 20 }}>
