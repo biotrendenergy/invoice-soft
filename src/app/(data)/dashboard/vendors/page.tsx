@@ -94,6 +94,7 @@ export default function VendorTable() {
       await deleteVendor(selectedVendor.id);
       await updateData();
     }
+    alert("done");
     setIsDeleteConfirmOpen(false);
   };
 
