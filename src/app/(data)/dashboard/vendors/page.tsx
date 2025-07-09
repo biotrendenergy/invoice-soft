@@ -91,12 +91,17 @@ export default function VendorTable() {
 
   const handleDelete = () => {
     if (selectedVendor) {
-      deleteVendor(selectedVendor.id).then(() => {
-        updateData().then(() => {
-          alert("done");
-          setIsDeleteConfirmOpen(false);
+      setLoading(true);
+      deleteVendor(selectedVendor.id)
+        .then(() => {
+          updateData().then(() => {
+            alert("done");
+            setIsDeleteConfirmOpen(false);
+          });
+        })
+        .finally(() => {
+          setLoading(false);
         });
-      });
     }
   };
 
