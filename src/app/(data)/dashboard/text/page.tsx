@@ -51,6 +51,13 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
     else toast.error("No data to print!");
   };
 
+  const handlePrintMarges = () => {
+    if (id) {
+      window.open(`/marge/${id}`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
   useEffect(() => {
     (async () => {
       setCompanies(await getAllCompany());
@@ -243,6 +250,9 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
             </button>
             <button className="btn btn-accent" onClick={handlePrintChallan}>
               Print Challan
+            </button>
+            <button className="btn btn-accent" onClick={handlePrintMarges}>
+              merge pdf
             </button>
           </>
         )}
