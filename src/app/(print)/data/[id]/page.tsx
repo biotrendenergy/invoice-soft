@@ -1,5 +1,5 @@
 import { getOcr } from "@/action/ocr";
-import "./style.css";
+import style from "./style.module.css";
 import EditButton from "../../_components/editButton";
 import PrintButton from "../../_components/printButton";
 interface pageProps {
@@ -38,80 +38,82 @@ const page = async ({ params }: pageProps) => {
         <EditButton />
         <PrintButton />
       </div>
-      <div className="ritz grid-container" dir="ltr">
-        <table className="waffle" cellSpacing={0} cellPadding={0}>
+      <div className={`${style.ritz} ${style["grid-container"]}`} dir="ltr">
+        <table className={style.waffle} cellSpacing={0} cellPadding={0}>
           <thead>
             <tr>
-              <th className="row-header freezebar-origin-ltr"></th>
+              <th
+                className={`${style["row-header"]} ${style["freezebar-origin-ltr"]}`}
+              ></th>
               <th
                 id="0C0"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C1"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C2"
                 style={{ width: "71px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C3"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C4"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C5"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C6"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C7"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C8"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C9"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C10"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C11"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C12"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
               <th
                 id="0C13"
                 style={{ width: "100px" }}
-                className="column-headers-background"
+                className={`${style["column-headers-background"]}`}
               ></th>
             </tr>
           </thead>
@@ -181,7 +183,7 @@ const page = async ({ params }: pageProps) => {
               </th>
               <td></td>
               <td></td>
-              <td className="s0" dir="ltr" colSpan={12} rowSpan={3}>
+              <td className={style.s0} dir="ltr" colSpan={12} rowSpan={3}>
                 Bio Trend Energy (OPC) Pvt. Ltd.
               </td>
             </tr>
@@ -226,7 +228,7 @@ const page = async ({ params }: pageProps) => {
               </th>
               <td></td>
               <td></td>
-              <td className="s1" colSpan={12} rowSpan={3}></td>
+              <td className={style.s1} colSpan={12} rowSpan={3}></td>
             </tr>
             <tr style={{ height: "20px" }}>
               <th
@@ -268,9 +270,9 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
+              <td className={style.s2}></td>
               <td
-                className="s3"
+                className={style.s3}
                 colSpan={12}
                 rowSpan={2}
                 style={{
@@ -295,7 +297,7 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
+              <td className={style.s2}></td>
             </tr>
             <tr style={{ height: "20px" }}>
               <th
@@ -309,8 +311,8 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
-              <td className="s3" dir="ltr" colSpan={12}>
+              <td className={style.s2}></td>
+              <td className={style.s3} dir="ltr" colSpan={12}>
                 For Non-Torrefied Biomass Pellets
               </td>
             </tr>
@@ -326,8 +328,8 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
-              <td className="s3" dir="ltr" colSpan={12}>
+              <td className={style.s2}></td>
+              <td className={style.s3} dir="ltr" colSpan={12}>
                 Tag for Consignment
               </td>
             </tr>
@@ -343,8 +345,8 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
-              <td className="s3" dir="ltr" colSpan={12}>
+              <td className={style.s2}></td>
+              <td className={style.s3} dir="ltr" colSpan={12}>
                 General Details
               </td>
             </tr>
@@ -360,15 +362,15 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
-              <td className="s4" dir="ltr">
+              <td className={style.s2}></td>
+              <td className={style.s4} dir="ltr">
                 1
               </td>
-              <td className="s5" dir="ltr" colSpan={5}>
+              <td className={style.s5} dir="ltr" colSpan={5}>
                 Name of Company
               </td>
-              <td className="s4"></td>
-              <td className="s3" dir="ltr" colSpan={5}>
+              <td className={style.s4}></td>
+              <td className={style.s3} dir="ltr" colSpan={5}>
                 Bio Trend Energy (OPC) Pvt Ltd
               </td>
             </tr>
@@ -384,15 +386,15 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
-              <td className="s4" dir="ltr">
+              <td className={style.s2}></td>
+              <td className={style.s4} dir="ltr">
                 2
               </td>
-              <td className="s5" dir="ltr" colSpan={5}>
+              <td className={style.s5} dir="ltr" colSpan={5}>
                 Date of Dispatch
               </td>
-              <td className="s4"></td>
-              <td className="s3" colSpan={5}>
+              <td className={style.s4}></td>
+              <td className={style.s3} colSpan={5}>
                 {formatDateToCustom(data?.date ?? new Date())}
               </td>
             </tr>
@@ -408,15 +410,15 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
-              <td className="s4" dir="ltr">
+              <td className={style.s2}></td>
+              <td className={style.s4} dir="ltr">
                 3
               </td>
-              <td className="s5" dir="ltr" colSpan={5}>
+              <td className={style.s5} dir="ltr" colSpan={5}>
                 Batch Number
               </td>
-              <td className="s4"></td>
-              <td className="s3" colSpan={5}>
+              <td className={style.s4}></td>
+              <td className={style.s3} colSpan={5}>
                 {data?.challan}
               </td>
             </tr>
@@ -432,15 +434,15 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
-              <td className="s4" dir="ltr">
+              <td className={style.s2}></td>
+              <td className={style.s4} dir="ltr">
                 4
               </td>
-              <td className="s5" dir="ltr" colSpan={5}>
+              <td className={style.s5} dir="ltr" colSpan={5}>
                 Carriage Vehicle Type / Number
               </td>
-              <td className="s4"></td>
-              <td className="s3" colSpan={5}>
+              <td className={style.s4}></td>
+              <td className={style.s3} colSpan={5}>
                 {data?.vehicle_number}
               </td>
             </tr>
@@ -456,20 +458,20 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
-              <td className="s4" dir="ltr" rowSpan={3}>
+              <td className={style.s2}></td>
+              <td className={style.s4} dir="ltr" rowSpan={3}>
                 5
               </td>
-              <td className="s4" dir="ltr" colSpan={5} rowSpan={3}>
+              <td className={style.s4} dir="ltr" colSpan={5} rowSpan={3}>
                 Weight
               </td>
-              <td className="s4" dir="ltr" rowSpan={3}>
+              <td className={style.s4} dir="ltr" rowSpan={3}>
                 KG
               </td>
-              <td className="s4" dir="ltr" colSpan={3}>
+              <td className={style.s4} dir="ltr" colSpan={3}>
                 Gross Weight
               </td>
-              <td className="s3" colSpan={2}>
+              <td className={style.s3} colSpan={2}>
                 {data?.gross_weight}
               </td>
             </tr>
@@ -485,11 +487,11 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
-              <td className="s4" dir="ltr" colSpan={3}>
+              <td className={style.s2}></td>
+              <td className={style.s4} dir="ltr" colSpan={3}>
                 Tare Weight
               </td>
-              <td className="s3" colSpan={2}>
+              <td className={style.s3} colSpan={2}>
                 {data?.tare_weight}
               </td>
             </tr>
@@ -505,11 +507,11 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
-              <td className="s4" dir="ltr" colSpan={3}>
+              <td className={style.s2}></td>
+              <td className={style.s4} dir="ltr" colSpan={3}>
                 Material Weight
               </td>
-              <td className="s3" colSpan={2}>
+              <td className={style.s3} colSpan={2}>
                 {data?.net_weight}
               </td>
             </tr>
@@ -525,15 +527,15 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
-              <td className="s4" dir="ltr">
+              <td className={style.s2}></td>
+              <td className={style.s4} dir="ltr">
                 6
               </td>
-              <td className="s5" dir="ltr" colSpan={5}>
+              <td className={style.s5} dir="ltr" colSpan={5}>
                 Any Other Details as applicable
               </td>
-              <td className="s4"></td>
-              <td className="s3" colSpan={5}>
+              <td className={style.s4}></td>
+              <td className={style.s3} colSpan={5}>
                 NO
               </td>
             </tr>
@@ -549,15 +551,15 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s2"></td>
-              <td className="s6" dir="ltr">
+              <td className={style.s2}></td>
+              <td className={style.s6} dir="ltr">
                 7
               </td>
-              <td className="s7" dir="ltr" colSpan={5}>
+              <td className={style.s7} dir="ltr" colSpan={5}>
                 Any Other Details as applicable
               </td>
-              <td className="s6"></td>
-              <td className="s8" colSpan={5}>
+              <td className={style.s6}></td>
+              <td className={style.s8} colSpan={5}>
                 NO
               </td>
             </tr>
@@ -573,8 +575,8 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s9"></td>
-              <td className="s10" dir="ltr" colSpan={12}>
+              <td className={style.s9}></td>
+              <td className={style.s10} dir="ltr" colSpan={12}>
                 Technical Details
               </td>
             </tr>
@@ -590,15 +592,15 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s9"></td>
-              <td className="s4" dir="ltr">
+              <td className={style.s9}></td>
+              <td className={style.s4} dir="ltr">
                 1
               </td>
-              <td className="s5" dir="ltr" colSpan={5}>
+              <td className={style.s5} dir="ltr" colSpan={5}>
                 Diameter of Pellet in MM
               </td>
-              <td className="s5"></td>
-              <td className="s11" dir="ltr" colSpan={5}>
+              <td className={style.s5}></td>
+              <td className={style.s11} dir="ltr" colSpan={5}>
                 18MM with GCV 4000 Kcal/Kg
               </td>
             </tr>
@@ -614,15 +616,15 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s9"></td>
-              <td className="s4" dir="ltr">
+              <td className={style.s9}></td>
+              <td className={style.s4} dir="ltr">
                 2
               </td>
-              <td className="s5" dir="ltr" colSpan={5}>
+              <td className={style.s5} dir="ltr" colSpan={5}>
                 Name of Base meterial and its %
               </td>
-              <td className="s5"></td>
-              <td className="s11" dir="ltr" colSpan={5}>
+              <td className={style.s5}></td>
+              <td className={style.s11} dir="ltr" colSpan={5}>
                 Agro Residue Pellets - 80%
               </td>
             </tr>
@@ -638,15 +640,15 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s9"></td>
-              <td className="s4" dir="ltr">
+              <td className={style.s9}></td>
+              <td className={style.s4} dir="ltr">
                 3
               </td>
-              <td className="s5" dir="ltr" colSpan={5}>
+              <td className={style.s5} dir="ltr" colSpan={5}>
                 Mixing Material and its %
               </td>
-              <td className="s5"></td>
-              <td className="s11" dir="ltr" colSpan={5}>
+              <td className={style.s5}></td>
+              <td className={style.s11} dir="ltr" colSpan={5}>
                 Other Agro Residue Pellets - 20%
               </td>
             </tr>
@@ -662,15 +664,15 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td className="s9"></td>
-              <td className="s12" dir="ltr">
+              <td className={style.s9}></td>
+              <td className={style.s12} dir="ltr">
                 4
               </td>
-              <td className="s13" dir="ltr" colSpan={5}>
+              <td className={style.s13} dir="ltr" colSpan={5}>
                 Additive and its %
               </td>
-              <td className="s13"></td>
-              <td className="s14" dir="ltr" colSpan={5}>
+              <td className={style.s13}></td>
+              <td className={style.s14} dir="ltr" colSpan={5}>
                 NIL
               </td>
             </tr>

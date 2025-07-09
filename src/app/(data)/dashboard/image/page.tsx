@@ -414,6 +414,13 @@ const page = () => {
       toast.error("No data to print!");
     }
   };
+  const handlePrintMarges = () => {
+    if (data) {
+      window.open(`/marge/${data.id}`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
   const handlePrintChallan = () => {
     if (data) {
       window.open(`/challan/${data.id}`, "popupWindow");
@@ -833,6 +840,12 @@ const page = () => {
                 className="btn btn-secondary mt-4"
               >
                 Print Challan
+              </button>
+              <button
+                onClick={handlePrintMarges}
+                className="btn btn-secondary mt-4"
+              >
+                merge pdf
               </button>
             </div>
           ) : (
