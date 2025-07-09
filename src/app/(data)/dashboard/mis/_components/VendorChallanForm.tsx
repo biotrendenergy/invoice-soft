@@ -48,8 +48,8 @@ const FileUploadModal = ({
 
       setValue("vendorChallanDate", convertToHtmlDate(data.challan_date));
       setValue("vendorChallanNo", data.challan_number);
-      setValue("vendorEwayBill", data.eway_bill_number);
-      setValue("vendorEwayBillDate", convertToHtmlDate(data.eway_bill_date));
+      // setValue("vendorEwayBill", data.eway_bill_number);
+      // setValue("vendorEwayBillDate", convertToHtmlDate(data.eway_bill_date));
     } catch (e: any) {
       console.log(e);
 
@@ -172,13 +172,13 @@ export default function VendorChallanForm() {
     setValue("netWeightNTPC", ocrData?.net_weight.toString() ?? "");
     setValue("tareWeight", ocrData?.tare_weight.toString() ?? "");
     setValue("vehicleNo", ocrData?.vehicle_number.toString() ?? "");
-    setValue("netWeightVendor", ocrData?.A_weight.toString() ?? "");
+    // setValue("netWeightVendor", ocrData?.A_weight.toString() ?? "");
     setValue("bteChallanNo", ocrData?.challan.toString() ?? "");
-    setValue("ewayBillNo", ocrData?.e_way_bill.toString() ?? "");
-    setValue("hsnCode", "440110");
-    setValue("registrationState", "23-Madhya Pradesh");
-    setValue("gstCode", "23");
-    setValue("gstNumber", "23AAJCB9063A1ZZ");
+    // setValue("ewayBillNo", ocrData?.e_way_bill.toString() ?? "");
+    // setValue("hsnCode", "440110");
+    // setValue("registrationState", "23-Madhya Pradesh");
+    // setValue("gstCode", "23");
+    // setValue("gstNumber", "23AAJCB9063A1ZZ");
     setValue(
       "ewayBillDate",
       ocrData?.e_way_bill_date.toISOString().slice(0, 10) ?? ""
@@ -265,28 +265,28 @@ export default function VendorChallanForm() {
           error={errors.vendorChallanNo}
           inputClass="input"
         />
-        <Field
+        {/* <Field
           label="Vendor E-Way Bill Date"
           name="vendorEwayBillDate"
           type="date"
           register={register}
           error={errors.vendorEwayBillDate}
           inputClass="input"
-        />
-        <Field
+        /> */}
+        {/* <Field
           label="Vendor Eway-Bill"
           name="vendorEwayBill"
           register={register}
           error={errors.vendorEwayBill}
           inputClass="input"
-        />
-        <Field
+        /> */}
+        {/* <Field
           label="Vender material Weight "
           name="netWeightVendor"
           register={register}
           error={errors.netWeightVendor}
           inputClass="input"
-        />
+        /> */}
 
         <Field
           label="Vehicle No."
@@ -310,34 +310,34 @@ export default function VendorChallanForm() {
           error={errors.challanDate}
           inputClass="input"
         />
-        <Field
+        {/* <Field
           label="HSN Code"
           name="hsnCode"
           register={register}
           error={errors.hsnCode}
           inputClass="input"
-        />
-        <Field
+        /> */}
+        {/* <Field
           label="Registration State"
           name="registrationState"
           register={register}
           error={errors.registrationState}
           inputClass="input"
-        />
-        <Field
+        /> */}
+        {/* <Field
           label="GST Code"
           name="gstCode"
           register={register}
           error={errors.gstCode}
           inputClass="input"
-        />
-        <Field
+        /> */}
+        {/* <Field
           label="GST Number"
           name="gstNumber"
           register={register}
           error={errors.gstNumber}
           inputClass="input"
-        />
+        /> */}
         <Field
           label="E-Way Bill Date"
           name="ewayBillDate"
@@ -346,13 +346,13 @@ export default function VendorChallanForm() {
           error={errors.ewayBillDate}
           inputClass="input"
         />
-        <Field
+        {/* <Field
           label="E-Way Bill No."
           name="ewayBillNo"
           register={register}
           error={errors.ewayBillNo}
           inputClass="input"
-        />
+        /> */}
         <Field
           label="Gross Weight"
           name="grossWeight"
