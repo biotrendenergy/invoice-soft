@@ -89,13 +89,15 @@ export default function VendorTable() {
     setIsDeleteConfirmOpen(true);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (selectedVendor) {
-      await deleteVendor(selectedVendor.id);
-      await updateData();
+      deleteVendor(selectedVendor.id).then(() => {
+        updateData().then(() => {
+          alert("done");
+          setIsDeleteConfirmOpen(false);
+        });
+      });
     }
-    alert("done");
-    setIsDeleteConfirmOpen(false);
   };
 
   return (
