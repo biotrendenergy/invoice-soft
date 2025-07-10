@@ -159,13 +159,15 @@ export default function VendorChallanForm() {
       toast.warning(`${ocrData?.company.name} does not have a sheet URL.`);
     }
     setSheetUrl(ocrData?.company.sheetUrl ?? null);
-    const data = localStorage.getItem(`data_for_mis_${ocrData?.id}`);
+    if (typeof window !== "undefined") {
+      const data = localStorage.getItem(`data_for_mis_${ocrData?.id}`);
 
-    if (!data) {
-      setValue("biomeChallanNo", "");
-    } else {
-      let json = JSON.parse(data);
-      setValue("biomeChallanNo", json.at(-1)["challan_number"]);
+      if (!data) {
+        setValue("biomeChallanNo", "");
+      } else {
+        let json = JSON.parse(data);
+        setValue("biomeChallanNo", json.at(-1)["challan_number"]);
+      }
     }
     setValue("challanDate", new Date().toISOString().slice(0, 10));
     setValue("grossWeight", ocrData?.gross_weight.toString() ?? "");
