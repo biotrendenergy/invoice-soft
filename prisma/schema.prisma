@@ -107,8 +107,8 @@ model debitNote {
   rate               Int
   quntity            Int
   amount             Float
-  shipTo             companyDetail @relation(fields: [companyDetailId], references: [id])
-  billTo             vendorDetail  @relation(fields: [vendorDetailId], references: [id])
+  shipTo             companyDetail @relation(fields: [companyDetailId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  billTo             vendorDetail  @relation(fields: [vendorDetailId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   companyDetailId    Int
   vendorDetailId     Int
 }
