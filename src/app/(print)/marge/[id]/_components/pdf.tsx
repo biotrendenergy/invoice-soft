@@ -17,16 +17,24 @@ export default function PDFViewer({ base64Pdf }: Props) {
   const onLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
   };
+  console.log(numPages);
 
   return (
     <div>
       <Document
         renderMode="canvas"
         file={base64Pdf}
+        className={"w-screen"}
         onLoadSuccess={onLoadSuccess}
       >
         {Array.from(new Array(numPages), (_, i) => (
-          <Page key={i} pageNumber={i + 1} renderAnnotationLayer={false} />
+          <Page
+            renderTextLayer={false}
+            scale={2}
+            key={i}
+            pageNumber={i + 1}
+            renderAnnotationLayer={false}
+          />
         ))}
       </Document>
     </div>
