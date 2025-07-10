@@ -352,12 +352,12 @@ export default function SlipDetailsForm() {
         open={showDebitModal}
         onClose={() => setShowDebitModal(false)}
         onSubmit={handleDebitNoteSubmit}
+        ocrData={ocrData}
         defaultValues={{
           bteChallan: getValues("bteChallanNo"),
           quantity: parseInt(getValues("weightDiff")),
           companyDetailId: ocrData?.company.id,
-          partyChallan:
-            localStorage.getItem(`data_for_mis_${ocrData?.id}`) ?? "",
+
           e_way_bill_ship_to: ocrData?.e_way_bill_ship_to ?? undefined,
 
           // rate: 1, // set default or calculate

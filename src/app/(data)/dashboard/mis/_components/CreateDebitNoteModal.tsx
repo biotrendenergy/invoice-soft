@@ -4,11 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { getAllVendor } from "@/action/vendores";
 import { getAllCompany } from "@/action/company";
-import { companyDetail, vendorDetail } from "@/generated/prisma";
+import { companyDetail, ocr, vendorDetail } from "@/generated/prisma";
 import { DebitNoteFormValues, debitNoteSchema } from "../_utils/schema";
 
 interface Props {
   open: boolean;
+  ocrData: ocr | undefined;
   onClose: () => void;
   onSubmit: (data: DebitNoteFormValues) => void;
   defaultValues?: Partial<DebitNoteFormValues>;
@@ -19,6 +20,7 @@ export const CreateDebitNoteModal = ({
   onClose,
   onSubmit,
   defaultValues,
+  ocrData,
 }: Props) => {
   if (!open) return null;
   console.log(defaultValues);
@@ -71,6 +73,10 @@ export const CreateDebitNoteModal = ({
 
   useEffect(() => {
     setValue("amount", getValues("quantity") * getValues("rate"));
+    setValue(
+      "partyChallan",
+      localStorage.getItem(`data_for_mis_${ocrData?.id}`) ?? ""
+    );
   }, [setValue, watch("rate")]);
 
   return (
