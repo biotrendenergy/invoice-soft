@@ -1,3 +1,4 @@
+"use client";
 import { useForm, UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DebitNoteFormValues, slipDetailsSchema } from "../_utils/schema";
