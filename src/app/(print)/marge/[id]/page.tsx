@@ -11,7 +11,6 @@ interface pageProps {
 const page = async ({ params }: pageProps) => {
   const { id } = await params;
   const data = await getOcrWithImage(Number(id));
-  console.log(data);
 
   return (
     <>
@@ -28,8 +27,6 @@ const page = async ({ params }: pageProps) => {
       <div>
         {data?.medias.map((v) => {
           if (v.title.toLowerCase().includes("e-way bill")) {
-            console.log("s");
-
             return (
               <PdfViewer
                 base64Pdf={`data:application/pdf;base64,${v.content}`}
