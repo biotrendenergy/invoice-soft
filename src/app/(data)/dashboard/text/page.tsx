@@ -1,6 +1,11 @@
 "use client";
 
-import { addOCRData, extractEWayBill_withIn, getFilePart } from "@/action/ocr";
+import {
+  addMedia,
+  addOCRData,
+  extractEWayBill_withIn,
+  getFilePart,
+} from "@/action/ocr";
 import { use, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { parse, isValid, set } from "date-fns";
@@ -32,6 +37,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
   const [entryData, setEntryData] = useState<any>(entry);
   const [e_way_bill_date, setEwayBill_date] = useState<Date | null>(null);
   const [e_way_bill_gst, setEwayBill_gst] = useState<string | null>(null);
+  const [e_way_bill_file, setEwayBill_file] = useState<File | null>(null);
   const [e_way_bill_ship_to, setEwayBill_ship_to] = useState<string | null>(
     null
   );
@@ -168,6 +174,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                 );
                 setEwayBill_gst(eWayBillData.gst_no);
                 setEwayBill_ship_to(eWayBillData.shipping_address);
+                setEwayBill_file(e.target.files[0]);
                 setLoading(false);
               }}
             />
@@ -229,6 +236,12 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   toast.error(data.message);
                   return;
                 }
+                if (e_way_bill_file)
+                  await addMedia(
+                    "E-Way bill - " + invoice,
+                    e_way_bill_file,
+                    data.id
+                  );
 
                 setId(data.id);
                 localStorage.removeItem("ocr_input_text"); // Optional: clear saved text on submit
