@@ -15,12 +15,12 @@ export const vendorChallanSchema = z.object({
   // gstCode: z.string(),
   // gstNumber: z.string(),
   ewayBillDate: z.string(),
-  // ewayBillNo: z.string(),
+  ewayBillNo: z.string(),
   grossWeight: z.string(),
   tareWeight: z.string(),
   netWeightNTPC: z.string(),
   // netWeight: z.string(),
-  // netWeightVendor: z.string(),
+  netWeightVendor: z.string(),
 });
 
 export const slipDetailsSchema = z.object({

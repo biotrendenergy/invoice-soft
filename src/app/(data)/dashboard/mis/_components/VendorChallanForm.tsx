@@ -172,9 +172,9 @@ export default function VendorChallanForm() {
     setValue("netWeightNTPC", ocrData?.net_weight.toString() ?? "");
     setValue("tareWeight", ocrData?.tare_weight.toString() ?? "");
     setValue("vehicleNo", ocrData?.vehicle_number.toString() ?? "");
-    // setValue("netWeightVendor", ocrData?.A_weight.toString() ?? "");
+    setValue("netWeightVendor", ocrData?.A_weight.toString() ?? "");
     setValue("bteChallanNo", ocrData?.challan.toString() ?? "");
-    // setValue("ewayBillNo", ocrData?.e_way_bill.toString() ?? "");
+    setValue("ewayBillNo", ocrData?.e_way_bill.toString() ?? "");
     // setValue("hsnCode", "440110");
     // setValue("registrationState", "23-Madhya Pradesh");
     // setValue("gstCode", "23");
@@ -280,13 +280,13 @@ export default function VendorChallanForm() {
           error={errors.vendorEwayBill}
           inputClass="input"
         /> */}
-        {/* <Field
+        <Field
           label="Vender material Weight "
           name="netWeightVendor"
           register={register}
           error={errors.netWeightVendor}
           inputClass="input"
-        /> */}
+        />
 
         <Field
           label="Vehicle No."
@@ -346,13 +346,13 @@ export default function VendorChallanForm() {
           error={errors.ewayBillDate}
           inputClass="input"
         />
-        {/* <Field
+        <Field
           label="E-Way Bill No."
           name="ewayBillNo"
           register={register}
           error={errors.ewayBillNo}
           inputClass="input"
-        /> */}
+        />
         <Field
           label="Gross Weight"
           name="grossWeight"
