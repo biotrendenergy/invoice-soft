@@ -40,7 +40,12 @@ const page = async ({ params }: pageProps) => {
           if (v.title.toLowerCase().includes("e-way bill")) {
             console.log("s");
 
-            return <PdfViewer base64Pdf={v.content} key={v.id} />;
+            return (
+              <PdfViewer
+                base64Pdf={`data:application/pdf;base64,${v.content}`}
+                key={v.id}
+              />
+            );
           }
         })}
       </div>
