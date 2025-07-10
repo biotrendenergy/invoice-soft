@@ -580,10 +580,22 @@ export async function getOcr(id: number) {
     },
     include: {
       company: true,
+
     },
   });
 }
 
+export async function getOcrWithImage(id: number) {
+  return await prisma.ocr.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      medias: true
+
+    },
+  });
+}
 export async function ocrCount(companyID: number) {
   return await prisma.ocr.count({
     where: {
