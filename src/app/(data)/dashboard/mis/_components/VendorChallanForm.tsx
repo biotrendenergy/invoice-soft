@@ -10,6 +10,7 @@ import { vendorDetail } from "@/generated/prisma";
 import { extractData_msi, getAllOcr, getFilePart } from "@/action/ocr";
 import { toast } from "sonner";
 import { getAllVendor } from "@/action/vendores";
+import { format } from "date-fns";
 const convertToHtmlDate = (dateStr: string) => {
   const [day, month, year] = dateStr.split("-");
   return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
@@ -170,7 +171,7 @@ export default function VendorChallanForm() {
         setValue("biomeChallanNo", json.at(-1)["challan_number"]);
       }
     }
-    setValue("challanDate", new Date().toISOString().slice(0, 10));
+    setValue("challanDate", format(ocrData.date, "dd-MMM-yyyy"));
     setValue("grossWeight", ocrData?.gross_weight.toString() ?? "");
     setValue("netWeightNTPC", ocrData?.net_weight.toString() ?? "");
     setValue("tareWeight", ocrData?.tare_weight.toString() ?? "");
