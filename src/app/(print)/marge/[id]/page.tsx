@@ -22,21 +22,11 @@ const page = async ({ params }: pageProps) => {
       >
         <Data params={params} />
       </div>
-      <div
-        style={{
-          height: "100vh",
-        }}
-      >
+      <div>
         <Challan params={params} />
       </div>
-      <div
-        style={{
-          height: "100vh",
-        }}
-      >
+      <div>
         {data?.medias.map((v) => {
-          console.log(v.title);
-
           if (v.title.toLowerCase().includes("e-way bill")) {
             console.log("s");
 
@@ -47,6 +37,7 @@ const page = async ({ params }: pageProps) => {
               />
             );
           }
+          return null;
         })}
       </div>
     </>

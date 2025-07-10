@@ -17,10 +17,9 @@ export default function PDFViewer({ base64Pdf }: Props) {
   const onLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
   };
-  console.log(numPages);
 
   return (
-    <div>
+    <>
       <Document
         renderMode="canvas"
         file={base64Pdf}
@@ -37,6 +36,6 @@ export default function PDFViewer({ base64Pdf }: Props) {
           />
         ))}
       </Document>
-    </div>
+    </>
   );
 }
