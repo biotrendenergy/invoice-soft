@@ -195,10 +195,10 @@ export default function SlipDetailsForm() {
         type: "S",
         data: {
           ...data,
-          grossWeight: parseInt(data.grossWeight),
-          tareWeight: parseInt(data.tareWeight),
-          netWeight: parseInt(data.netWeight),
-          weightDiff: parseInt(data.weightDiff),
+          grossWeight: parseInt(data.grossWeight).toString(),
+          tareWeight: parseInt(data.tareWeight).toString(),
+          netWeight: parseInt(data.netWeight).toString(),
+          weightDiff: parseInt(data.weightDiff).toString(),
         },
         sheetURl: sheetUrl,
       });
