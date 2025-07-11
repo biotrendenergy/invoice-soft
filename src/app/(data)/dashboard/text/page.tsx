@@ -64,6 +64,28 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
       toast.error("No data to print!");
     }
   };
+
+  const handlePrintData2 = () => {
+    if (id) {
+      window.open(`/data/${id}/khar`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+  const handlePrintMarges2 = () => {
+    if (id) {
+      window.open(`/marge/${id}/khar`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+  const handlePrintChallan2 = () => {
+    if (id) {
+      window.open(`/challan/${id}/khar`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
   useEffect(() => {
     (async () => {
       setCompanies(await getAllCompany());
@@ -266,6 +288,15 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
             </button>
             <button className="btn btn-accent" onClick={handlePrintMarges}>
               merge pdf
+            </button>
+            <button className="btn btn-accent" onClick={handlePrintData2}>
+              Print Annexure 2
+            </button>
+            <button className="btn btn-accent" onClick={handlePrintChallan2}>
+              Print Challan 2
+            </button>
+            <button className="btn btn-accent" onClick={handlePrintMarges2}>
+              merge pdf 2
             </button>
           </>
         )}

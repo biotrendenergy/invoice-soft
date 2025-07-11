@@ -429,6 +429,28 @@ const page = () => {
     }
   };
 
+  const handlePrintData2 = () => {
+    if (data) {
+      window.open(`/data/${data.id}/khar`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+  const handlePrintMarges2 = () => {
+    if (data) {
+      window.open(`/marge/${data.id}/khar`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+  const handlePrintChallan2 = () => {
+    if (data) {
+      window.open(`/challan/${data.id}/khar`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+
   return (
     <div className="flex">
       {/* Left Column - File Upload */}
@@ -846,6 +868,25 @@ const page = () => {
                 className="btn btn-secondary mt-4"
               >
                 merge pdf
+              </button>
+
+              <button
+                onClick={handlePrintData2}
+                className="btn btn-secondary mt-4"
+              >
+                Print annexure 2
+              </button>
+              <button
+                onClick={handlePrintChallan2}
+                className="btn btn-secondary mt-4"
+              >
+                Print Challan 2
+              </button>
+              <button
+                onClick={handlePrintMarges2}
+                className="btn btn-secondary mt-4"
+              >
+                merge pdf 2
               </button>
             </div>
           ) : (

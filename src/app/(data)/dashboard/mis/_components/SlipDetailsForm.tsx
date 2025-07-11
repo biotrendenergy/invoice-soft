@@ -193,7 +193,13 @@ export default function SlipDetailsForm() {
 
       const raw = JSON.stringify({
         type: "S",
-        data,
+        data: {
+          ...data,
+          grossWeight: parseInt(data.grossWeight),
+          tareWeight: parseInt(data.tareWeight),
+          netWeight: parseInt(data.netWeight),
+          weightDiff: parseInt(data.weightDiff),
+        },
         sheetURl: sheetUrl,
       });
 
