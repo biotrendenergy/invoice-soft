@@ -101,6 +101,7 @@
 }
 .ritz .waffle .s4 {
   border-right: 1px SOLID #000000;
+
   background-color: #ffffff;
   text-align: center;
   color: #000000;
@@ -124,9 +125,13 @@
 
   padding: 2px 3px 2px 3px;
 }
+.ritz .waffle .lef {
+  border-left: 1px solid black;
+}
 .ritz .waffle .s9 {
   border-bottom: 1px SOLID #000000;
   border-right: 1px SOLID #000000;
+
   background-color: #ffffff;
   text-align: center;
   color: #000000;

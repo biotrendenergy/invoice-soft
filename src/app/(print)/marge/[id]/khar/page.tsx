@@ -21,7 +21,12 @@ const page = async ({ params }: pageProps) => {
       >
         <Data params={params} />
       </div>
-      <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         <Challan params={params} />
       </div>
       <div>

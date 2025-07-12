@@ -156,7 +156,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s1" dir="ltr" colSpan={6}>
+                <td className="s1 lef" dir="ltr" colSpan={6}>
                   <strong> Bio Trend Energy (OPC) Pvt Ltd,</strong> <br />
                   <br />
                   Bill to
@@ -207,7 +207,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" colSpan={6} />
+                <td className="s3 lef" colSpan={6} />
                 <td />
                 <td />
               </tr>
@@ -222,7 +222,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" dir="ltr" colSpan={6}></td>
+                <td className="s3 lef" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
               </tr>
@@ -237,7 +237,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" dir="ltr" colSpan={6}></td>
+                <td className="s3 lef" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
               </tr>
@@ -252,7 +252,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" dir="ltr" colSpan={6}>
+                <td className="s3 lef" dir="ltr" colSpan={6}>
                   Ship to
                   <br />
                   NTPC LTD <br />
@@ -275,7 +275,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" colSpan={6} />
+                <td className="s3 lef" colSpan={6} />
                 <td />
                 <td />
                 <td />
@@ -296,7 +296,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s1" dir="ltr" colSpan={6}></td>
+                <td className="s1 lef" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
                 <td />
@@ -317,7 +317,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s1" dir="ltr" colSpan={6}></td>
+                <td className="s1 lef" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
                 <td />
@@ -338,7 +338,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s1" dir="ltr" colSpan={6}></td>
+                <td className="s1 lef" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
                 <td />
@@ -359,7 +359,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" dir="ltr" colSpan={6}></td>
+                <td className="s3 lef" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
                 <td />
@@ -378,7 +378,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" dir="ltr" colSpan={6}></td>
+                <td className="s3 lef" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
                 <td />
@@ -397,7 +397,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" />
+                <td className="s3 lef" />
                 <td />
                 <td />
                 <td />
@@ -423,7 +423,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" dir="ltr" colSpan={3}></td>
+                <td className="s3 lef" dir="ltr" colSpan={3}></td>
                 <td />
                 <td />
                 <td />
@@ -443,7 +443,7 @@ const page = async ({ params }: pageProps) => {
                   className="row-headers-background"
                 ></th>
                 <td
-                  className="s3"
+                  className="s3 lef"
                   style={{
                     verticalAlign: "top",
                   }}
@@ -476,7 +476,7 @@ const page = async ({ params }: pageProps) => {
                   // style={{ height: 20 }}
                   className="row-headers-background"
                 ></th>
-                <td className="s3" dir="ltr" colSpan={3}></td>
+                <td className="s3 lef" dir="ltr" colSpan={3}></td>
                 <td />
                 <td />
                 <td />
@@ -500,7 +500,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" />
+                <td className="s3 lef" />
                 <td />
                 <td />
                 <td />
@@ -526,7 +526,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" />
+                <td className="s3 lef" />
                 <td />
                 <td />
                 <td />
@@ -553,7 +553,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s6" dir="ltr" />
+                <td className="s6 lef" dir="ltr" />
                 <td className="s7" />
                 <td className="s7" />
                 <td className="s7" />
@@ -579,7 +579,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s9" dir="ltr" rowSpan={3}>
+                <td className="s9 lef" dir="ltr" rowSpan={3}>
                   Sl No
                 </td>
                 <td className="s10" dir="ltr" colSpan={5} rowSpan={3}>
@@ -636,7 +636,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s4" dir="ltr">
+                <td className="s4 lef" dir="ltr">
                   1
                 </td>
                 <td className="s4" dir="ltr" colSpan={5}>
@@ -665,7 +665,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s2" />
+                <td className="s2 lef" />
                 <td className="s5" />
                 <td className="s5" />
                 <td className="s5" />
@@ -691,7 +691,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s2" />
+                <td className="s2 lef" />
                 <td className="s3" />
                 <td />
                 <td />
@@ -717,7 +717,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s2" />
+                <td className="s2 lef" />
                 <td className="s3" />
                 <td />
                 <td />
@@ -743,7 +743,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s2" />
+                <td className="s2 lef" />
                 <td className="s3" />
                 <td />
                 <td />
@@ -769,7 +769,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s2" />
+                <td className="s2 lef" />
                 <td className="s3" />
                 <td />
                 <td />
@@ -795,7 +795,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s2" />
+                <td className="s2 lef" />
                 <td className="s3" />
                 <td />
                 <td />
@@ -821,7 +821,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s2" />
+                <td className="s2 lef" />
                 <td className="s3" />
                 <td />
                 <td />
@@ -847,7 +847,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s2" />
+                <td className="s2 lef" />
                 <td className="s3" />
                 <td />
                 <td />
@@ -873,7 +873,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s2" />
+                <td className="s2 lef" />
                 <td className="s3" />
                 <td />
                 <td />
@@ -899,7 +899,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s8" />
+                <td className="s8 lef" />
                 <td className="s7" />
                 <td className="s7" />
                 <td className="s7" />
