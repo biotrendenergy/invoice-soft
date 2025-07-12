@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import RecordTable from "./_record";
-import { getAllOcr } from "@/action/ocr";
+import { getAllOcr_all } from "@/action/ocr";
 import { ocr } from "@/generated/prisma";
 
 const Page = () => {
   const [ocrData, setOcrData] = useState<ocr[]>([]);
 
   const fetchData = async () => {
-    const data = await getAllOcr();
+    const data = await getAllOcr_all();
     setOcrData(data);
   };
 

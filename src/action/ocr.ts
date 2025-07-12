@@ -573,6 +573,17 @@ export async function getAllOcr() {
   });
 }
 
+export async function getAllOcr_all() {
+  return await prisma.ocr.findMany({
+
+    orderBy: {
+      created_at: "desc",
+    },
+    include: {
+      company: true
+    }
+  });
+}
 export async function getOcr(id: number) {
   return await prisma.ocr.findUnique({
     where: {
