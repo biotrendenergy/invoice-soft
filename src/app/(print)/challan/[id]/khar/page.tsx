@@ -157,16 +157,33 @@ const page = async ({ params }: pageProps) => {
                   ></div>
                 </th>
                 <td className="s1" dir="ltr" colSpan={6}>
-                  Bio Trend Energy (OPC) Pvt Ltd, <br />
+                  <strong> Bio Trend Energy (OPC) Pvt Ltd,</strong> <br />
+                  <br />
+                  Bill to
                   <br />
                   Ground Floor C-55/4, Okhla Industrial Area,
                   <br /> Phase-2, Delhi South Delhi, Delhi, 110020
+                  <br /> Gst No. -07AAJCB9063A1ZT
                 </td>
-                <td className="s2" colSpan={6} rowSpan={5}>
+                <td
+                  className="s2"
+                  colSpan={6}
+                  rowSpan={5}
+                  style={{
+                    position: "relative",
+                  }}
+                >
                   <div
                     id="embed_527324326"
                     className="waffle-embedded-object-overlay"
-                    style={{ width: 443, height: 223, display: "block" }}
+                    style={{
+                      width: 443,
+                      height: 223,
+                      display: "block",
+                      position: "absolute",
+                      right: -91,
+                      top: 0,
+                    }}
                   >
                     <img
                       src="https://lh7-rt.googleusercontent.com/sheetsz/AHOq17GPjAOcPivMSuiSoQ0F_5QCCUw6l0IO6oERWwPaVl5YiQFGZfYa3rUlsEhA6AsCGDjc9_5612J3IhsbQWEYzO1N_-hUJ1LfNuHEc1R6Bp-llvEq8pBGaGGDdBbmcG_ij1EyyIOy?key=QJ0OJmX1keXQCLOUEnnY7g"
@@ -236,7 +253,13 @@ const page = async ({ params }: pageProps) => {
                   ></div>
                 </th>
                 <td className="s3" dir="ltr" colSpan={6}>
-                  Gst No. -07AAJCB9063A1ZT
+                  Ship to
+                  <br />
+                  NTPC LTD <br />
+                  {data.company?.shippingAddress.split(",")[0]},<br />
+                  {data.company?.shippingAddress.split(",").slice(1).join(",")}
+                  <br />
+                  GST No. – {data.company?.shipping_gstNo}
                 </td>
                 <td />
                 <td />
@@ -273,9 +296,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s1" dir="ltr" colSpan={6}>
-                  SHIPPED TO
-                </td>
+                <td className="s1" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
                 <td />
@@ -296,9 +317,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s1" dir="ltr" colSpan={6}>
-                  NTPC LTD{" "}
-                </td>
+                <td className="s1" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
                 <td />
@@ -319,9 +338,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s1" dir="ltr" colSpan={6}>
-                  {data.company?.shippingAddress.split(",")[0]},
-                </td>
+                <td className="s1" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
                 <td />
@@ -342,15 +359,11 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" dir="ltr" colSpan={6}>
-                  {data.company?.shippingAddress.split(",").slice(1).join(",")}
-                </td>
+                <td className="s3" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
                 <td />
-                <td className="s4" dir="ltr" colSpan={3}>
-                  DATE {format(data.date, "dd/mm/yyyy")}
-                </td>
+                <td className="s4" dir="ltr" colSpan={3}></td>
                 <td />
                 <td />
               </tr>
@@ -365,15 +378,11 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" dir="ltr" colSpan={6}>
-                  GST No. – {data.company?.shipping_gstNo}
-                </td>
+                <td className="s3" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
                 <td />
-                <td className="s4" dir="ltr" colSpan={3}>
-                  CHALLAN NO-{data.challan}
-                </td>
+                <td className="s4" dir="ltr" colSpan={3}></td>
                 <td />
                 <td />
               </tr>
@@ -414,9 +423,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3" dir="ltr" colSpan={3}>
-                  AGST. -
-                </td>
+                <td className="s3" dir="ltr" colSpan={3}></td>
                 <td />
                 <td />
                 <td />
@@ -434,13 +441,15 @@ const page = async ({ params }: pageProps) => {
                   id="0R16"
                   style={{ height: 20 }}
                   className="row-headers-background"
+                ></th>
+                <td
+                  className="s3"
+                  style={{
+                    verticalAlign: "top",
+                  }}
                 >
-                  <div
-                    className="row-header-wrapper"
-                    style={{ lineHeight: 20 }}
-                  ></div>
-                </th>
-                <td className="s3" />
+                  PO NO: {data.company?.PONumber}{" "}
+                </td>
                 <td className="s3" />
                 <td className="s3" />
                 <td />
@@ -449,6 +458,12 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td className="s5" dir="ltr" colSpan={3}>
+                  CHALLAN NO-{data.challan}
+                  <br />
+                  <br />
+                  DATE {format(data.date, "dd/mm/yyyy")}
+                  <br />
+                  <br />
                   EWAY BILL NO. - {data.e_way_bill}
                 </td>
                 <td className="s2" />
@@ -458,17 +473,10 @@ const page = async ({ params }: pageProps) => {
               <tr style={{ height: 20 }}>
                 <th
                   id="0R17"
-                  style={{ height: 20 }}
+                  // style={{ height: 20 }}
                   className="row-headers-background"
-                >
-                  <div
-                    className="row-header-wrapper"
-                    style={{ lineHeight: 20 }}
-                  ></div>
-                </th>
-                <td className="s3" dir="ltr" colSpan={3}>
-                  781538072229
-                </td>
+                ></th>
+                <td className="s3" dir="ltr" colSpan={3}></td>
                 <td />
                 <td />
                 <td />
@@ -501,8 +509,7 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td className="s5" dir="ltr" colSpan={3}>
-                  {" "}
-                  PO NO: {data.company?.PONumber}{" "}
+                  EWAY BILL DATE {format(data.e_way_bill_date, "dd/MM/yyyy")}
                 </td>
                 <td className="s2" />
                 <td />
@@ -582,11 +589,10 @@ const page = async ({ params }: pageProps) => {
                   HSN/SAC
                 </td>
                 <td className="s10" dir="ltr" colSpan={2} rowSpan={3}>
-                  EOM
+                  VOM
                 </td>
                 <td className="s10" dir="ltr" colSpan={2} rowSpan={3}>
-                  QUANTITY <br />
-                  (KGS){" "}
+                  QUANTITY
                 </td>
                 <td className="s5" />
                 <td className="s5" />

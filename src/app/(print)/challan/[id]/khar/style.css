@@ -22,7 +22,7 @@
 }
 .ritz .waffle .s5 {
   background-color: #ffffff;
-  text-align: center;
+  /* text-align: center; */
   color: #000000;
   font-family: Arial;
   font-size: 10pt;
@@ -175,7 +175,7 @@
 .ritz .waffle .s1 {
   background-color: #ffffff;
   text-align: left;
-  font-weight: bold;
+  /* font-weight: bold; */
   color: #000000;
   font-family: Arial;
   font-size: 10pt;
