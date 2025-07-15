@@ -217,7 +217,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
               setLoading(true);
               const parseDate = (d: string) => {
                 const [day, month, year] = d.split("/");
-                return new Date(`20${year}-${month}-${day}`);
+                return new Date(`${year}-${month}-${day}`);
               };
 
               const safeNumber = (value: string) =>
