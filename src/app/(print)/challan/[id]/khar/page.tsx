@@ -159,11 +159,23 @@ const page = async ({ params }: pageProps) => {
                 <td className="s1 lef" dir="ltr" colSpan={6}>
                   <strong> Bio Trend Energy (OPC) Pvt Ltd,</strong> <br />
                   <br />
-                  Bill to
-                  <br />
                   Ground Floor C-55/4, Okhla Industrial Area,
                   <br /> Phase-2, Delhi South Delhi, Delhi, 110020
                   <br /> Gst No. -07AAJCB9063A1ZT
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  Bill to
+                  <br />
+                  NTPC LTD <br />
+                  {data.company?.shippingAddress.split(",")[0]},<br />
+                  {data.company?.shippingAddress.split(",").slice(1).join(",")}
+                  <br />
+                  GST No. – {data.company?.shipping_gstNo}
                 </td>
                 <td
                   className="s2"
@@ -207,7 +219,17 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3 lef" colSpan={6} />
+                <td className="s3 lef" colSpan={6}>
+                  <br />
+                  <br />
+                  Ship to
+                  <br />
+                  NTPC LTD <br />
+                  {data.company?.shippingAddress.split(",")[0]},<br />
+                  {data.company?.shippingAddress.split(",").slice(1).join(",")}
+                  <br />
+                  GST No. – {data.company?.shipping_gstNo}
+                </td>
                 <td />
                 <td />
               </tr>
@@ -252,15 +274,7 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td className="s3 lef" dir="ltr" colSpan={6}>
-                  Ship to
-                  <br />
-                  NTPC LTD <br />
-                  {data.company?.shippingAddress.split(",")[0]},<br />
-                  {data.company?.shippingAddress.split(",").slice(1).join(",")}
-                  <br />
-                  GST No. – {data.company?.shipping_gstNo}
-                </td>
+                <td className="s3 lef" dir="ltr" colSpan={6}></td>
                 <td />
                 <td />
               </tr>
@@ -461,7 +475,7 @@ const page = async ({ params }: pageProps) => {
                   CHALLAN NO-{data.challan}
                   <br />
                   <br />
-                  DATE {format(data.date, "dd/mm/yyyy")}
+                  DATE {format(data.date, "dd/MM/yyyy")}
                   <br />
                   <br />
                   EWAY BILL NO. - {data.e_way_bill}
@@ -1005,10 +1019,10 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td />
-                <td className="s3" dir="ltr" colSpan={3}>
+                <td className="s3" colSpan={3}>
                   Thank you for your business!
                 </td>
+                <td />
                 <td />
                 <td />
                 <td />
@@ -1057,10 +1071,10 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td />
                 <td className="s3" dir="ltr" colSpan={4}>
                   Company's PAN : AAJCB9063A
                 </td>
+                <td />
                 <td />
                 <td />
                 <td />
@@ -1082,10 +1096,10 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td />
                 <td className="s3" dir="ltr" colSpan={4}>
                   Goods once sold will not be taken back
                 </td>
+                <td />
                 <td />
                 <td />
                 <td />
@@ -1106,10 +1120,10 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td />
                 <td className="s3" dir="ltr" colSpan={4}>
                   Subject to Delhi Jurisdiction
                 </td>
+                <td />
                 <td />
                 <td />
                 <td />
@@ -1191,7 +1205,22 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td />
-                <td className="s5" dir="ltr" colSpan={4}>
+                <td
+                  style={{
+                    position: "relative",
+                  }}
+                  className="s5"
+                  dir="ltr"
+                  colSpan={4}
+                >
+                  <img
+                    src="/sign.png"
+                    height={100}
+                    style={{
+                      position: "absolute",
+                      top: -69,
+                    }}
+                  />
                   Authorized Signatory
                 </td>
                 <td />

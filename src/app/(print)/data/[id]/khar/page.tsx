@@ -282,7 +282,7 @@ const page = async ({ params }: pageProps) => {
                   fontSize: "16px",
                 }}
               >
-                Annexure
+                Annexure-II
               </td>
             </tr>
             <tr style={{ height: "20px" }}>
@@ -391,6 +391,31 @@ const page = async ({ params }: pageProps) => {
                 2
               </td>
               <td className={style.s5} dir="ltr" colSpan={5}>
+                Address of the manufacturing location
+              </td>
+              <td className={style.s4}></td>
+              <td className={style.s3} colSpan={5}>
+                244, DLF South Court, District Centre, Saket, New Delhi-110017,
+                India
+              </td>
+            </tr>
+            <tr style={{ height: "20px" }}>
+              <th
+                id="0R14"
+                style={{ height: "20px" }}
+                className="row-headers-background"
+              >
+                <div
+                  className="row-header-wrapper"
+                  style={{ lineHeight: "20px" }}
+                ></div>
+              </th>
+              <td></td>
+              <td className={style.s2}></td>
+              <td className={style.s4} dir="ltr">
+                3
+              </td>
+              <td className={style.s5} dir="ltr" colSpan={5}>
                 Date of Dispatch
               </td>
               <td className={style.s4}></td>
@@ -412,7 +437,7 @@ const page = async ({ params }: pageProps) => {
               <td></td>
               <td className={style.s2}></td>
               <td className={style.s4} dir="ltr">
-                3
+                4
               </td>
               <td className={style.s5} dir="ltr" colSpan={5}>
                 Batch Number
@@ -436,7 +461,7 @@ const page = async ({ params }: pageProps) => {
               <td></td>
               <td className={style.s2}></td>
               <td className={style.s4} dir="ltr">
-                4
+                5
               </td>
               <td className={style.s5} dir="ltr" colSpan={5}>
                 Carriage Vehicle Type / Number
@@ -460,7 +485,7 @@ const page = async ({ params }: pageProps) => {
               <td></td>
               <td className={style.s2}></td>
               <td className={style.s4} dir="ltr" rowSpan={3}>
-                5
+                6
               </td>
               <td className={style.s4} dir="ltr" colSpan={5} rowSpan={3}>
                 Weight
@@ -529,7 +554,7 @@ const page = async ({ params }: pageProps) => {
               <td></td>
               <td className={style.s2}></td>
               <td className={style.s4} dir="ltr">
-                6
+                7
               </td>
               <td className={style.s5} dir="ltr" colSpan={5}>
                 Any Other Details as applicable
@@ -553,7 +578,7 @@ const page = async ({ params }: pageProps) => {
               <td></td>
               <td className={style.s2}></td>
               <td className={style.s6} dir="ltr">
-                7
+                8
               </td>
               <td className={style.s7} dir="ltr" colSpan={5}>
                 Any Other Details as applicable

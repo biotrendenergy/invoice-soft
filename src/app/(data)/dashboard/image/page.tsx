@@ -169,6 +169,8 @@ const page = () => {
 
     setValue(name, e.target.files[0]);
     let dataPart = await getFilePart(e.target.files[0]);
+    console.log(name);
+
     switch (name) {
       case "e_wayBill":
         setError("e_wayBill", {
