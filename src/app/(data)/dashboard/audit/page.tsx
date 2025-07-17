@@ -71,7 +71,7 @@ export default function AuditPage() {
         <div className="overflow-x-auto">
           <table className="table table-zebra table-sm">
             <thead>
-              <tr>
+              <tr className="uppercase">
                 <th>ID</th>
                 <th>Message</th>
                 <th>IP</th>

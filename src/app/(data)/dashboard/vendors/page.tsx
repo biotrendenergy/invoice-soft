@@ -119,7 +119,7 @@ export default function VendorTable() {
       <div className="overflow-x-auto">
         <table className="table table-zebra w-full">
           <thead>
-            <tr>
+            <tr className="uppercase">
               <th>Name</th>
               <th>Address</th>
               <th>State</th>

@@ -471,8 +471,8 @@ const page = () => {
               </button>
             </div>
           </div>
-          <fieldset className="flex flex-col">
-            <label>Vendor Name</label>
+          <fieldset className="fieldset flex flex-col">
+            <label className="fieldset-legend">Vendor Name</label>
             <select
               className="select select-bordered"
               defaultValue=""
@@ -587,7 +587,7 @@ const page = () => {
                 )}
               </fieldset>
               <div className="flex w-full gap-4">
-                <fieldset className="flex-1 mb-4">
+                <fieldset className="fieldset flex-1 mb-4">
                   <legend className="fieldset-legend">Net Weight (A)</legend>
                   <div className="flex  gap-2">
                     <input
@@ -630,7 +630,7 @@ const page = () => {
                     <p className="text-error">{errors.net_data.message}</p>
                   )} */}
                 </fieldset>
-                <fieldset className="flex-1 mb-4">
+                <fieldset className="fieldset flex-1 mb-4">
                   <legend className="fieldset-legend">Net Weight (B)</legend>
                   <div className="flex  gap-2">
                     <input

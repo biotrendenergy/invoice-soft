@@ -58,7 +58,7 @@ export default function OcrDashboard() {
         <div className="overflow-x-auto">
           <table className="table table-zebra">
             <thead>
-              <tr>
+              <tr className="uppercase">
                 <th>ID</th>
                 <th>Challan</th>
                 <th>Company</th>

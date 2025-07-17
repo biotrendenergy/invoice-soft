@@ -12,33 +12,33 @@ const Sidebar = (props: PropsWithChildren) => {
       </div>
       <div className="drawer-side">
         <label htmlFor="dashboard-drawer" className="drawer-overlay"></label>
-        <ul className="menu p-4 w-80 min-h-full bg-base-100 text-base-content">
-          <li>
+        <ul className="menu p-4 w-56 min-h-full text-black  uppercase bg-white">
+          <li className="hover:bg-black/15">
             <Link href={"/dashboard"}>Home</Link>
           </li>
-          <li>
+          <li className="hover:bg-black/15">
             <Link href={"/dashboard/image"}>Image</Link>
           </li>
-          <li>
+          <li className="hover:bg-black/15">
             <Link href={"/dashboard/text"}>Text</Link>
           </li>
 
-          <li>
+          <li className="hover:bg-black/15">
             <Link href={"/dashboard/compare"}>PDF Compare</Link>
           </li>
-          <li>
+          <li className="hover:bg-black/15">
             <Link href={"/dashboard/mis"}>MIS</Link>
           </li>
-          <li>
+          <li className="hover:bg-black/15">
             <Link href={"/dashboard/companys"}>companies</Link>
           </li>
-          <li>
+          <li className="hover:bg-black/15">
             <Link href={"/dashboard/vendors"}>vendor</Link>
           </li>
-          <li>
+          <li className="hover:bg-black/15">
             <Link href={"/dashboard/audit"}>audit</Link>
           </li>
-          <li>
+          <li className="hover:bg-black/15">
             <Link href={"/dashboard/db"}>Data base</Link>
           </li>
         </ul>
