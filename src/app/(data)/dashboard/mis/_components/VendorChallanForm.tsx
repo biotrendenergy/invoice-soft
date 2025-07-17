@@ -115,11 +115,7 @@ const FileUploadModal = ({
             <button className="btn" onClick={onClose}>
               Close
             </button>
-            <button
-              className="btn"
-              disabled={!ewayBill || !challan}
-              onClick={onsubmit}
-            >
+            <button className="btn" disabled={!ewayBill} onClick={onsubmit}>
               Submit
             </button>
           </div>
