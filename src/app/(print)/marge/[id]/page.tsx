@@ -21,10 +21,15 @@ const page = async ({ params }: pageProps) => {
       >
         <Data params={params} />
       </div>
+
       <div>
         <Challan params={params} />
       </div>
-      <div>
+      <div
+        style={{
+          position: "relative",
+        }}
+      >
         {data?.medias.map((v) => {
           if (v.title.toLowerCase().includes("e-way bill")) {
             return (

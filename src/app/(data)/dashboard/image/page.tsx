@@ -870,24 +870,30 @@ const page = () => {
                 merge pdf
               </button>
 
-              <button
-                onClick={handlePrintData2}
-                className="btn btn-secondary mt-4"
-              >
-                Print annexure 2
-              </button>
-              <button
-                onClick={handlePrintChallan2}
-                className="btn btn-secondary mt-4"
-              >
-                Print Challan 2
-              </button>
-              <button
-                onClick={handlePrintMarges2}
-                className="btn btn-secondary mt-4"
-              >
-                merge pdf 2
-              </button>
+              {companies
+                ?.find((v) => v.id == getValues("companyId"))
+                ?.shotName.toLowerCase() == "dadri" && (
+                <>
+                  <button
+                    onClick={handlePrintData2}
+                    className="btn btn-secondary mt-4"
+                  >
+                    Print annexure 2
+                  </button>
+                  <button
+                    onClick={handlePrintChallan2}
+                    className="btn btn-secondary mt-4"
+                  >
+                    Print Challan 2
+                  </button>
+                  <button
+                    onClick={handlePrintMarges2}
+                    className="btn btn-secondary mt-4"
+                  >
+                    merge pdf 2
+                  </button>
+                </>
+              )}
             </div>
           ) : (
             <p>No data to display</p>

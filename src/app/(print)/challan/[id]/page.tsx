@@ -1346,7 +1346,22 @@ const page = async ({ params }: pageProps) => {
               <td className="s1"></td>
               <td className="s1"></td>
               <td className="s1"></td>
-              <td className="s15" colSpan={3}>
+              <td
+                className="s15"
+                colSpan={3}
+                style={{
+                  position: "relative",
+                }}
+              >
+                <img
+                  src="/sign.png"
+                  height={100}
+                  style={{
+                    position: "absolute",
+                    top: -100,
+                    right: 80,
+                  }}
+                />
                 Authorised Signatory
               </td>
               <td className="s0"></td>

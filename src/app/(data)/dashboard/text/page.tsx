@@ -289,15 +289,23 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
             <button className="btn btn-accent" onClick={handlePrintMarges}>
               merge pdf
             </button>
-            <button className="btn btn-accent" onClick={handlePrintData2}>
-              Print Annexure 2
-            </button>
-            <button className="btn btn-accent" onClick={handlePrintChallan2}>
-              Print Challan 2
-            </button>
-            <button className="btn btn-accent" onClick={handlePrintMarges2}>
-              merge pdf 2
-            </button>
+            {companies?.find((v) => v.id == company)?.shotName.toLowerCase() ==
+              "dadri" && (
+              <>
+                <button className="btn btn-accent" onClick={handlePrintData2}>
+                  Print Annexure 2
+                </button>
+                <button
+                  className="btn btn-accent"
+                  onClick={handlePrintChallan2}
+                >
+                  Print Challan 2
+                </button>
+                <button className="btn btn-accent" onClick={handlePrintMarges2}>
+                  merge pdf 2
+                </button>
+              </>
+            )}
           </>
         )}
       </div>

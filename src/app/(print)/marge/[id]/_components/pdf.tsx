@@ -27,13 +27,15 @@ export default function PDFViewer({ base64Pdf }: Props) {
         onLoadSuccess={onLoadSuccess}
       >
         {Array.from(new Array(numPages), (_, i) => (
-          <Page
-            renderTextLayer={false}
-            scale={2}
-            key={i}
-            pageNumber={i + 1}
-            renderAnnotationLayer={false}
-          />
+          <>
+            <Page
+              renderTextLayer={false}
+              scale={2}
+              key={i}
+              pageNumber={i + 1}
+              renderAnnotationLayer={false}
+            />
+          </>
         ))}
       </Document>
     </>
