@@ -65,6 +65,24 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
     }
   };
 
+  const handlePrintDataSign = () => {
+    if (id) window.open(`/data/${id}/sign`, "popupWindow");
+    else toast.error("No data to print!");
+  };
+
+  const handlePrintChallanSign = () => {
+    if (id) window.open(`/challan/${id}/sign`, "popupWindow");
+    else toast.error("No data to print!");
+  };
+
+  const handlePrintMargesSign = () => {
+    if (id) {
+      window.open(`/marge/${id}/sign`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+
   const handlePrintData2 = () => {
     if (id) {
       window.open(`/data/${id}/khar`, "popupWindow");
@@ -82,6 +100,28 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
   const handlePrintChallan2 = () => {
     if (id) {
       window.open(`/challan/${id}/khar`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+
+  const handlePrintData2sign = () => {
+    if (id) {
+      window.open(`/data/${id}/khar/sign`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+  const handlePrintMarges2sign = () => {
+    if (id) {
+      window.open(`/marge/${id}/khar/sign`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+  const handlePrintChallan2sign = () => {
+    if (id) {
+      window.open(`/challan/${id}/khar/sign`, "popupWindow");
     } else {
       toast.error("No data to print!");
     }
@@ -289,6 +329,15 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
             <button className="btn btn-accent" onClick={handlePrintMarges}>
               merge pdf
             </button>
+            <button className="btn btn-accent" onClick={handlePrintDataSign}>
+              Print Annexure Sign
+            </button>
+            <button className="btn btn-accent" onClick={handlePrintChallanSign}>
+              Print Challan Sign
+            </button>
+            <button className="btn btn-accent" onClick={handlePrintMargesSign}>
+              merge pdf Sign
+            </button>
             {companies?.find((v) => v.id == company)?.shotName.toLowerCase() ==
               "dadri" && (
               <>
@@ -301,8 +350,30 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                 >
                   Print Challan 2
                 </button>
-                <button className="btn btn-accent" onClick={handlePrintMarges2}>
+                <button
+                  className="btn btn-accent"
+                  onClick={handlePrintMarges2sign}
+                >
                   merge pdf 2
+                </button>
+
+                <button
+                  className="btn btn-accent"
+                  onClick={handlePrintData2sign}
+                >
+                  Print Annexure 2 Sign
+                </button>
+                <button
+                  className="btn btn-accent"
+                  onClick={handlePrintChallan2}
+                >
+                  Print Challan 2 Sign
+                </button>
+                <button
+                  className="btn btn-accent"
+                  onClick={handlePrintMarges2sign}
+                >
+                  merge pdf 2 Sign
                 </button>
               </>
             )}

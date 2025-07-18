@@ -431,6 +431,28 @@ const page = () => {
     }
   };
 
+  const handlePrintDataSign = () => {
+    if (data) {
+      window.open(`/data/${data.id}`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+  const handlePrintMargesSign = () => {
+    if (data) {
+      window.open(`/marge/${data.id}/sign`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+  const handlePrintChallanSign = () => {
+    if (data) {
+      window.open(`/challan/${data.id}/sign`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+
   const handlePrintData2 = () => {
     if (data) {
       window.open(`/data/${data.id}/khar`, "popupWindow");
@@ -448,6 +470,28 @@ const page = () => {
   const handlePrintChallan2 = () => {
     if (data) {
       window.open(`/challan/${data.id}/khar`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+
+  const handlePrintData2sign = () => {
+    if (data) {
+      window.open(`/data/${data.id}/khar/sign`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+  const handlePrintMarges2sign = () => {
+    if (data) {
+      window.open(`/marge/${data.id}/khar/sign`, "popupWindow");
+    } else {
+      toast.error("No data to print!");
+    }
+  };
+  const handlePrintChallan2sign = () => {
+    if (data) {
+      window.open(`/challan/${data.id}/khar/sign`, "popupWindow");
     } else {
       toast.error("No data to print!");
     }
@@ -871,6 +915,24 @@ const page = () => {
               >
                 merge pdf
               </button>
+              <button
+                onClick={handlePrintDataSign}
+                className="btn btn-secondary mt-4"
+              >
+                Print annexure sign
+              </button>
+              <button
+                onClick={handlePrintChallanSign}
+                className="btn btn-secondary mt-4"
+              >
+                Print Challan sign
+              </button>
+              <button
+                onClick={handlePrintMargesSign}
+                className="btn btn-secondary mt-4"
+              >
+                merge pdf sign
+              </button>
 
               {companies
                 ?.find((v) => v.id == getValues("companyId"))
@@ -893,6 +955,24 @@ const page = () => {
                     className="btn btn-secondary mt-4"
                   >
                     merge pdf 2
+                  </button>
+                  <button
+                    onClick={handlePrintData2sign}
+                    className="btn btn-secondary mt-4"
+                  >
+                    Print annexure sign 2
+                  </button>
+                  <button
+                    onClick={handlePrintChallan2sign}
+                    className="btn btn-secondary mt-4"
+                  >
+                    Print Challan sign 2
+                  </button>
+                  <button
+                    onClick={handlePrintMarges2sign}
+                    className="btn btn-secondary mt-4"
+                  >
+                    merge pdf sign 2
                   </button>
                 </>
               )}

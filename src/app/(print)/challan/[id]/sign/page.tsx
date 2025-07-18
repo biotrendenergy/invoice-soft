@@ -1,8 +1,8 @@
 import { getOcr } from "@/action/ocr";
 import "./style.css";
 import { getStateCode } from "@/utility/getStateCode";
-import EditButton from "../../_components/editButton";
-import PrintButton from "../../_components/printButton";
+import EditButton from "../../../_components/editButton";
+import PrintButton from "../../../_components/printButton";
 interface pageProps {
   params: Promise<{
     id: string;
@@ -1349,11 +1349,11 @@ const page = async ({ params }: pageProps) => {
               <td
                 className="s15"
                 colSpan={3}
-                // style={{
-                //   position: "relative",
-                // }}
+                style={{
+                  position: "relative",
+                }}
               >
-                {/* <img
+                <img
                   src="/sign.png"
                   height={100}
                   style={{
@@ -1361,7 +1361,7 @@ const page = async ({ params }: pageProps) => {
                     top: -100,
                     right: 80,
                   }}
-                /> */}
+                />
                 Authorised Signatory
               </td>
               <td className="s0"></td>
