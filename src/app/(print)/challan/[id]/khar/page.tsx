@@ -1213,14 +1213,14 @@ const page = async ({ params }: pageProps) => {
                   dir="ltr"
                   colSpan={4}
                 >
-                  <img
+                  {/* <img
                     src="/sign.png"
                     height={100}
                     style={{
                       position: "absolute",
                       top: -69,
                     }}
-                  />
+                  /> */}
                   Authorized Signatory
                 </td>
                 <td />
