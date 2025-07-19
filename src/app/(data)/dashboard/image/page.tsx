@@ -433,7 +433,7 @@ const page = () => {
 
   const handlePrintDataSign = () => {
     if (data) {
-      window.open(`/data/${data.id}`, "popupWindow");
+      window.open(`/data/${data.id}/sign`, "popupWindow");
     } else {
       toast.error("No data to print!");
     }
