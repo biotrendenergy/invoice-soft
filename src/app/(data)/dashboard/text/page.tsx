@@ -357,7 +357,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   merge pdf 2
                 </button>
 
-                <button
+                {/* <button
                   className="btn btn-accent"
                   onClick={handlePrintData2sign}
                 >
@@ -368,7 +368,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                   onClick={handlePrintChallan2}
                 >
                   Print Challan 2 Sign
-                </button>
+                </button> */}
                 <button
                   className="btn btn-accent"
                   onClick={handlePrintMarges2sign}

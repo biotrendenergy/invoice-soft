@@ -920,7 +920,7 @@ const page = () => {
               >
                 merge pdf
               </button>
-              <button
+              {/* <button
                 onClick={handlePrintDataSign}
                 className="btn btn-secondary mt-4"
               >
@@ -931,7 +931,7 @@ const page = () => {
                 className="btn btn-secondary mt-4"
               >
                 Print Challan sign
-              </button>
+              </button> */}
               <button
                 onClick={handlePrintMargesSign}
                 className="btn btn-secondary mt-4"
@@ -961,7 +961,7 @@ const page = () => {
                   >
                     merge pdf 2
                   </button>
-                  <button
+                  {/* <button
                     onClick={handlePrintData2sign}
                     className="btn btn-secondary mt-4"
                   >
@@ -972,7 +972,7 @@ const page = () => {
                     className="btn btn-secondary mt-4"
                   >
                     Print Challan sign 2
-                  </button>
+                  </button> */}
                   <button
                     onClick={handlePrintMarges2sign}
                     className="btn btn-secondary mt-4"
