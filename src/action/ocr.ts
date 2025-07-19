@@ -58,26 +58,29 @@ You are provided with an image that contains logistics or shipment data, includi
 
 ---
 
-#### **2. vehicle_number**
+#### **2. vehicle\_number**
 
 * An Indian vehicle registration number.
-* Common format: \`CG10BV0674\`, \`MH - 12AB - 1234\`, etc.
-* Appears near or after:
+* Common formats include:
 
-  * \`Note: \`, \`Vehicle No: \`, \`Truck No: \`
-  * Or may appear in free text near the GPS box.
+  * \`CG10BV0674\`, \`MH - 12AB - 1234 \`,\`MH09X2545\`, \`MH 09X 2545\`
+* Look for text near:
+
+  * \`Note:\`, \`Vehicle No:\`, \`Truck No: \`, or free text near the GPS section.
+* **Accept variations with or without spaces or dashes.**
+* **Example:** If the image contains \`MH 09X 2545\`, extract \`"MH09X2545"\`.
 
 ---
 
 #### **3. address**
 
 * A complete textual address from the **GPS overlay section**.
-* Often appears at the top of the overlay.
 * May include: street/road name, locality, city, state, pin code, country.
+* Typically found near the top of the GPS overlay.
 
 ---
 
-#### **4. map_url**
+#### **4. map\_url**
 
 * Construct a valid **Google Maps URL** using extracted latitude and longitude.
 * Format:
@@ -99,22 +102,29 @@ You are provided with an image that contains logistics or shipment data, includi
 
 #### ** 7. date **
 
-* Appears in the ** GPS overlay ** under\`Date\`.
+* Appears in the ** GPS overlay ** under \`Date\`.
 * Convert the date and time(GMT) to ** ISO 8601 UTC format **.
 * Format: \`"YYYY-MM-DDTHH:MM:SSZ"\`
 
-  * Example: \`07-05-2025 GMT 10:18:15 AM\` → \`"2025-07-05T10:18:15Z"\`
+  * Example: \`07-05-2025 GMT 10:18:15 AM\` →\ \`"2025-07-05T10:18:15Z"\`
 
 ---
 
-### ✅ ** Return Format **
+### ⚠️ Special Notes:
 
-  Return the ** first valid occurrence ** of each value in the following ** pure JSON ** structure:
+* Ignore values near terms like ** "AI Dietact" ** (e.g.,\`0\` or\`O\` beside it); they are not relevant.
+* Clean and normalize any OCR quirks(e.g., letter "O" misread as zero \`0\`, or vice versa).
+
+---
+
+### ✅ Return Format
+
+Return the ** first valid occurrence ** of each value in the following ** pure JSON ** structure:
 
 \`\`\`json
 {
   "weight": 59500,
-  "vehicle_number": "CG10BV0674",
+  "vehicle_number": "MH09X2545",
   "address": "Kaudiya Road Chirah Kurdh, Madhya Pradesh 487555, India",
   "map_url": "https://maps.google.com/?q=22.936331,78.846788",
   "latitude": 22.936331,
