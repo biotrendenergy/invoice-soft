@@ -626,6 +626,7 @@ const page = () => {
                     reset
                   </button> */}
                 </div>
+                <p className="text-sm">{watch("tar_data.vehicle_number")}</p>
                 {(errors.tar_data || errors.tar_file) && (
                   <p className="text-error">
                     {(errors.tar_data ?? errors.tar_file)?.message}
@@ -667,6 +668,7 @@ const page = () => {
                       reset
                     </button> */}
                   </div>
+                  <p className="text-sm">{watch("net_data.vehicle_number")}</p>
                   {(errors.net_data || errors.net_file) && (
                     <p className="text-error">
                       {(errors.net_data ?? errors.net_file)?.message}
@@ -712,6 +714,9 @@ const page = () => {
                       reset
                     </button> */}
                   </div>
+                  <p className="text-sm">
+                    {watch("gross_data.vehicle_number")}
+                  </p>
                   {(errors.gross_data || errors.gross_file) && (
                     <p className="text-error">
                       {(errors.gross_data ?? errors.gross_file)?.message}
