@@ -48,8 +48,11 @@ const FileUploadModal = ({
         throw new Error("Data not found!!");
       }
 
-      setValue("vendorChallanDate", convertToHtmlDate(data.challan_date));
-      setValue("vendorChallanNo", data.challan_number);
+      if (challan) {
+        setValue("vendorChallanDate", convertToHtmlDate(data.challan_date));
+        setValue("vendorChallanNo", data.challan_number);
+      }
+
       // setValue("vendorEwayBill", data.eway_bill_number);
       // setValue("vendorEwayBillDate", convertToHtmlDate(data.eway_bill_date));
     } catch (e: any) {
