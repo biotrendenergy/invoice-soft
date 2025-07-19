@@ -39,10 +39,10 @@ const FileUploadModal = ({
   const [challan, setChallan] = useState<null | File>(null);
 
   const onsubmit = async () => {
-    if (!ewayBill || !challan) return;
+    if (!ewayBill) return;
     try {
       const ewayBillFile = await getFilePart(ewayBill);
-      const challanFile = await getFilePart(challan);
+      const challanFile = challan ? await getFilePart(challan) : null;
       let data = await extractData_msi([ewayBillFile, challanFile]);
       if (!data) {
         throw new Error("Data not found!!");
