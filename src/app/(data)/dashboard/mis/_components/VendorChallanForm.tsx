@@ -338,14 +338,14 @@ export default function VendorChallanForm() {
           error={errors.gstNumber}
           inputClass="input"
         /> */}
-        <Field
+        {/* <Field
           label="E-Way Bill Date"
           name="ewayBillDate"
           type="date"
           register={register}
           error={errors.ewayBillDate}
           inputClass="input"
-        />
+        /> */}
         <Field
           label="E-Way Bill No."
           name="ewayBillNo"
