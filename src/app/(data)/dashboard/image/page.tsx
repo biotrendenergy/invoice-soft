@@ -902,42 +902,36 @@ const page = () => {
                 <strong>B weight:</strong> {data.B_weight}
               </p>
 
-              <button
-                onClick={handlePrintData}
-                className="btn btn-secondary mt-4"
-              >
-                Print annexure
-              </button>
-              <button
-                onClick={handlePrintChallan}
-                className="btn btn-secondary mt-4"
-              >
-                Print Challan
-              </button>
-              <button
-                onClick={handlePrintMarges}
-                className="btn btn-secondary mt-4"
-              >
-                merge pdf
-              </button>
-              {/* <button
-                onClick={handlePrintDataSign}
-                className="btn btn-secondary mt-4"
-              >
-                Print annexure sign
-              </button>
-              <button
-                onClick={handlePrintChallanSign}
-                className="btn btn-secondary mt-4"
-              >
-                Print Challan sign
-              </button> */}
-              <button
-                onClick={handlePrintMargesSign}
-                className="btn btn-secondary mt-4"
-              >
-                merge pdf sign
-              </button>
+              {companies
+                ?.find((v) => v.id == getValues("companyId"))
+                ?.shotName.toLowerCase() !== "dadri" && (
+                <>
+                  <button
+                    onClick={handlePrintData}
+                    className="btn btn-secondary mt-4"
+                  >
+                    Print annexure
+                  </button>
+                  <button
+                    onClick={handlePrintChallan}
+                    className="btn btn-secondary mt-4"
+                  >
+                    Print Challan
+                  </button>
+                  <button
+                    onClick={handlePrintMarges}
+                    className="btn btn-secondary mt-4"
+                  >
+                    merge pdf
+                  </button>
+                  <button
+                    onClick={handlePrintMargesSign}
+                    className="btn btn-secondary mt-4"
+                  >
+                    merge pdf sign
+                  </button>
+                </>
+              )}
 
               {companies
                 ?.find((v) => v.id == getValues("companyId"))
