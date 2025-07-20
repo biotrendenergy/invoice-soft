@@ -320,24 +320,38 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
 
         {id && e_way_bill && (
           <>
-            <button className="btn btn-accent" onClick={handlePrintData}>
-              Print Annexure
-            </button>
-            <button className="btn btn-accent" onClick={handlePrintChallan}>
-              Print Challan
-            </button>
-            <button className="btn btn-accent" onClick={handlePrintMarges}>
-              merge pdf
-            </button>
-            <button className="btn btn-accent" onClick={handlePrintDataSign}>
-              Print Annexure Sign
-            </button>
-            <button className="btn btn-accent" onClick={handlePrintChallanSign}>
-              Print Challan Sign
-            </button>
-            <button className="btn btn-accent" onClick={handlePrintMargesSign}>
-              merge pdf Sign
-            </button>
+            {companies?.find((v) => v.id == company)?.shotName.toLowerCase() !==
+              "dadri" && (
+              <>
+                <button className="btn btn-accent" onClick={handlePrintData}>
+                  Print Annexure
+                </button>
+                <button className="btn btn-accent" onClick={handlePrintChallan}>
+                  Print Challan
+                </button>
+                <button className="btn btn-accent" onClick={handlePrintMarges}>
+                  merge pdf
+                </button>
+                <button
+                  className="btn btn-accent"
+                  onClick={handlePrintDataSign}
+                >
+                  Print Annexure Sign
+                </button>
+                <button
+                  className="btn btn-accent"
+                  onClick={handlePrintChallanSign}
+                >
+                  Print Challan Sign
+                </button>
+                <button
+                  className="btn btn-accent"
+                  onClick={handlePrintMargesSign}
+                >
+                  merge pdf Sign
+                </button>
+              </>
+            )}
             {companies?.find((v) => v.id == company)?.shotName.toLowerCase() ==
               "dadri" && (
               <>
