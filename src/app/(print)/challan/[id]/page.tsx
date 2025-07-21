@@ -471,7 +471,7 @@ const page = async ({ params }: pageProps) => {
                 M/S
               </td>
               <td className="s15" colSpan={2}>
-                NTPC Limited
+                {data.company?.shipping_Name ?? "NTPC Limited"}
               </td>
               <td className="s4" colSpan={2}>
                 P.O. No. :

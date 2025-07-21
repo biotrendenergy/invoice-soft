@@ -36,6 +36,7 @@ const companySchema = z.object({
   ),
   gstNo: z.string().min(2, "Billing GST number is required"),
   shippingAddress: z.string().min(2, "Shipping address is required"),
+  shippingName: z.string().min(2, "Shipping Name is required"),
   // shippingState: z.string().min(2, "Shipping state is required"),
   shipping_gstNo: z.string().min(2, "Shipping GST number is required"),
   stringNumber: z.string().min(1, "String number is required"),
@@ -86,6 +87,7 @@ export default function CompanyTable() {
             stringNumber: company.stringNumber,
             PONumber: company.PONumber,
             sheetUrl: company.sheetUrl ?? "",
+            shippingName: company.shipping_Name ?? "",
           }
         : {
             shotName: "",
@@ -98,6 +100,7 @@ export default function CompanyTable() {
             shipping_gstNo: "",
             stringNumber: "",
             PONumber: "",
+            shippingName: "",
           }
     );
     setIsModalOpen(true);
@@ -123,6 +126,7 @@ export default function CompanyTable() {
       stringNumber: data.stringNumber,
       PONumber: data.PONumber,
       sheetUrl: data.sheetUrl,
+      shipping_Name: data.shippingName,
     } as companyDetail;
 
     if (isEditing && selectedCompany) {
@@ -172,6 +176,7 @@ export default function CompanyTable() {
               <th>Billing Address</th>
               <th>Billing State</th>
               <th>Billing GST No</th>
+              <th>Shipping Name</th>
               <th>Shipping Address</th>
               <th>Shipping State</th>
               <th>Shipping GST No</th>
@@ -189,6 +194,7 @@ export default function CompanyTable() {
                 <td>{company.billingAddress}</td>
                 <td>{company.billingState}</td>
                 <td>{company.billing_gstNo}</td>
+                <td>{company.shipping_Name}</td>
                 <td>{company.shippingAddress}</td>
                 <td>{company.shippingState}</td>
                 <td>{company.shipping_gstNo}</td>
@@ -245,6 +251,7 @@ export default function CompanyTable() {
                 { name: "billingAddress", label: "Billing Address" },
                 { name: "billingState", label: "Billing State" },
                 { name: "gstNo", label: "Billing GST Number" },
+                { name: "shippingName", label: "Shipping Name" },
                 { name: "shippingAddress", label: "Shipping Address" },
                 { name: "shippingState", label: "Shipping State" },
                 { name: "shipping_gstNo", label: "Shipping GST Number" },

@@ -905,7 +905,7 @@ const page = () => {
               {companies
                 ?.find((v) => v.id == getValues("companyId"))
                 ?.shotName.toLowerCase() !== "dadri" && (
-                <>
+                <div className="flex gap-2">
                   <button
                     onClick={handlePrintData}
                     className="btn btn-secondary mt-4"
@@ -930,13 +930,13 @@ const page = () => {
                   >
                     merge pdf sign
                   </button>
-                </>
+                </div>
               )}
 
               {companies
                 ?.find((v) => v.id == getValues("companyId"))
                 ?.shotName.toLowerCase() == "dadri" && (
-                <>
+                <div className="flex gap-2">
                   <button
                     onClick={handlePrintData2}
                     className="btn btn-secondary mt-4"
@@ -973,7 +973,7 @@ const page = () => {
                   >
                     merge pdf sign 2
                   </button>
-                </>
+                </div>
               )}
             </div>
           ) : (

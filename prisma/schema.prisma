@@ -66,6 +66,7 @@ model companyDetail {
   billingAddress  String
   billingState    String
   billing_gstNo   String
+  shipping_Name   String  @default("")
   shipping_gstNo  String
   shippingAddress String
   shippingState   String
