@@ -304,7 +304,7 @@ const page = async ({ params }: pageProps) => {
                 M/S
               </td>
               <td className="s15" colSpan={2}>
-                {data?.company?.name}
+                {data?.company?.shotName}
               </td>
               <td className="s16" colSpan={2} rowSpan={2}>
                 State
@@ -471,7 +471,7 @@ const page = async ({ params }: pageProps) => {
                 M/S
               </td>
               <td className="s15" colSpan={2}>
-                {data.company?.shipping_Name ?? "NTPC Limited"}
+                {data.company?.name}
               </td>
               <td className="s4" colSpan={2}>
                 P.O. No. :
