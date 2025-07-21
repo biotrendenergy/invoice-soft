@@ -210,6 +210,8 @@ const page = () => {
           message: "",
         });
         const tar_data = await extractData(dataPart);
+        console.log(tar_data);
+
         if (!tar_data) {
           setError("tar_file", {
             message: "File not found or invalid format",
@@ -277,6 +279,15 @@ const page = () => {
           message: "",
         });
         const net_data = await extractData(dataPart);
+        console.log(net_data);
+
+        if (!net_data) {
+          setError("net_data", {
+            message: "File not found or invalid format",
+          });
+          setLoading(false);
+          return;
+        }
         if (!vehicle_number) {
           setError("e_wayBill", {
             message: "Fist upload E way bill",
@@ -352,6 +363,15 @@ const page = () => {
           message: "",
         });
         const gross_data = await extractData(dataPart);
+        console.log(gross_data);
+
+        if (!gross_data) {
+          setError("gross_data", {
+            message: "File not found or invalid format",
+          });
+          setLoading(false);
+          return;
+        }
         if (!vehicle_number) {
           setError("e_wayBill", {
             message: "Please upload the e-way bill first.",
