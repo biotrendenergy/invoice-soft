@@ -1,3 +1,8 @@
+@page {
+  size: A4; /* or size: 8.5in 11in; for US Letter */
+  /* margin: 0.1in; */
+  border: solid 1px #000;
+}
 .bts {
   display: flex;
   align-items: center;
@@ -6,12 +11,22 @@
     display: none;
   }
 }
-
+.ritz .waffle {
+  /* width: 100%; */
+  border: solid 1px #000000;
+  @media print {
+    width: 100%;
+    border: none;
+  }
+}
 .ritz .waffle a {
   color: inherit;
 }
 .ritz .waffle .s3 {
-  border-right: 1px SOLID #000000;
+  @media print {
+    display: none;
+  }
+  /* border-right: 1px SOLID #000000; */
   background-color: #ffffff;
   text-align: left;
   color: #000000;
@@ -124,7 +139,10 @@
   padding: 0px 3px 0px 3px;
 }
 .ritz .waffle .s2 {
-  border-bottom: 1px SOLID #000000;
+  @media print {
+    display: none;
+  }
+  /* border-bottom: 1px SOLID #000000; */
   background-color: #ffffff;
   text-align: left;
   color: #000000;
@@ -421,8 +439,11 @@
   padding: 0px 3px 0px 3px;
 }
 .ritz .waffle .s34 {
-  border-bottom: 1px SOLID #000000;
-  border-right: 1px SOLID #000000;
+  @media print {
+    display: none;
+  }
+  /* border-bottom: 1px SOLID #000000; */
+  /* border-right: 1px SOLID #000000; */
   background-color: #ffffff;
   text-align: left;
   color: #000000;

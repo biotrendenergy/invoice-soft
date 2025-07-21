@@ -130,7 +130,7 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td></td>
+              {/* <td></td> */}
               <td></td>
               <td></td>
               <td></td>
@@ -156,7 +156,7 @@ const page = async ({ params }: pageProps) => {
                 ></div>
               </th>
               <td></td>
-              <td></td>
+              {/* <td></td> */}
               <td></td>
               <td></td>
               <td></td>
@@ -181,7 +181,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td></td>
               <td className={style.s0} colSpan={12} rowSpan={3}>
                 Bio Trend Energy (OPC) Pvt. Ltd.
@@ -226,7 +226,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td></td>
               <td className={style.s1} colSpan={12} rowSpan={3}></td>
             </tr>
@@ -241,7 +241,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td></td>
             </tr>
             <tr style={{ height: "20px" }}>
@@ -255,7 +255,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td></td>
             </tr>
             <tr style={{ height: "20px" }}>
@@ -269,7 +269,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td
                 className={style.s3}
@@ -296,7 +296,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
             </tr>
             <tr style={{ height: "20px" }}>
@@ -310,7 +310,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td className={style.s3} colSpan={12}>
                 For Non-Torrefied Biomass Pellets
@@ -327,7 +327,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td className={style.s3} colSpan={12}>
                 Tag for Consignment
@@ -344,7 +344,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td className={style.s3} colSpan={12}>
                 General Details
@@ -361,7 +361,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td className={style.s4}>1</td>
               <td className={style.s5} colSpan={5}>
@@ -383,7 +383,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td className={style.s4}>2</td>
               <td className={style.s5} colSpan={5}>
@@ -405,7 +405,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td className={style.s4}>3</td>
               <td className={style.s5} colSpan={5}>
@@ -427,7 +427,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td className={style.s4}>4</td>
               <td className={style.s5} colSpan={5}>
@@ -449,7 +449,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td className={style.s4} rowSpan={3}>
                 5
@@ -478,7 +478,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td className={style.s4} colSpan={3}>
                 Tare Weight
@@ -498,7 +498,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td className={style.s4} colSpan={3}>
                 Material Weight
@@ -518,7 +518,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td className={style.s4}>6</td>
               <td className={style.s5} colSpan={5}>
@@ -540,7 +540,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s2}></td>
               <td className={style.s6}>7</td>
               <td className={style.s7} colSpan={5}>
@@ -562,7 +562,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s9}></td>
               <td className={style.s10} colSpan={12}>
                 Technical Details
@@ -579,7 +579,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s9}></td>
               <td className={style.s4}>1</td>
               <td className={style.s5} colSpan={5}>
@@ -601,7 +601,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s9}></td>
               <td className={style.s4}>2</td>
               <td className={style.s5} colSpan={5}>
@@ -623,7 +623,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s9}></td>
               <td className={style.s4}>3</td>
               <td className={style.s5} colSpan={5}>
@@ -645,7 +645,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ lineHeight: "20px" }}
                 ></div>
               </th>
-              <td></td>
+              {/* <td></td> */}
               <td className={style.s9}></td>
               <td className={style.s12}>4</td>
               <td className={style.s13} colSpan={5}>
