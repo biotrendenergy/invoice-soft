@@ -210,6 +210,13 @@ const page = () => {
           message: "",
         });
         const tar_data = await extractData(dataPart);
+        if (!tar_data) {
+          setError("tar_file", {
+            message: "File not found or invalid format",
+          });
+          setLoading(false);
+          return;
+        }
         if (!vehicle_number) {
           setError("e_wayBill", {
             message: "Please upload the e-way bill first.",
