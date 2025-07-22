@@ -9,6 +9,7 @@ import {
 } from "@/action/ocr";
 import { ocr } from "@/generated/prisma";
 import { useState, useRef, DragEvent, ChangeEvent, useEffect } from "react";
+import { toast } from "sonner";
 const normalizeWeight = (value: string | null) => {
   if (!value) return null;
   const match = value.match(/^([\d.]+)\s*([a-zA-Z]+)$/);
@@ -104,6 +105,7 @@ const Page = () => {
             `data_for_mis_${ocrData?.id}`,
             JSON.stringify(data)
           );
+          toast.success("Data saved successfully!");
         }
       } else {
         resultMessage = "Mismatches found:\n" + mismatches.join("\n");
@@ -231,6 +233,7 @@ const Page = () => {
                     `data_for_mis_${ocrData?.id}`,
                     JSON.stringify(data)
                   );
+                  toast.success("Data saved successfully!");
                 }
                 setLoading(false);
               }}
