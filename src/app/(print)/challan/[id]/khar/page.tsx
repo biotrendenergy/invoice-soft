@@ -404,7 +404,7 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td />
-                <td className="s4" dir="ltr" colSpan={3}></td>
+                {/* <td className="s4" dir="ltr" colSpan={3}></td> */}
                 {/* <td />
                 <td /> */}
               </tr>
@@ -430,7 +430,7 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td />
-                <td className="s2" />
+                {/* <td className="s2" /> */}
                 {/* <td />
                 <td /> */}
               </tr>
@@ -454,7 +454,7 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td />
-                <td className="s2" />
+                {/* <td className="s2" /> */}
                 {/* <td />
                 <td /> */}
               </tr>
