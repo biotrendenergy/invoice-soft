@@ -26,11 +26,11 @@ export default function PDFViewer({ base64Pdf }: Props) {
         className={"w-screen"}
         onLoadSuccess={onLoadSuccess}
       >
-        {Array.from(new Array(numPages), (_, i) => (
+        {Array.from(new Array((numPages ?? 0) - 1), (_, i) => (
           <>
             <Page
               renderTextLayer={false}
-              scale={2}
+              scale={1.5}
               key={i}
               pageNumber={i + 1}
               renderAnnotationLayer={false}
