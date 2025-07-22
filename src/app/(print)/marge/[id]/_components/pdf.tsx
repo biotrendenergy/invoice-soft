@@ -17,6 +17,7 @@ export default function PDFViewer({ base64Pdf }: Props) {
   const onLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
   };
+  console.log("PDFViewer base64Pdf", base64Pdf);
 
   return (
     <>
@@ -26,17 +27,20 @@ export default function PDFViewer({ base64Pdf }: Props) {
         className={"w-screen"}
         onLoadSuccess={onLoadSuccess}
       >
-        {Array.from(new Array((numPages ?? 0) - 1), (_, i) => (
-          <>
-            <Page
-              renderTextLayer={false}
-              scale={1.5}
-              key={i}
-              pageNumber={i + 1}
-              renderAnnotationLayer={false}
-            />
-          </>
-        ))}
+        {Array.from(
+          new Array(numPages && numPages > 1 ? numPages - 1 : numPages),
+          (_, i) => (
+            <>
+              <Page
+                renderTextLayer={false}
+                scale={1.5}
+                key={i}
+                pageNumber={i + 1}
+                renderAnnotationLayer={false}
+              />
+            </>
+          )
+        )}
       </Document>
     </>
   );
