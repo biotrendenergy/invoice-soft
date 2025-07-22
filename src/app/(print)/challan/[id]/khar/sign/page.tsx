@@ -21,6 +21,14 @@ const page = async ({ params }: pageProps) => {
         <PrintButton />
       </div>
       <>
+        <style>{`
+        @page {
+          size: A4; /* or size: 8.5in 11in; for US Letter */
+          /* margin: 0.1in; */
+          border: solid 1px #000 !important;
+        }
+
+        `}</style>
         <div className="ritz grid-container" dir="ltr">
           <table className="waffle" cellSpacing={0} cellPadding={0}>
             <thead>
@@ -86,7 +94,7 @@ const page = async ({ params }: pageProps) => {
                   style={{ width: 100 }}
                   className="column-headers-background"
                 ></th>
-                <th
+                {/* <th
                   id="0C12"
                   style={{ width: 100 }}
                   className="column-headers-background"
@@ -95,7 +103,7 @@ const page = async ({ params }: pageProps) => {
                   id="0C13"
                   style={{ width: 100 }}
                   className="column-headers-background"
-                ></th>
+                ></th> */}
               </tr>
             </thead>
             <tbody>
@@ -127,8 +135,8 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -141,8 +149,8 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -171,8 +179,12 @@ const page = async ({ params }: pageProps) => {
                   Bill to
                   <br />
                   NTPC LTD <br />
-                  {data.company?.shippingAddress.split(",")[0]},<br />
-                  {data.company?.shippingAddress.split(",").slice(1).join(",")}
+                  {data.company?.shippingAddress
+                    .split(" ")
+                    .slice(0, 3)
+                    .join(" ")}
+                  ,<br />
+                  {data.company?.shippingAddress.split(" ").slice(3).join(" ")}
                   <br />
                   GST No. – {data.company?.shipping_gstNo}
                 </td>
@@ -194,6 +206,7 @@ const page = async ({ params }: pageProps) => {
                       position: "absolute",
                       right: -91,
                       top: 0,
+                      zIndex: 0,
                     }}
                   >
                     <img
@@ -204,8 +217,8 @@ const page = async ({ params }: pageProps) => {
                     />
                   </div>
                 </td>
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -224,162 +237,19 @@ const page = async ({ params }: pageProps) => {
                   Ship to
                   <br />
                   NTPC LTD <br />
-                  {data.company?.shippingAddress.split(",")[0]},<br />
-                  {data.company?.shippingAddress.split(",").slice(1).join(",")}
+                  {data.company?.shippingAddress
+                    .split(" ")
+                    .slice(0, 3)
+                    .join(" ")}
+                  ,<br />
+                  {data.company?.shippingAddress.split(" ").slice(3).join(" ")}
                   <br />
                   GST No. – {data.company?.shipping_gstNo}
                 </td>
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
-              <tr style={{ height: 20 }}>
-                <th
-                  id="0R5"
-                  style={{ height: 20 }}
-                  className="row-headers-background"
-                >
-                  <div
-                    className="row-header-wrapper"
-                    style={{ lineHeight: 20 }}
-                  ></div>
-                </th>
-                <td className="s3 lef" dir="ltr" colSpan={6}></td>
-                <td />
-                <td />
-              </tr>
-              <tr style={{ height: 20 }}>
-                <th
-                  id="0R6"
-                  style={{ height: 20 }}
-                  className="row-headers-background"
-                >
-                  <div
-                    className="row-header-wrapper"
-                    style={{ lineHeight: 20 }}
-                  ></div>
-                </th>
-                <td className="s3 lef" dir="ltr" colSpan={6}></td>
-                <td />
-                <td />
-              </tr>
-              <tr style={{ height: 20 }}>
-                <th
-                  id="0R7"
-                  style={{ height: 20 }}
-                  className="row-headers-background"
-                >
-                  <div
-                    className="row-header-wrapper"
-                    style={{ lineHeight: 20 }}
-                  ></div>
-                </th>
-                <td className="s3 lef" dir="ltr" colSpan={6}></td>
-                <td />
-                <td />
-              </tr>
-              <tr style={{ height: 20 }}>
-                <th
-                  id="0R8"
-                  style={{ height: 20 }}
-                  className="row-headers-background"
-                >
-                  <div
-                    className="row-header-wrapper"
-                    style={{ lineHeight: 20 }}
-                  ></div>
-                </th>
-                <td className="s3 lef" colSpan={6} />
-                <td />
-                <td />
-                <td />
-                <td />
-                <td />
-                <td className="s2" />
-                <td />
-                <td />
-              </tr>
-              <tr style={{ height: 20 }}>
-                <th
-                  id="0R9"
-                  style={{ height: 20 }}
-                  className="row-headers-background"
-                >
-                  <div
-                    className="row-header-wrapper"
-                    style={{ lineHeight: 20 }}
-                  ></div>
-                </th>
-                <td className="s1 lef" dir="ltr" colSpan={6}></td>
-                <td />
-                <td />
-                <td />
-                <td />
-                <td />
-                <td className="s2" />
-                <td />
-                <td />
-              </tr>
-              <tr style={{ height: 20 }}>
-                <th
-                  id="0R10"
-                  style={{ height: 20 }}
-                  className="row-headers-background"
-                >
-                  <div
-                    className="row-header-wrapper"
-                    style={{ lineHeight: 20 }}
-                  ></div>
-                </th>
-                <td className="s1 lef" dir="ltr" colSpan={6}></td>
-                <td />
-                <td />
-                <td />
-                <td />
-                <td />
-                <td className="s2" />
-                <td />
-                <td />
-              </tr>
-              <tr style={{ height: 20 }}>
-                <th
-                  id="0R11"
-                  style={{ height: 20 }}
-                  className="row-headers-background"
-                >
-                  <div
-                    className="row-header-wrapper"
-                    style={{ lineHeight: 20 }}
-                  ></div>
-                </th>
-                <td className="s1 lef" dir="ltr" colSpan={6}></td>
-                <td />
-                <td />
-                <td />
-                <td />
-                <td />
-                <td className="s2" />
-                <td />
-                <td />
-              </tr>
-              <tr style={{ height: 20 }}>
-                <th
-                  id="0R12"
-                  style={{ height: 20 }}
-                  className="row-headers-background"
-                >
-                  <div
-                    className="row-header-wrapper"
-                    style={{ lineHeight: 20 }}
-                  ></div>
-                </th>
-                <td className="s3 lef" dir="ltr" colSpan={6}></td>
-                <td />
-                <td />
-                <td />
-                <td className="s4" dir="ltr" colSpan={3}></td>
-                <td />
-                <td />
-              </tr>
+
               <tr style={{ height: 20 }}>
                 <th
                   id="0R13"
@@ -396,8 +266,8 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td className="s4" dir="ltr" colSpan={3}></td>
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -422,8 +292,8 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -446,8 +316,8 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -480,8 +350,8 @@ const page = async ({ params }: pageProps) => {
                   EWAY BILL NO. - {data.e_way_bill}
                 </td>
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -499,8 +369,8 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -525,8 +395,8 @@ const page = async ({ params }: pageProps) => {
                   EWAY BILL DATE {format(data.e_way_bill_date, "dd/MM/yyyy")}
                 </td>
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -552,8 +422,8 @@ const page = async ({ params }: pageProps) => {
                   Motor Vehicle No. {data.vehicle_number}
                 </td>
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -578,8 +448,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s7" />
                 <td className="s7" />
                 <td className="s8" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -607,8 +477,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s10" dir="ltr" colSpan={2} rowSpan={3}>
                   QUANTITY
                 </td>
-                <td className="s5" />
-                <td className="s5" />
+                {/* <td className="s5" />
+                <td className="s5" /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -621,8 +491,8 @@ const page = async ({ params }: pageProps) => {
                     style={{ lineHeight: 20 }}
                   ></div>
                 </th>
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -664,8 +534,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s4" dir="ltr" colSpan={2}>
                   {data.net_weight.toLocaleString()}
                 </td>
-                <td className="s5" />
-                <td className="s5" />
+                {/* <td className="s5" />
+                <td className="s5" /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -690,8 +560,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s2" />
                 <td className="s3" />
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -716,8 +586,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s2" />
                 <td className="s3" />
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -742,8 +612,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s2" />
                 <td className="s3" />
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -768,8 +638,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s2" />
                 <td className="s3" />
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -794,8 +664,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s2" />
                 <td className="s3" />
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -820,8 +690,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s2" />
                 <td className="s3" />
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -846,8 +716,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s2" />
                 <td className="s3" />
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -872,8 +742,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s2" />
                 <td className="s3" />
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -898,8 +768,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s2" />
                 <td className="s3" />
                 <td className="s2" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -924,8 +794,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s8" />
                 <td className="s7" />
                 <td className="s8" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -952,8 +822,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s11" dir="ltr" colSpan={2}>
                   {data.net_weight.toLocaleString()}
                 </td>
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -978,8 +848,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s12" />
                 <td className="s12" />
                 <td className="s12" />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -1004,8 +874,8 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -1030,8 +900,8 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -1056,8 +926,8 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -1081,8 +951,8 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -1105,8 +975,8 @@ const page = async ({ params }: pageProps) => {
                 <td className="s5" dir="ltr" colSpan={4}>
                   For BIO TREND ENERGY (OPC) PRIVATE LIMITED
                 </td>
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -1130,8 +1000,8 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -1156,8 +1026,8 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -1182,8 +1052,8 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td />
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
               <tr style={{ height: 20 }}>
                 <th
@@ -1222,8 +1092,8 @@ const page = async ({ params }: pageProps) => {
                   />
                   Authorized Signatory
                 </td>
-                <td />
-                <td />
+                {/* <td />
+                <td /> */}
               </tr>
             </tbody>
           </table>

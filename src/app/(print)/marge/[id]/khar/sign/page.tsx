@@ -14,6 +14,15 @@ const page = async ({ params }: pageProps) => {
 
   return (
     <>
+      <style>{`
+    @page {
+  size: A4; /* or size: 8.5in 11in; for US Letter */
+  /* margin: 0.1in; */
+  border: solid 1px #000;
+}
+
+    
+    `}</style>
       <div
         style={{
           height: "100vh",
@@ -25,11 +34,16 @@ const page = async ({ params }: pageProps) => {
         style={{
           display: "flex",
           justifyContent: "center",
+          height: "max-content",
         }}
       >
         <Challan params={params} />
       </div>
-      <div>
+      <div
+        style={{
+          height: "100vh",
+        }}
+      >
         {data?.medias.map((v) => {
           if (v.title.toLowerCase().includes("e-way bill")) {
             return (

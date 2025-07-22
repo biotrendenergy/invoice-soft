@@ -6,6 +6,10 @@
     display: none;
   }
 }
+.ritz,
+.waffle {
+  width: 100vw;
+}
 .ritz .waffle a {
   color: inherit;
 }
@@ -46,6 +50,9 @@
 }
 .ritz .waffle .s2 {
   border-right: 1px SOLID #000000;
+  @media print {
+    border-right: 1px SOLID #000000 !important;
+  }
   background-color: #ffffff;
   text-align: left;
   color: #000000;
@@ -161,6 +168,10 @@
 
   direction: ltr;
   padding: 2px 3px 2px 3px;
+  @media print {
+    border-bottom: 1px SOLID #000000 !important;
+    border-right: 1px SOLID #000000 !important;
+  }
 }
 .ritz .waffle .s8 {
   border-bottom: 1px SOLID #000000;
@@ -176,6 +187,10 @@
   direction: ltr;
 
   padding: 2px 3px 2px 3px;
+
+  @media print {
+    border-right: 1px SOLID #000000 !important;
+  }
 }
 .ritz .waffle .s1 {
   background-color: #ffffff;
