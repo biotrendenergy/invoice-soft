@@ -37,19 +37,12 @@ function getDurationInWords(
     return "Invalid input: end time is before start time.";
   }
 
-  // const seconds = Math.floor((durationMs / 1000) % 60);
-  // const minutes = Math.floor((durationMs / (1000 * 60)) % 60);
-  const hours = Math.floor((durationMs / (1000 * 60 * 60)) % 24);
-  const days = Math.floor(durationMs / (1000 * 60 * 60 * 24));
+  const msInDay = 1000 * 60 * 60 * 24;
+  const totalDays = Math.ceil(durationMs / msInDay); // Always round up
 
-  const parts: string[] = [];
-  if (days > 0) parts.push(`${days} day${days !== 1 ? "s" : ""}`);
-  if (hours > 0) parts.push(`${hours} hour${hours !== 1 ? "s" : ""}`);
-  // if (minutes > 0) parts.push(`${minutes} minute${minutes !== 1 ? "s" : ""}`);
-  // if (seconds > 0) parts.push(`${seconds} second${seconds !== 1 ? "s" : ""}`);
-
-  return parts.length ? parts.join(" ") : "0 seconds";
+  return `${totalDays} day${totalDays !== 1 ? "s" : ""}`;
 }
+
 const convertToHtmlDate = (dateStr: string) => {
   const [day, month, year] = dateStr.split("/");
   return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
