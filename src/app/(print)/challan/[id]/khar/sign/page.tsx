@@ -169,13 +169,15 @@ const page = async ({ params }: pageProps) => {
                   <br />
                   <br />
                   <br />
-                  Bill to
-                  <br />
-                  NTPC LTD <br />
-                  {data.company?.shippingAddress
-                    .split(" ")
-                    .slice(0, 4)
-                    .join(" ")}
+                  <strong>
+                    BILL TO
+                    <br />
+                    NTPC LTD <br />
+                    {data.company?.shippingAddress
+                      .split(" ")
+                      .slice(0, 4)
+                      .join(" ")}
+                  </strong>
                   ,<br />
                   {data.company?.shippingAddress.split(" ").slice(4).join(" ")}
                   <br />
@@ -226,13 +228,15 @@ const page = async ({ params }: pageProps) => {
                 <td className="s3 lef" colSpan={6}>
                   <br />
                   <br />
-                  Ship to
-                  <br />
-                  NTPC LTD <br />
-                  {data.company?.shippingAddress
-                    .split(" ")
-                    .slice(0, 4)
-                    .join(" ")}
+                  <strong>
+                    SHIPPED TO
+                    <br />
+                    NTPC LTD <br />
+                    {data.company?.shippingAddress
+                      .split(" ")
+                      .slice(0, 4)
+                      .join(" ")}
+                  </strong>
                   ,<br />
                   {data.company?.shippingAddress.split(" ").slice(4).join(" ")}
                   <br />
