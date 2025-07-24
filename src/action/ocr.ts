@@ -345,9 +345,7 @@ export const extractEWayBill = async (
 
 const E_WAYBILL_PROMPT_in = `
 
-
-
-### 📄 **E-Way Bill Extraction Prompt (with Shipping Address) – WITH EXAMPLE**
+### 📄 **E-Way Bill Extraction Prompt (with Quantity Validation for MTS)**
 
 You are provided with a PDF or image document that contains logistics, shipping, or invoice information.
 
@@ -371,7 +369,7 @@ You are provided with a PDF or image document that contains logistics, shipping,
 * Can be **alphanumeric**.
 * Possible labels include:
 
-  * \`Challan No: \`, \`Challan Number: \`
+  * \`Challan No:\`,\`Challan Number:\`
   * \`Invoice No: \`, \`Invoice Number: \`
   * \`Document No.\`, \`Document Number\`
 
@@ -407,6 +405,18 @@ You are provided with a PDF or image document that contains logistics, shipping,
   * Another section begins.
 * Return as a single-line formatted address.
 
+#### **7. Quantity**
+
+* Look for labels like:
+
+  * \`Qty: \`, \`Quantity: \`, \`Total Quantity: \`, \`No.of Packages: \`
+* **Valid only if in KGS**
+* If **"MTS"**, **"MT"**, or **"Metric Tons"** is found, return:
+
+  \`\`\`json
+"quantity": "mts not valid only kgs"
+  \`\`\`
+
 ---
 
 ### ✅ **Return Format**
@@ -420,11 +430,12 @@ Return the **first occurrence** of each value in the following JSON format:
       "generated_date": "05/06/2024",
         "vehicle_number": "UP45AT9123",
           "gst_no": "06AAJCB1927H1ZS",
-            "shipping_address": "1054 KHARGONE STPP DIST KHARGONE, VILLAGE SELDA POST KHEDI BUJURG, KHARGONE, MADHYA PRADESH, MADHYA PRADESH - 486885"
+            "shipping_address": "1054 KHARGONE STPP DIST KHARGONE, VILLAGE SELDA POST KHEDI BUJURG, KHARGONE, MADHYA PRADESH, MADHYA PRADESH - 486885",
+              "quantity": 12345
 }
 \`\`\`
 
-
+> ✅ **Note:** Only return numeric quantity if the unit is **KGS**. Ignore or reject other units like **MTS, MT, Metric Tons**.
 
 `;
 
@@ -437,7 +448,8 @@ export const extractEWayBill_withIn = async (
   generated_date: string;
   vehicle_number: string;
   gst_no: string;
-  shipping_address: string
+  shipping_address: string;
+  quantity: string | number;
 }> => {
   let attempt = 0;
   while (attempt < maxRetries) {

@@ -1,5 +1,5 @@
 "use client";
-import { useForm, UseFormSetValue } from "react-hook-form";
+import { useForm, UseFormGetValues, UseFormSetValue } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { vendorChallanSchema } from "../_utils/schema";
 import type { z } from "zod";
@@ -33,12 +33,14 @@ const FileUploadModal = ({
   ocrData,
   selectOcrData,
   setValue,
+  getValue,
 }: {
   open: boolean;
   onClose: () => void;
   ocrData: Awaited<ReturnType<typeof getAllOcr>> | undefined;
   selectOcrData: React.Dispatch<React.SetStateAction<Ocr | undefined>>;
   setValue: UseFormSetValue<z.infer<typeof vendorChallanSchema>>;
+  getValue: UseFormGetValues<z.infer<typeof vendorChallanSchema>>;
 }) => {
   if (!open) return null;
   if (!ocrData) return null;
@@ -63,7 +65,12 @@ const FileUploadModal = ({
       if (!dat) {
         throw new Error("Data not found!!");
       }
-
+      if (
+        isNaN(Number(getValue("netWeightVendor"))) ||
+        Number(getValue("netWeightVendor")) == 0
+      ) {
+        setValue("netWeightVendor", dat.quantity.toString());
+      }
       if (challan && dat1) {
         setValue("vendorChallanDate", convertToHtmlDate(dat1.generated_date));
         setValue("vendorChallanNo", dat1.ChallanOrInvoiceNumber);
@@ -161,6 +168,7 @@ export default function VendorChallanForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    getValues,
     setValue,
   } = useForm<VendorChallanFormValues>({
     resolver: zodResolver(vendorChallanSchema),
@@ -194,7 +202,9 @@ export default function VendorChallanForm() {
         setValue("biomeChallanNo", json.at(-1)["challan_number"]);
       }
     }
-    setValue("challanDate", format(ocrData.date, "dd-MMM-yyyy"));
+    setValue("challanDate", format(ocrData.date, "yyyy-MM-dd"));
+    // console.log(format(ocrData.date, "dd-MM-yyyy"));
+
     setValue("grossWeight", ocrData?.gross_weight.toString() ?? "");
     setValue("netWeightNTPC", ocrData?.net_weight.toString() ?? "");
     setValue("tareWeight", ocrData?.tare_weight.toString() ?? "");
@@ -423,6 +433,7 @@ export default function VendorChallanForm() {
         onClose={() => setModalOpen(false)}
         ocrData={ocr}
         setValue={setValue}
+        getValue={getValues}
       />
     </>
   );
