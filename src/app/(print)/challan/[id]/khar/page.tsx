@@ -174,10 +174,10 @@ const page = async ({ params }: pageProps) => {
                   NTPC LTD <br />
                   {data.company?.shippingAddress
                     .split(" ")
-                    .slice(0, 3)
+                    .slice(0, 4)
                     .join(" ")}
                   ,<br />
-                  {data.company?.shippingAddress.split(" ").slice(3).join(" ")}
+                  {data.company?.shippingAddress.split(" ").slice(4).join(" ")}
                   <br />
                   GST No. – {data.company?.shipping_gstNo}
                 </td>
@@ -231,10 +231,10 @@ const page = async ({ params }: pageProps) => {
                   NTPC LTD <br />
                   {data.company?.shippingAddress
                     .split(" ")
-                    .slice(0, 3)
+                    .slice(0, 4)
                     .join(" ")}
                   ,<br />
-                  {data.company?.shippingAddress.split(" ").slice(3).join(" ")}
+                  {data.company?.shippingAddress.split(" ").slice(4).join(" ")}
                   <br />
                   GST No. – {data.company?.shipping_gstNo}
                 </td>
@@ -611,7 +611,7 @@ const page = async ({ params }: pageProps) => {
                   HSN/SAC
                 </td>
                 <td className="s10" dir="ltr" colSpan={2} rowSpan={3}>
-                  VOM
+                  UOM
                 </td>
                 <td className="s10" dir="ltr" colSpan={2} rowSpan={3}>
                   QUANTITY
