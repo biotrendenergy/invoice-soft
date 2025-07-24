@@ -67,8 +67,10 @@ const FileUploadModal = ({
       if (challan && dat1) {
         setValue("vendorChallanDate", convertToHtmlDate(dat1.generated_date));
         setValue("vendorChallanNo", dat1.ChallanOrInvoiceNumber);
+      } else {
+        setValue("vendorChallanDate", convertToHtmlDate(dat.generated_date));
+        setValue("vendorChallanNo", dat.ChallanOrInvoiceNumber);
       }
-
       // setValue("vendorEwayBill", data.eway_bill_number);
       // setValue("vendorEwayBillDate", convertToHtmlDate(data.eway_bill_date));
     } catch (e: any) {
