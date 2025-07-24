@@ -7,12 +7,19 @@ import { Field } from "./Field";
 import { useEffect, useState } from "react";
 import { companyDetail, ocr, Prisma } from "@/generated/prisma";
 import { vendorDetail } from "@/generated/prisma";
-import { extractData_msi, getAllOcr, getFilePart } from "@/action/ocr";
+import {
+  extractData_msi,
+  extractEWayBill_withIn,
+  getAllOcr,
+  getFilePart,
+} from "@/action/ocr";
 import { toast } from "sonner";
 import { getAllVendor } from "@/action/vendores";
 import { format } from "date-fns";
 const convertToHtmlDate = (dateStr: string) => {
-  const [day, month, year] = dateStr.split("-");
+  const [day, month, year] = dateStr.split("/");
+  console.log(day);
+
   return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 };
 
@@ -37,20 +44,29 @@ const FileUploadModal = ({
   if (!ocrData) return null;
   const [ewayBill, setEwayBill] = useState<null | File>(null);
   const [challan, setChallan] = useState<null | File>(null);
-
+  const [loading, setLoading] = useState<boolean>(false);
   const onsubmit = async () => {
-    if (!ewayBill) return;
+    setLoading(true);
+    if (!ewayBill) {
+      setLoading(false);
+      toast.error("Eway bill not get");
+      return;
+    }
     try {
       const ewayBillFile = await getFilePart(ewayBill);
       const challanFile = challan ? await getFilePart(challan) : null;
-      let data = await extractData_msi([ewayBillFile, challanFile]);
-      if (!data) {
+      let dat = await extractEWayBill_withIn(ewayBillFile);
+      let dat1 = challan ? await extractEWayBill_withIn(challanFile) : null;
+      console.log(dat, dat1);
+
+      // let data = await extractData_msi([ewayBillFile, challanFile]);
+      if (!dat) {
         throw new Error("Data not found!!");
       }
 
-      if (challan) {
-        setValue("vendorChallanDate", convertToHtmlDate(data.challan_date));
-        setValue("vendorChallanNo", data.challan_number);
+      if (challan && dat1) {
+        setValue("vendorChallanDate", convertToHtmlDate(dat1.generated_date));
+        setValue("vendorChallanNo", dat1.ChallanOrInvoiceNumber);
       }
 
       // setValue("vendorEwayBill", data.eway_bill_number);
@@ -60,6 +76,8 @@ const FileUploadModal = ({
 
       toast.error(e.message);
     } finally {
+      setLoading(false);
+
       onClose();
     }
   };
@@ -115,11 +133,15 @@ const FileUploadModal = ({
             />
           </div>
           <div className="modal-action">
-            <button className="btn" onClick={onClose}>
+            <button className="btn" disabled={loading} onClick={onClose}>
               Close
             </button>
-            <button className="btn" disabled={!ewayBill} onClick={onsubmit}>
-              Submit
+            <button
+              className="btn"
+              disabled={!ewayBill || loading}
+              onClick={onsubmit}
+            >
+              {loading ? "Processing..." : "Submit"}
             </button>
           </div>
         </div>
