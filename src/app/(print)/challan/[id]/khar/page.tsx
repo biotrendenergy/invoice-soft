@@ -13,7 +13,7 @@ const page = async ({ params }: pageProps) => {
   const { id } = await params;
   const data = await getOcr(Number(id));
   if (!data) return "challan not found";
-  // console.log(data);
+  console.log(data);
 
   return (
     <div>
@@ -535,7 +535,8 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td className="s5" dir="ltr" colSpan={3}>
-                  EWAY BILL DATE {format(data.e_way_bill_date, "dd/MM/yyyy")}
+                  EWAY BILL DATE
+                  {format(data.e_way_bill_date, "dd/MM/yyyy")}
                 </td>
                 <td className="s2" />
                 {/* <td />
