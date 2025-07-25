@@ -535,7 +535,7 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td className="s5" dir="ltr" colSpan={3}>
-                  EWAY BILL DATE {format(data.e_way_bill_date, "dd/MM/yyyy")}
+                  {/* EWAY BILL DATE {format(data.e_way_bill_date, "dd/MM/yyyy")} */}
                 </td>
                 <td className="s2" />
                 {/* <td />
