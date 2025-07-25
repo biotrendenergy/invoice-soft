@@ -175,11 +175,11 @@ const page = async ({ params }: pageProps) => {
                     NTPC LTD <br />
                     {data.company?.shippingAddress
                       .split(" ")
-                      .slice(0, 4)
+                      .slice(0, 5)
                       .join(" ")}
                   </strong>
-                  ,<br />
-                  {data.company?.shippingAddress.split(" ").slice(4).join(" ")}
+                  <br />
+                  {data.company?.shippingAddress.split(" ").slice(5).join(" ")}
                   <br />
                   GST No. – {data.company?.shipping_gstNo}
                 </td>
@@ -234,11 +234,11 @@ const page = async ({ params }: pageProps) => {
                     NTPC LTD <br />
                     {data.company?.shippingAddress
                       .split(" ")
-                      .slice(0, 4)
+                      .slice(0, 5)
                       .join(" ")}
                   </strong>
-                  ,<br />
-                  {data.company?.shippingAddress.split(" ").slice(4).join(" ")}
+                  <br />
+                  {data.company?.shippingAddress.split(" ").slice(5).join(" ")}
                   <br />
                   GST No. – {data.company?.shipping_gstNo}
                 </td>
