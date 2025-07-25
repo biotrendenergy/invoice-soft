@@ -4,8 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { DebitNoteFormValues, slipDetailsSchema } from "../_utils/schema";
 import type { z } from "zod";
 import { Field } from "./Field";
-import { useEffect, useState } from "react";
-import { extractData_slipData, getAllOcr, getFilePart } from "@/action/ocr";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  extractData_slipData,
+  extractEWayBill_withIn,
+  getAllOcr,
+  getFilePart,
+} from "@/action/ocr";
 import Link from "next/link";
 import { companyDetail, ocr } from "@/generated/prisma";
 import { toast } from "sonner";
@@ -48,32 +53,46 @@ const convertToHtmlDate = (dateStr: string) => {
   return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 };
 type SlipDetailsFormValues = z.infer<typeof slipDetailsSchema>;
+
 const FileUploadModal = ({
   open,
   onClose,
   setValue,
   selectOcrData,
   ocrData,
+  setVendorChallan,
 }: {
   open: boolean;
   onClose: () => void;
   ocrData: Awaited<ReturnType<typeof getAllOcr>> | undefined;
   selectOcrData: React.Dispatch<React.SetStateAction<Ocr | undefined>>;
   setValue: UseFormSetValue<z.infer<typeof slipDetailsSchema>>;
+  setVendorChallan: Dispatch<
+    SetStateAction<{
+      EWayBillNumber: string;
+      ChallanOrInvoiceNumber: string;
+      generated_date: string;
+      vehicle_number: string;
+      gst_no: string;
+      shipping_address: string;
+      quantity: string | number;
+    } | null>
+  >;
 }) => {
-  console.log(open);
-
-  // if (!open) return null;
-  if (!ocrData) return null;
   const [slipFile, setSlipFile] = useState<null | File>(null);
+  const [challan, setChallan] = useState<null | File>(null);
   const [ocr, setOcr] = useState<null | ocr>(null);
+  const [loading, setLoading] = useState(false);
+
+  if (!ocrData) return null;
+
   return (
-    open == true && (
+    open && (
       <dialog open className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg mb-4">Upload Files</h3>
           <div className="flex flex-col gap-4">
-            <label>challan</label>
+            <label>Challan</label>
             <select
               className="select select-bordered"
               defaultValue=""
@@ -82,10 +101,7 @@ const FileUploadModal = ({
                   (xx) =>
                     xx.id === Number(v.target.value) && xx.company !== null
                 );
-                console.log(selected);
-
                 if (selected && selected.company) {
-                  // Type assertion is safe here because of the check above
                   selectOcrData(selected as Ocr);
                   setOcr(selected);
                 } else {
@@ -102,6 +118,7 @@ const FileUploadModal = ({
                 </option>
               ))}
             </select>
+
             <label>Upload Slip</label>
             <input
               onChange={(e) => {
@@ -111,18 +128,35 @@ const FileUploadModal = ({
               type="file"
               className="file-input file-input-bordered"
             />
+
+            <label>Upload Vendor Challan</label>
+            <input
+              onChange={(e) => {
+                if (!e.target.files) return;
+                setChallan(e.target.files[0]);
+              }}
+              type="file"
+              className="file-input file-input-bordered"
+            />
           </div>
-          <div className="modal-action">
-            <button className="btn" onClick={onClose}>
+
+          <div className="modal-action flex justify-between items-center">
+            <button className="btn" onClick={onClose} disabled={loading}>
               Close
             </button>
             <button
-              className="btn"
+              className={`btn ${loading ? "btn-disabled opacity-50" : ""}`}
               onClick={async () => {
                 try {
-                  if (!slipFile) return;
+                  if (!slipFile || !challan) return;
+                  setLoading(true);
+
                   const file = await getFilePart(slipFile);
                   const data = await extractData_slipData(file);
+
+                  const challanFile = await getFilePart(slipFile); // <-- might be a mistake, should this be `challan`?
+                  const ChallanData = await extractEWayBill_withIn(challanFile);
+
                   setValue("grossWeight", data.gross_weight);
                   setValue("netWeight", data.net_weight);
                   setValue("slipInDate", convertToHtmlDate(data.date_in));
@@ -137,7 +171,8 @@ const FileUploadModal = ({
                       data.time_out
                     )
                   );
-                  console.log(data.net_weight, ocr);
+
+                  setVendorChallan(ChallanData);
 
                   setValue(
                     "weightDiff",
@@ -146,17 +181,23 @@ const FileUploadModal = ({
                     ).toString() + " kgs"
                   );
                 } catch (e) {
+                  console.error("Submission error", e);
                 } finally {
+                  setLoading(false);
                   onClose();
                 }
               }}
+              disabled={loading}
             >
-              Submit
+              {loading ? "Processing..." : "Submit"}
             </button>
           </div>
         </div>
+
         <form method="dialog" className="modal-backdrop">
-          <button onClick={onClose}>close</button>
+          <button onClick={onClose} disabled={loading}>
+            close
+          </button>
         </form>
       </dialog>
     )
@@ -178,6 +219,15 @@ export default function SlipDetailsForm() {
     resolver: zodResolver(slipDetailsSchema),
   });
   const [modalOpen, setModalOpen] = useState(false);
+  const [vendorChallan, setVendorChallan] = useState<{
+    EWayBillNumber: string;
+    ChallanOrInvoiceNumber: string;
+    generated_date: string;
+    vehicle_number: string;
+    gst_no: string;
+    shipping_address: string;
+    quantity: string | number;
+  } | null>(null);
   const onSubmit = async (data: SlipDetailsFormValues) => {
     console.log("Form submitted:", data);
     try {
@@ -356,7 +406,7 @@ export default function SlipDetailsForm() {
           bteChallan: getValues("bteChallanNo"),
           quantity: parseInt(getValues("weightDiff")),
           companyDetailId: ocrData?.company.id,
-
+          vendorChallan: vendorChallan?.ChallanOrInvoiceNumber ?? undefined,
           e_way_bill_ship_to: ocrData?.e_way_bill_ship_to ?? undefined,
 
           // rate: 1, // set default or calculate
@@ -364,6 +414,7 @@ export default function SlipDetailsForm() {
         // you can add vendor info if available
       />
       <FileUploadModal
+        setVendorChallan={setVendorChallan}
         selectOcrData={setOcrData}
         open={modalOpen}
         onClose={() => setModalOpen(false)}
