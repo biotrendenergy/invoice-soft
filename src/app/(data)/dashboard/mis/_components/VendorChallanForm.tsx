@@ -318,7 +318,7 @@ export default function VendorChallanForm() {
           inputClass="input"
         /> */}
         <Field
-          label="Vender material Weight "
+          label="Vendor material Weight "
           name="netWeightVendor"
           register={register}
           error={errors.netWeightVendor}
