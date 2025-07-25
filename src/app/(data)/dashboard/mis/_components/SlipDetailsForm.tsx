@@ -154,7 +154,7 @@ const FileUploadModal = ({
                   const file = await getFilePart(slipFile);
                   const data = await extractData_slipData(file);
 
-                  const challanFile = await getFilePart(slipFile); // <-- might be a mistake, should this be `challan`?
+                  const challanFile = await getFilePart(challan); // <-- might be a mistake, should this be `challan`?
                   const ChallanData = await extractEWayBill_withIn(challanFile);
 
                   setValue("grossWeight", data.gross_weight);
