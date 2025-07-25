@@ -371,8 +371,8 @@ You are provided with a PDF or image document that contains logistics, shipping,
 
   * \`Challan No:\`,\`Challan Number:\`
   * \`Invoice No: \`, \`Invoice Number: \`
-  * \`Document No.\`, \`Document Number\`
-
+  * \`Document No.\`, \`Document Number:\`
+  * The term should not be 'Delivery Challan'.
 #### **3. Generated Date**
 
 * Date format: \`DD / MM / YYYY\` or \`DD - MM - YYYY\`
