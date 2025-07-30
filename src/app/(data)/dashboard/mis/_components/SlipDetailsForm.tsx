@@ -148,14 +148,18 @@ const FileUploadModal = ({
               className={`btn ${loading ? "btn-disabled opacity-50" : ""}`}
               onClick={async () => {
                 try {
-                  if (!slipFile || !challan) return;
+                  if (!slipFile) return;
                   setLoading(true);
 
                   const file = await getFilePart(slipFile);
                   const data = await extractData_slipData(file);
-
-                  const challanFile = await getFilePart(challan); // <-- might be a mistake, should this be `challan`?
-                  const ChallanData = await extractEWayBill_withIn(challanFile);
+                  if (challan) {
+                    const challanFile = await getFilePart(challan); // <-- might be a mistake, should this be `challan`?
+                    const ChallanData = await extractEWayBill_withIn(
+                      challanFile
+                    );
+                    setVendorChallan(ChallanData);
+                  }
 
                   setValue("grossWeight", data.gross_weight);
                   setValue("netWeight", data.net_weight);
@@ -171,8 +175,6 @@ const FileUploadModal = ({
                       data.time_out
                     )
                   );
-
-                  setVendorChallan(ChallanData);
 
                   setValue(
                     "weightDiff",
