@@ -12,7 +12,7 @@ const Sidebar = (props: PropsWithChildren) => {
       </div>
       <div className="drawer-side">
         <label htmlFor="dashboard-drawer" className="drawer-overlay"></label>
-        <ul className="menu p-4 w-56 min-h-full text-black  uppercase bg-white">
+        <ul className="menu p-4 w-56 min-h-full text-black gap-3 uppercase text-lg bg-white">
           <li className="hover:bg-black/15">
             <Link href={"/dashboard"}>Home</Link>
           </li>

@@ -139,6 +139,12 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
       if (Number(entry["net weight"]) > Number(entry["gross weight"])) {
         entry = { ...entry, "net weight": `❌ ${entry["net weight"]}` };
       }
+      if (
+        Number(entry["gross weight"]) ==
+        Number(entry["tare weight"]) + Number(entry["net weight"])
+      ) {
+        entry = { ...entry, "gross weight": `❌ ${entry["gross weight"]}` };
+      }
       return entry;
     });
   }, [entry]);
