@@ -126,6 +126,6 @@ model media {
 model audit {
   id       Int      @id @default(autoincrement())
   message  String
-  ip       String
+  username String
   createAt DateTime @default(now())
 }

@@ -17,7 +17,7 @@ export const signToken = async (
 
 export const verifyToken = async (token: string) => {
   try {
-    return jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET!));
+    return jwtVerify<{ userId: string }>(token, new TextEncoder().encode(process.env.JWT_SECRET!));
   } catch (error) {
     console.log("JWT verification failed:", error);
 

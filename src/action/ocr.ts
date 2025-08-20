@@ -2,9 +2,17 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { prisma } from "@/lib/db";
 import { ocr } from "@/generated/prisma";
-import { headers } from "next/headers";
+import { verifyToken } from "@/lib/jwt";
+import { cookies, headers } from "next/headers";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 export async function deleteMultipleOCR(ids: number[]) {
+  const cookie = await cookies();
+  const jwt = await verifyToken(cookie.get("token")?.value || "");
+  const user = await prisma.user.findUnique({
+    where: {
+      id: Number(jwt?.payload.userId),
+    },
+  });
   try {
     if (!Array.isArray(ids) || ids.length === 0) {
       console.log("Invalid input: ids must be a non-empty array.");
@@ -32,7 +40,7 @@ export async function deleteMultipleOCR(ids: number[]) {
     // throw error;
     await prisma.audit.create({
       data: {
-        ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
+        username: user?.username ?? "<unknown>",
         message: `Error deleting ocr with ids: ${ids.join(", ")} - ${ids.length} records`,
       },
     });
@@ -147,10 +155,19 @@ export type ExtractDataJsonType = {
   date: Date;
 };
 export const getFilePart = async (file: File) => {
-  const headerList = await headers();
+  // const headerList = await headers();
+
+  const cookie = await cookies();
+  const jwt = await verifyToken(cookie.get("token")?.value || "");
+  const user = await prisma.user.findUnique({
+    where: {
+      id: Number(jwt?.payload.userId),
+    },
+  });
+
   await prisma.audit.create({
     data: {
-      ip: headerList.get("x-forwarded-for") ?? "0.0.0.0",
+      username: user?.username ?? "<unknown>",
       message: "File upload",
     },
   });
@@ -166,6 +183,14 @@ export const extractData = async (
   filePart: any,
   maxRetries = 3
 ): Promise<ExtractDataJsonType> => {
+
+  const cookie = await cookies();
+  const jwt = await verifyToken(cookie.get("token")?.value || "");
+  const user = await prisma.user.findUnique({
+    where: {
+      id: Number(jwt?.payload.userId),
+    },
+  });
   let attempt = 0;
   while (attempt < maxRetries) {
     try {
@@ -183,7 +208,7 @@ export const extractData = async (
       console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
       await prisma.audit.create({
         data: {
-          ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
+          username: user?.username ?? "<unknown>",
           message: `Extracted data from image: ${jsonString}`,
         },
       });
@@ -191,7 +216,7 @@ export const extractData = async (
     } catch (error) {
       await prisma.audit.create({
         data: {
-          ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
+          username: user?.username ?? "<unknown>",
           message: `Error extracting data from image: ${error instanceof Error ? error.message : String(error)
             }`,
         },
@@ -243,12 +268,19 @@ export async function extractFromImages(formData: FormData) {
 }
 
 export async function addOCRData(data: ocr) {
+  const cookie = await cookies();
+  const jwt = await verifyToken(cookie.get("token")?.value || "");
+  const user = await prisma.user.findUnique({
+    where: {
+      id: Number(jwt?.payload.userId),
+    },
+  });
   try {
     const headerList = await headers();
 
     await prisma.audit.create({
       data: {
-        ip: headerList.get("x-forwarded-for") ?? "0.0.0.0",
+        username: user?.username ?? "<unknown>",
         message: "create bill",
       },
     });
@@ -303,6 +335,13 @@ export const extractEWayBill = async (
   eway_bill_no: string;
   generated_date: string;
 }> => {
+  const cookie = await cookies();
+  const jwt = await verifyToken(cookie.get("token")?.value || "");
+  const user = await prisma.user.findUnique({
+    where: {
+      id: Number(jwt?.payload.userId),
+    },
+  });
   let attempt = 0;
   while (attempt < maxRetries) {
     try {
@@ -320,7 +359,7 @@ export const extractEWayBill = async (
       console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
       await prisma.audit.create({
         data: {
-          ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
+          username: user?.username ?? "<unknown>",
           message: `Extracted E-Way Bill data: ${jsonString}`,
         },
       });
@@ -329,7 +368,7 @@ export const extractEWayBill = async (
       console.error(`Attempt ${attempt + 1} failed:`, error);
       await prisma.audit.create({
         data: {
-          ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
+          username: user?.username ?? "<unknown>",
           message: `Error extracting E-Way Bill data: ${error instanceof Error ? error.message : String(error)
             }`,
         },
@@ -451,6 +490,7 @@ export const extractEWayBill_withIn = async (
   shipping_address: string;
   quantity: string | number;
 }> => {
+
   let attempt = 0;
   while (attempt < maxRetries) {
     try {
@@ -544,6 +584,7 @@ export const ExtractDataFORCompar = async (
   filePart: any,
   maxRetries = 3
 ): Promise<ExtractDataFORComparJsonType> => {
+
   let attempt = 0;
   while (attempt < maxRetries) {
     try {
@@ -991,11 +1032,17 @@ export async function extractData_AllWight(
 }
 
 export async function addMedia(title: string, content: File, ocrId: number) {
-  const headerList = await headers();
+  const cookie = await cookies();
+  const jwt = await verifyToken(cookie.get("token")?.value || "");
+  const user = await prisma.user.findUnique({
+    where: {
+      id: Number(jwt?.payload.userId),
+    },
+  });
 
   await prisma.audit.create({
     data: {
-      ip: headerList.get("x-forwarded-for") ?? "0.0.0.0",
+      username: user?.username ?? "<unknown>",
       message: `${title} - File upload`,
     },
   });

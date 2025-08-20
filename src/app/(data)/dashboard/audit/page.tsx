@@ -43,7 +43,7 @@ export default function AuditPage() {
         <div className="flex flex-wrap gap-4 mb-4">
           <input
             type="text"
-            placeholder="Search message/IP"
+            placeholder="Search message/usernames"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="input input-bordered w-full max-w-xs"

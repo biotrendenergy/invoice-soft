@@ -15,7 +15,7 @@ export async function getAuditLogs({
         {
           OR: [
             { message: { contains: search, mode: "insensitive" } },
-            { ip: { contains: search, mode: "insensitive" } },
+            { username: { contains: search, mode: "insensitive" } },
           ],
         },
         from ? { createAt: { gte: new Date(from) } } : {},
