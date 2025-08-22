@@ -74,7 +74,7 @@ export default function AuditPage() {
               <tr className="uppercase">
                 <th>ID</th>
                 <th>Message</th>
-                <th>IP</th>
+                <th>username</th>
                 <th>Created At</th>
               </tr>
             </thead>
@@ -84,7 +84,7 @@ export default function AuditPage() {
                   <tr key={log.id}>
                     <td>{log.id}</td>
                     <td>{log.message}</td>
-                    <td>{log.ip}</td>
+                    <td>{log.username}</td>
                     <td>
                       {format(new Date(log.createAt), "yyyy-MM-dd HH:mm:ss")}
                     </td>
