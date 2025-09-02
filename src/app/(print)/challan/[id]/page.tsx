@@ -235,7 +235,7 @@ const page = async ({ params }: pageProps) => {
                 DELIVERY CHALLAN
               </td>
               <td className="s12" colSpan={3} rowSpan={2}>
-                {data?.e_way_bill_gst}
+                {data?.company?.shipping_gstNo}
               </td>
               <td className="s0"></td>
               <td className="s3"></td>
