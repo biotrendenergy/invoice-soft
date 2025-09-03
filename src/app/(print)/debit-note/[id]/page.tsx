@@ -35,6 +35,7 @@ const page = async ({ params }: pageProps) => {
   if (!data) {
     return "Null";
   }
+
   const amount_with_out_tex =
     data.amount - (data.amount / data.sgst + data.amount / data.cgst);
   return (
@@ -400,20 +401,27 @@ const page = async ({ params }: pageProps) => {
               <td
                 className="s9"
                 style={{
-                  borderBottomColor: "transparent",
+                  verticalAlign: "middle", // not "center"
+                  // textAlign: "center", // optional, for horizontal centering
                 }}
                 dir="ltr"
                 colSpan={3}
                 rowSpan={2}
-              ></td>
+              >
+                Vender Challan
+              </td>
               <td
                 className="s5"
                 style={{
-                  borderBottomColor: "transparent",
+                  verticalAlign: "middle", // not "center"
+                  // textAlign: "center", // optional, for horizontal centering
                 }}
+                dir="ltr"
                 colSpan={3}
                 rowSpan={2}
-              />
+              >
+                {data.venderChallan}
+              </td>
             </tr>
             <tr style={{ height: 20 }}>
               <th
