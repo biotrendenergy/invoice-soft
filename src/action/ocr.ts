@@ -626,7 +626,7 @@ export async function UpdateOCRData(id: number, data: Partial<ocr>) {
 
 export async function getAllOcr() {
   return await prisma.ocr.findMany({
-    take: 10,
+    take: 15,
     orderBy: {
       created_at: "desc",
     },
