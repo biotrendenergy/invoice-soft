@@ -95,7 +95,7 @@ const FileUploadModal = ({
             <label>Challan</label>
             <select
               size={10}
-              className="select select-bordered max-h-60 overflow-y-auto"
+              className="select select-bordered"
               defaultValue=""
               onChange={(v) => {
                 const selected = ocrData.find(
