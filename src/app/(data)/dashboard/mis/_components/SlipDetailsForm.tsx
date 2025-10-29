@@ -16,13 +16,13 @@ import { companyDetail, ocr } from "@/generated/prisma";
 import { toast } from "sonner";
 import { CreateDebitNoteModal } from "./CreateDebitNoteModal";
 import { createDebitNote } from "@/action/note";
+
 function getDurationInWords(
   date_in: string,
   date_out: string,
   time_in: string,
   time_out: string
 ): string {
-  // Helper to convert dd/mm/yyyy to yyyy-mm-dd
   const formatDate = (dateStr: string): string => {
     const [day, month, year] = dateStr.split("/");
     return `${year}-${month}-${day}`;
@@ -30,7 +30,6 @@ function getDurationInWords(
 
   const start = new Date(`${formatDate(date_in)}T${time_in}`);
   const end = new Date(`${formatDate(date_out)}T${time_out}`);
-  console.log(start, end);
 
   if (isNaN(start.getTime()) || isNaN(end.getTime())) {
     return "Invalid date or time input.";
@@ -43,8 +42,7 @@ function getDurationInWords(
   }
 
   const msInDay = 1000 * 60 * 60 * 24;
-  const totalDays = Math.ceil(durationMs / msInDay); // Always round up
-
+  const totalDays = Math.ceil(durationMs / msInDay);
   return `${totalDays} day${totalDays !== 1 ? "s" : ""}`;
 }
 
@@ -52,7 +50,12 @@ const convertToHtmlDate = (dateStr: string) => {
   const [day, month, year] = dateStr.split("/");
   return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 };
+
 type SlipDetailsFormValues = z.infer<typeof slipDetailsSchema>;
+
+interface Ocr extends ocr {
+  company: companyDetail;
+}
 
 const FileUploadModal = ({
   open,
@@ -83,6 +86,7 @@ const FileUploadModal = ({
   const [challan, setChallan] = useState<null | File>(null);
   const [ocr, setOcr] = useState<null | ocr>(null);
   const [loading, setLoading] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(10); // show 10 initially
 
   if (!ocrData) return null;
 
@@ -93,31 +97,46 @@ const FileUploadModal = ({
           <h3 className="font-bold text-lg mb-4">Upload Files</h3>
           <div className="flex flex-col gap-4">
             <label>Challan</label>
-            <select
-              className="select select-bordered"
-              defaultValue=""
-              onChange={(v) => {
-                const selected = ocrData.find(
-                  (xx) =>
-                    xx.id === Number(v.target.value) && xx.company !== null
-                );
-                if (selected && selected.company) {
-                  selectOcrData(selected as Ocr);
-                  setOcr(selected);
-                } else {
-                  selectOcrData(undefined);
+
+            {/* SCROLLABLE SELECT DROPDOWN */}
+            <div
+              className="relative border border-base-300 rounded-md overflow-y-auto max-h-48"
+              onScroll={(e) => {
+                const el = e.currentTarget;
+                if (el.scrollTop + el.clientHeight >= el.scrollHeight - 10) {
+                  setVisibleCount((prev) =>
+                    Math.min(prev + 10, ocrData.length)
+                  );
                 }
               }}
             >
-              <option value="" disabled>
-                Select Challan
-              </option>
-              {ocrData?.map((ocr) => (
-                <option key={ocr.id} value={ocr.id}>
-                  {ocr.challan || `OCR #${ocr.id}`}
+              <select
+                className="select select-bordered w-full"
+                size={10} // shows 10 items at a time
+                defaultValue=""
+                onChange={(v) => {
+                  const selected = ocrData.find(
+                    (xx) =>
+                      xx.id === Number(v.target.value) && xx.company !== null
+                  );
+                  if (selected && selected.company) {
+                    selectOcrData(selected as Ocr);
+                    setOcr(selected);
+                  } else {
+                    selectOcrData(undefined);
+                  }
+                }}
+              >
+                <option value="" disabled>
+                  Select Challan
                 </option>
-              ))}
-            </select>
+                {ocrData?.slice(0, visibleCount).map((ocr) => (
+                  <option key={ocr.id} value={ocr.id}>
+                    {ocr.challan || `OCR #${ocr.id}`}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <label>Upload Slip</label>
             <input
@@ -153,8 +172,9 @@ const FileUploadModal = ({
 
                   const file = await getFilePart(slipFile);
                   const data = await extractData_slipData(file);
+
                   if (challan) {
-                    const challanFile = await getFilePart(challan); // <-- might be a mistake, should this be `challan`?
+                    const challanFile = await getFilePart(challan);
                     const ChallanData = await extractEWayBill_withIn(
                       challanFile
                     );
@@ -206,9 +226,6 @@ const FileUploadModal = ({
   );
 };
 
-interface Ocr extends ocr {
-  company: companyDetail;
-}
 export default function SlipDetailsForm() {
   const {
     register,
@@ -220,6 +237,7 @@ export default function SlipDetailsForm() {
   } = useForm<SlipDetailsFormValues>({
     resolver: zodResolver(slipDetailsSchema),
   });
+
   const [modalOpen, setModalOpen] = useState(false);
   const [vendorChallan, setVendorChallan] = useState<{
     EWayBillNumber: string;
@@ -230,6 +248,29 @@ export default function SlipDetailsForm() {
     shipping_address: string;
     quantity: string | number;
   } | null>(null);
+  const [ocr, setOcr] = useState<Awaited<ReturnType<typeof getAllOcr>>>();
+  const [ocrData, setOcrData] = useState<Ocr>();
+  const [sheetUrl, setSheetUrl] = useState<string | null>(null);
+  const [showDebitModal, setShowDebitModal] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      setOcr(await getAllOcr());
+    })();
+  }, []);
+
+  useEffect(() => {
+    setValue("bteChallanNo", ocrData?.challan ?? "");
+  }, [ocrData]);
+
+  useEffect(() => {
+    if (!ocrData) return;
+    if (ocrData?.company.sheetUrl == null) {
+      toast.warning(`${ocrData?.company.name} does not have a sheet URL.`);
+    }
+    setSheetUrl(ocrData?.company.sheetUrl ?? null);
+  }, [ocrData]);
+
   const onSubmit = async (data: SlipDetailsFormValues) => {
     console.log("Form submitted:", data);
     try {
@@ -262,28 +303,6 @@ export default function SlipDetailsForm() {
       console.error("Error submitting form:", error);
     }
   };
-  const [ocr, setOcr] = useState<Awaited<ReturnType<typeof getAllOcr>>>();
-  const [ocrData, setOcrData] = useState<Ocr>();
-  const [sheetUrl, setSheetUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      setOcr(await getAllOcr());
-    })();
-  }, []);
-  useEffect(() => {
-    setValue("bteChallanNo", ocrData?.challan ?? "");
-  }, [ocrData]);
-
-  useEffect(() => {
-    if (!ocrData) {
-      return;
-    }
-    if (ocrData?.company.sheetUrl == null) {
-      toast.warning(`${ocrData?.company.name} does not have a sheet URL.`);
-    }
-    setSheetUrl(ocrData?.company.sheetUrl ?? null);
-  }, [ocrData]);
 
   const handleDebitNoteSubmit = (noteData: DebitNoteFormValues) => {
     console.log("Debit note data:", noteData);
@@ -312,19 +331,15 @@ export default function SlipDetailsForm() {
     }).then((data) => {
       console.log(data);
       window.open(`/debit-note/${data.id}`, "popupWindow");
-
-      // window.location.href = "/debit-note/" + data.id;
-
-      // handle success
     });
-    // You can post this to an API or store it as needed
   };
-  const [showDebitModal, setShowDebitModal] = useState(false);
+
   return (
     <>
       <button className="btn btn-accent" onClick={() => setModalOpen(true)}>
         upload receiving slip
       </button>
+
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
@@ -401,6 +416,7 @@ export default function SlipDetailsForm() {
             </button>
           )}
       </form>
+
       <CreateDebitNoteModal
         open={showDebitModal}
         onClose={() => setShowDebitModal(false)}
@@ -412,11 +428,9 @@ export default function SlipDetailsForm() {
           companyDetailId: ocrData?.company.id,
           vendorChallan: vendorChallan?.ChallanOrInvoiceNumber ?? undefined,
           e_way_bill_ship_to: ocrData?.e_way_bill_ship_to ?? undefined,
-
-          // rate: 1, // set default or calculate
         }}
-        // you can add vendor info if available
       />
+
       <FileUploadModal
         setVendorChallan={setVendorChallan}
         selectOcrData={setOcrData}
