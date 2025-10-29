@@ -94,7 +94,8 @@ const FileUploadModal = ({
           <div className="flex flex-col gap-4">
             <label>Challan</label>
             <select
-              className="select select-bordered"
+              size={10}
+              className="select select-bordered max-h-60 overflow-y-auto"
               defaultValue=""
               onChange={(v) => {
                 const selected = ocrData.find(
