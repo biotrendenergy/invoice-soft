@@ -94,7 +94,6 @@ const FileUploadModal = ({
           <div className="flex flex-col gap-4">
             <label>Challan</label>
             <select
-              size={10}
               className="select select-bordered"
               defaultValue=""
               onChange={(v) => {
