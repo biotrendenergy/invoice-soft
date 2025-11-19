@@ -23,7 +23,7 @@ const Header = () => {
           </svg>
         </label>
         <a className="btn btn-ghost text-xl">
-          <img src="/logo.png" className="w-[100px] " />
+          <h1>Bio Trend Energy Pvt. Ltd.</h1>
         </a>
       </div>
       <div className="navbar-end">
