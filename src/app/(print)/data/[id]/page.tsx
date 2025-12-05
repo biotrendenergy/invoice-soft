@@ -184,7 +184,7 @@ const page = async ({ params }: pageProps) => {
               {/* <td></td> */}
               <td></td>
               <td className={style.s0} colSpan={12} rowSpan={3}>
-                Bio Trend Energy (OPC) Pvt. Ltd.
+                Bio Trend Energy Pvt. Ltd.
               </td>
             </tr>
             <tr style={{ height: "20px" }}>
@@ -369,7 +369,7 @@ const page = async ({ params }: pageProps) => {
               </td>
               <td className={style.s4}></td>
               <td className={style.s3} colSpan={5}>
-                Bio Trend Energy (OPC) Pvt Ltd
+                Bio Trend Energy Pvt Ltd
               </td>
             </tr>
             <tr style={{ height: "20px" }}>
