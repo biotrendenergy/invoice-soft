@@ -184,7 +184,7 @@ const page = async ({ params }: pageProps) => {
               </th>
               <td className="s1" />
               <td className="s2" dir="ltr" colSpan={6}>
-                Bio Trend Energy (Opc) Pvt Ltd
+                Bio Trend Energy Pvt Ltd
               </td>
               <td className="s3" dir="ltr" colSpan={3}>
                 Debit Note No.
@@ -1177,7 +1177,7 @@ const page = async ({ params }: pageProps) => {
               <td className="s1" />
               <td className="s2" colSpan={5} />
               <td className="s12" dir="ltr" colSpan={7}>
-                for Bio Trend Energy (Opc) Pvt Ltd
+                for Bio Trend Energy Pvt Ltd
               </td>
             </tr>
             <tr style={{ height: 20 }}>
