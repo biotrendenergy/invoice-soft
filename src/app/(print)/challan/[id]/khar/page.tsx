@@ -157,7 +157,7 @@ const page = async ({ params }: pageProps) => {
                   ></div>
                 </th>
                 <td className="s1 lef" dir="ltr" colSpan={6}>
-                  <strong> Bio Trend Energy (OPC) Pvt Ltd,</strong> <br />
+                  <strong> Bio Trend Energy Pvt Ltd,</strong> <br />
                   <br />
                   Ground Floor C-55/4, Okhla Industrial Area,
                   <br /> Phase-2, Delhi South Delhi, Delhi, 110020
@@ -1116,7 +1116,7 @@ const page = async ({ params }: pageProps) => {
                 <td />
                 <td />
                 <td className="s5" dir="ltr" colSpan={4}>
-                  For BIO TREND ENERGY (OPC) PRIVATE LIMITED
+                  For BIO TREND ENERGY PRIVATE LIMITED
                 </td>
                 <td />
                 <td />
