@@ -150,7 +150,7 @@ const page = async ({ params }: pageProps) => {
               <td className="s0"></td>
               <td className="s4"></td>
               <td className="s5" colSpan={9} rowSpan={3}>
-                BIOTREND ENERGY OPC PVT LTD
+                BIOTREND ENERGY PVT LTD
               </td>
               <td className="s6">Original</td>
               <td className="s0"></td>
@@ -954,7 +954,7 @@ const page = async ({ params }: pageProps) => {
               <td className="s0"></td>
               <td className="s4"></td>
               <td className="s24" colSpan={4}>
-                Beneficiary : BIOTREND ENERGY OPC PVT LTD
+                Beneficiary : BIOTREND ENERGY PVT LTD
               </td>
               <td className="s0"></td>
               <td className="s4"></td>
@@ -1247,7 +1247,7 @@ const page = async ({ params }: pageProps) => {
                 Terms &amp; Conditions:
               </td>
               <td className="s21" colSpan={6}>
-                FOR BIO TREND ENERGY OPC PVT LTD
+                FOR BIO TREND ENERGY PVT LTD
               </td>
               <td className="s0"></td>
               <td className="s3"></td>
