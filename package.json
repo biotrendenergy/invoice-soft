@@ -31,7 +31,7 @@
     "jose": "^6.0.11",
     "jsonwebtoken": "^9.0.2",
     "jszip": "^3.10.1",
-    "next": "15.3.2",
+    "next": "15.3.6",
     "number-to-words": "^1.2.4",
     "pdfjs-dist": "^3.11.174",
     "react": "^19.0.0",
