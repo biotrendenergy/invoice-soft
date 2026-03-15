@@ -259,7 +259,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="text-xs text-gray-400 text-center mt-8">🔒 Authorized personnel access only</p>
+          <p className="text-xs text-gray-400 text-center mt-8">Authorized personnel access only</p>
         </div>
       </div>
     </div>
