@@ -525,279 +525,486 @@ const page = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 py-4">
-      {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-100 tracking-tight">Upload Images</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Extract challan data from weight images · BioTrend Energy</p>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
-        {/* Left Column - Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
-
-          {/* Vendor & Company */}
-          <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-4">
-            <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Details</h2>
-
-            <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-              <label className="text-sm font-medium text-slate-300">Vendor Name</label>
-              <select
-                className="select select-bordered w-full"
-                defaultValue=""
-                disabled={loading}
-                onChange={(v) => setValue("vendorId", Number(v.target.value))}
+    <div className="flex">
+      {/* Left Column - File Upload */}
+      <div className="flex p-6">
+        <form className="flex-1 mr-6" onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex justify-between">
+            <h2 className="text-2xl mb-4">Upload Images</h2>
+            <div className="flex gap-2.5 ">
+              <button type="button" className="btn  btn-active text-white">
+                Save
+              </button>
+              <button
+                type="button"
+                className="btn btn-error text-white"
+                onClick={() => reset()}
               >
-                <option value="" disabled>Select vendor</option>
-                {vendors?.map((ocr) => (
-                  <option key={ocr.id} value={ocr.id}>{ocr.name || `OCR #${ocr.id}`}</option>
-                ))}
-              </select>
-              {errors.vendorId && <p className="text-error text-xs">{errors.vendorId?.message}</p>}
-            </fieldset>
-
-            <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-              <label className="text-sm font-medium text-slate-300">Short Name</label>
-              <select
-                disabled={loading}
-                className="select select-bordered w-full"
-                defaultValue=""
-                onChange={(e) => setValue("companyId", Number(e.target.value))}
-              >
-                <option value="" disabled>Select short name</option>
-                {companies?.map((v, i) => (
-                  <option key={i} value={v.id}>{v.shotName}</option>
-                ))}
-              </select>
-            </fieldset>
+                Reset
+              </button>
+            </div>
           </div>
-
-          {/* E-Way Bill */}
-          <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-3">
-            <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">E-Way Bill</h2>
-            <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-              <label className="text-sm font-medium text-slate-300">Upload PDF</label>
-              <input
-                disabled={loading}
-                type="file"
-                className="file-input w-full"
-                accept=".pdf"
-                name={"e_wayBill" as keyof formType}
-                onChange={handleFileChange}
-                onFocus={() => setError("e_wayBill", { message: "" })}
-              />
-              {errors.e_wayBill && <p className="text-error text-xs">{errors.e_wayBill.message}</p>}
-            </fieldset>
-          </div>
-
-          {/* Weight Images */}
-          <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-4">
-            <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Weight Images</h2>
-
-            <div className="tabs tabs-lifted">
-              <input
-                disabled={loading}
-                type="radio"
-                name="upload_mode"
-                role="tab"
-                className="tab"
-                aria-label="Multi Upload"
-                defaultChecked
-              />
-              <div role="tabpanel" className="tab-content bg-base-100 border-base-300 p-5 flex flex-col gap-4">
-                <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-                  <label className="text-sm font-medium text-slate-300">Tare Image</label>
+          <fieldset className="fieldset flex flex-col">
+            <label className="fieldset-legend">Vendor Name</label>
+            <select
+              className="select select-bordered"
+              defaultValue=""
+              disabled={loading}
+              // {...register("vendorId")}
+              onChange={(v) => {
+                setValue("vendorId", Number(v.target.value));
+              }}
+            >
+              <option value="" disabled>
+                Select vendor
+              </option>
+              {vendors?.map((ocr) => (
+                <option key={ocr.id} value={ocr.id}>
+                  {ocr.name || `OCR #${ocr.id}`}
+                </option>
+              ))}
+            </select>
+            {errors.vendorId && (
+              <p className="text-error">{errors.vendorId?.message}</p>
+            )}
+          </fieldset>
+          <fieldset className="fieldset mb-4">
+            <legend className="fieldset-legend">Short name</legend>
+            <select
+              disabled={loading}
+              className="select select-bordered"
+              defaultValue=""
+              onChange={(e) => {
+                setValue("companyId", Number(e.target.value));
+              }}
+            >
+              <option value="" disabled>
+                Select short name
+              </option>
+              {companies?.map((v, i) => (
+                <option key={i} value={v.id}>
+                  {v.shotName}
+                </option>
+              ))}
+            </select>
+          </fieldset>
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">Eway Bill (PDF)</legend>
+            <input
+              disabled={loading}
+              type="file"
+              className="file-input"
+              accept=".pdf"
+              name={"e_wayBill" as keyof formType}
+              onChange={handleFileChange}
+              onFocus={() => {
+                setError("e_wayBill", { message: "" });
+              }}
+              // {...register("e_wayBill")}
+            />
+            {errors.e_wayBill && (
+              <p className="text-error">{errors.e_wayBill.message}</p>
+            )}
+          </fieldset>
+          <div className="tabs tabs-lifted md-6 my-4">
+            <input
+              disabled={loading}
+              type="radio"
+              name="upload_mode"
+              role="tab"
+              className="tab"
+              aria-label="Multi Upload"
+              defaultChecked
+            />
+            <div
+              role="tabpanel"
+              className="tab-content bg-base-100 border-base-300 p-6 "
+            >
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">Tare Image</legend>
+                <div className="flex  gap-2">
                   <input
-                    disabled={loading || getValues("e_wayBill") == undefined || getValues("e_wayBill_data") == undefined}
+                    // Display file name
+                    disabled={
+                      loading ||
+                      getValues("e_wayBill") == undefined ||
+                      getValues("e_wayBill_data") == undefined
+                    }
                     type="file"
-                    className="file-input w-full"
+                    className="file-input"
                     accept="image/*"
                     name={"tar_file" as keyof formType}
                     onChange={handleFileChange}
+                    // {...register("e_wayBill")}
                   />
-                  <p className="text-xs text-slate-500">{watch("tar_data.vehicle_number")}</p>
-                  {(errors.tar_data || errors.tar_file) && (
-                    <p className="text-error text-xs">{(errors.tar_data ?? errors.tar_file)?.message}</p>
-                  )}
-                </fieldset>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-                    <label className="text-sm font-medium text-slate-300">Net Weight (A)</label>
+                  {/* <button
+                    type="button"
+                    className="btn btn-error"
+                    onClick={() => {
+                      resetField("tar_file");
+                      resetField("tar_data");
+                    }}
+                    disabled={
+                      loading ||
+                      getValues("multi_file") == undefined ||
+                      getValues("e_wayBill") == undefined
+                    }
+                  >
+                    reset
+                  </button> */}
+                </div>
+                <p className="text-sm">{watch("tar_data.vehicle_number")}</p>
+                {(errors.tar_data || errors.tar_file) && (
+                  <p className="text-error">
+                    {(errors.tar_data ?? errors.tar_file)?.message}
+                  </p>
+                )}
+              </fieldset>
+              <div className="flex w-full gap-4">
+                <fieldset className="fieldset flex-1 mb-4">
+                  <legend className="fieldset-legend">Net Weight (A)</legend>
+                  <div className="flex  gap-2">
                     <input
                       type="file"
-                      disabled={loading || getValues("multi_file") !== undefined || getValues("e_wayBill") == undefined || getValues("tar_file") == undefined}
-                      className="file-input w-full"
+                      disabled={
+                        loading ||
+                        getValues("multi_file") !== undefined ||
+                        getValues("e_wayBill") == undefined ||
+                        getValues("tar_file") == undefined
+                      }
+                      className="file-input"
                       onChange={handleFileChange}
                       accept="image/*"
                       name={"net_file" as keyof formType}
+                      // value={getValues("net_file")?.name || ""} // Display file name
                     />
-                    <p className="text-xs text-slate-500">{watch("net_data.vehicle_number")}</p>
-                    {(errors.net_data || errors.net_file) && (
-                      <p className="text-error text-xs">{(errors.net_data ?? errors.net_file)?.message}</p>
-                    )}
-                  </fieldset>
-
-                  <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-                    <label className="text-sm font-medium text-slate-300">Net Weight (B)</label>
+                    {/* <button
+                      type="button"
+                      className="btn btn-error"
+                      onClick={() => {
+                        resetField("net_file");
+                        resetField("net_data");
+                      }}
+                      disabled={
+                        loading ||
+                        getValues("multi_file") == undefined ||
+                        getValues("e_wayBill") == undefined ||
+                        getValues("tar_file") == undefined
+                      }
+                    >
+                      reset
+                    </button> */}
+                  </div>
+                  <p className="text-sm">{watch("net_data.vehicle_number")}</p>
+                  {(errors.net_data || errors.net_file) && (
+                    <p className="text-error">
+                      {(errors.net_data ?? errors.net_file)?.message}
+                    </p>
+                  )}
+                  {/* {errors.net_data && (
+                    <p className="text-error">{errors.net_data.message}</p>
+                  )} */}
+                </fieldset>
+                <fieldset className="fieldset flex-1 mb-4">
+                  <legend className="fieldset-legend">Net Weight (B)</legend>
+                  <div className="flex  gap-2">
                     <input
                       type="file"
-                      className="file-input w-full"
+                      className="file-input"
                       onChange={handleFileChange}
                       accept="image/*"
-                      disabled={loading || getValues("multi_file") !== undefined || getValues("e_wayBill") == undefined || getValues("tar_file") == undefined || getValues("net_file") == undefined}
+                      // value={getValues("gross_file")?.name || ""} // Display file name
+                      disabled={
+                        loading ||
+                        getValues("multi_file") !== undefined ||
+                        getValues("e_wayBill") == undefined ||
+                        getValues("tar_file") == undefined ||
+                        getValues("net_file") == undefined
+                      }
                       name={"gross_file" as keyof formType}
                     />
-                    <p className="text-xs text-slate-500">{watch("gross_data.vehicle_number")}</p>
-                    {(errors.gross_data || errors.gross_file) && (
-                      <p className="text-error text-xs">{(errors.gross_data ?? errors.gross_file)?.message}</p>
-                    )}
-                  </fieldset>
-                </div>
-              </div>
-
-              <input
-                type="radio"
-                name="upload_mode"
-                role="tab"
-                className="tab"
-                disabled={loading}
-                aria-label="Single Upload"
-              />
-              <div role="tabpanel" className="tab-content bg-base-100 border-base-300 p-5">
-                <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-                  <label className="text-sm font-medium text-slate-300">All Weights in One Image</label>
-                  <input
-                    type="file"
-                    className="file-input w-full"
-                    disabled={loading || getValues("gross_file") !== undefined || getValues("net_file") !== undefined || getValues("tar_file") !== undefined}
-                    accept="image/*"
-                    name={"multi_file" as keyof formType}
-                    onChange={async (e) => {
-                      setLoading(true);
-                      if (!e.target.files) {
-                        setError("multi_file", { message: `File that file not get` });
-                        resetField("multi_file");
-                        return;
+                    {/* <button
+                      type="button"
+                      className="btn btn-error"
+                      disabled={
+                        loading ||
+                        getValues("multi_file") == undefined ||
+                        getValues("e_wayBill") == undefined ||
+                        getValues("tar_file") == undefined ||
+                        getValues("net_file") == undefined
                       }
-                      const part = await getFilePart(e.target.files[0]);
-                      console.log(part);
-                      setValue("multi_file", e.target.files[0]);
-                      const result = await extractData_AllWight(part);
-                      if (!vehicle_number) {
-                        setError("e_wayBill", { message: "Fist upload E way bill" });
-                        setLoading(false);
-                        resetField("multi_file");
-                        return;
-                      }
-                      if (result.vehicle_number != vehicle_number) {
-                        setError("multi_file", { message: "vehicle number not mach to e way bill" });
-                        setLoading(false);
-                        return;
-                      }
-                      if ((result.tare_weight ?? 0) > (result.net_weight ?? 0)) {
-                        setError("multi_file", { message: "A wight is not less than tar wight place check it and try again" });
-                        setLoading(false);
-                        return;
-                      }
-                      if ((result.net_weight ?? 0) > (result.gross_weight ?? 0)) {
-                        setError("multi_file", { message: "A wight is not less than tar wight place check it and try again" });
-                        setLoading(false);
-                        return;
-                      }
-                      setValue("gross_data", { ...result, weight: result.gross_weight ?? 0, vehicle_number: result.vehicle_number ?? "", address: result.address ?? "", map_url: result.map_url ?? "", date: new Date(), latitude: result.latitude ?? 0, longitude: result.longitude ?? 0 });
-                      setValue("gross_data.weight", result.gross_weight ?? 0);
-                      setValue("net_data", { ...result, weight: result.net_weight ?? 0, vehicle_number: result.vehicle_number ?? "", address: result.address ?? "", map_url: result.map_url ?? "", date: new Date(), latitude: result.latitude ?? 0, longitude: result.longitude ?? 0 });
-                      setValue("tar_data", { ...result, weight: result.tare_weight ?? 0, vehicle_number: result.vehicle_number ?? "", address: result.address ?? "", map_url: result.map_url ?? "", date: new Date(), latitude: result.latitude ?? 0, longitude: result.longitude ?? 0 });
-                      setLoading(false);
-                    }}
-                  />
-                  {errors.multi_file && (
-                    <p className="text-error text-xs">
-                      {typeof errors.multi_file?.message === "string" ? errors.multi_file.message : null}
+                      onClick={() => {
+                        resetField("gross_file");
+                        resetField("gross_data");
+                      }}
+                    >
+                      reset
+                    </button> */}
+                  </div>
+                  <p className="text-sm">
+                    {watch("gross_data.vehicle_number")}
+                  </p>
+                  {(errors.gross_data || errors.gross_file) && (
+                    <p className="text-error">
+                      {(errors.gross_data ?? errors.gross_file)?.message}
                     </p>
                   )}
                 </fieldset>
               </div>
             </div>
+            <input
+              type="radio"
+              name="upload_mode"
+              role="tab"
+              className="tab"
+              disabled={loading}
+              aria-label="Single Upload"
+            />
+            <div
+              role="tabpanel"
+              className="tab-content bg-base-100 border-base-300 p-6"
+            >
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">
+                  All Weights in One Image
+                </legend>
+                <input
+                  type="file"
+                  className="file-input"
+                  disabled={
+                    loading ||
+                    getValues("gross_file") !== undefined ||
+                    getValues("net_file") !== undefined ||
+                    getValues("tar_file") !== undefined
+                  }
+                  accept="image/*"
+                  name={"multi_file" as keyof formType}
+                  // {...register("multi_file")}
+                  onChange={async (e) => {
+                    setLoading(true);
+                    if (!e.target.files) {
+                      setError("multi_file", {
+                        message: `File that file not get`,
+                      });
+                      resetField("multi_file");
+                      return;
+                    }
+                    // if (!e.target.files || !e.target.files[0]) {
+                    //   toast("file not found!");
+                    //   return;
+                    // }
+
+                    const part = await getFilePart(e.target.files[0]);
+                    console.log(part);
+                    setValue("multi_file", e.target.files[0]);
+                    const result = await extractData_AllWight(part);
+                    if (!vehicle_number) {
+                      setError("e_wayBill", {
+                        message: "Fist upload E way bill",
+                      });
+                      setLoading(false);
+                      resetField("multi_file");
+
+                      return;
+                    }
+                    if (result.vehicle_number != vehicle_number) {
+                      setError("multi_file", {
+                        message: "vehicle number not mach to e way bill",
+                      });
+                      setLoading(false);
+
+                      return;
+                    }
+                    if ((result.tare_weight ?? 0) > (result.net_weight ?? 0)) {
+                      setError("multi_file", {
+                        message:
+                          "A wight is not less than tar wight place check it and try again",
+                      });
+                      setLoading(false);
+                      return;
+                    }
+                    if ((result.net_weight ?? 0) > (result.gross_weight ?? 0)) {
+                      setError("multi_file", {
+                        message:
+                          "A wight is not less than tar wight place check it and try again",
+                      });
+                      setLoading(false);
+                      return;
+                    }
+                    setValue("gross_data", {
+                      ...result,
+                      weight: result.gross_weight ?? 0,
+                      vehicle_number: result.vehicle_number ?? "",
+                      address: result.address ?? "",
+                      map_url: result.map_url ?? "",
+                      date: new Date(),
+                      latitude: result.latitude ?? 0,
+                      longitude: result.longitude ?? 0,
+                    });
+                    setValue("gross_data.weight", result.gross_weight ?? 0);
+                    setValue("net_data", {
+                      ...result,
+                      weight: result.net_weight ?? 0,
+                      vehicle_number: result.vehicle_number ?? "",
+                      address: result.address ?? "",
+                      map_url: result.map_url ?? "",
+                      date: new Date(),
+                      latitude: result.latitude ?? 0,
+                      longitude: result.longitude ?? 0,
+                    });
+                    setValue("tar_data", {
+                      ...result,
+                      weight: result.tare_weight ?? 0,
+                      vehicle_number: result.vehicle_number ?? "",
+                      address: result.address ?? "",
+                      map_url: result.map_url ?? "",
+                      date: new Date(),
+                      latitude: result.latitude ?? 0,
+                      longitude: result.longitude ?? 0,
+                    });
+                    setLoading(false);
+                  }}
+                />
+                {errors.multi_file && (
+                  <p className="text-error">
+                    {typeof errors.multi_file?.message === "string"
+                      ? errors.multi_file.message
+                      : null}
+                  </p>
+                )}
+              </fieldset>
+            </div>
           </div>
 
-          {/* Gross Weight + Actions */}
-          <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-4">
-            <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-              <label className="text-sm font-medium text-slate-300">Gross Weight <span className="text-slate-500 font-normal">(Auto-filled)</span></label>
-              <input
-                type="text"
-                disabled
-                className="input input-bordered w-full"
-                {...register("gross_data.weight")}
-              />
-            </fieldset>
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">
+              Gross weight (Auto-filled)
+            </legend>
+            <input
+              type="text"
+              disabled
+              className="input input-bordered w-full"
+              {...register("gross_data.weight")}
+            />
+          </fieldset>
+          <br />
 
-            <div className="flex gap-3 pt-1">
-              <button className="btn btn-primary flex-1" type="submit" disabled={loading}>
-                {loading ? "Processing..." : "Extract Data"}
-              </button>
-              <button type="button" className="btn btn-ghost" onClick={() => reset()}>
-                Reset
-              </button>
-            </div>
+          <div className="flex flex-col gap-4">
+            <button
+              className="btn btn-primary"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Processing..." : "Extract Data"}
+            </button>
             {data && <EditButton {...data} />}
           </div>
         </form>
-
-        {/* Right Column - Extracted Data */}
-        <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold text-slate-100 tracking-tight">Extracted Data</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Results from the uploaded weight images</p>
-          </div>
-
+      </div>
+      <div className="flex p-6">
+        {/* Right Column - Display Extracted Data */}
+        <div className="flex-1">
+          <h2 className="text-2xl mb-4">Extracted Data</h2>
           {data ? (
-            <div className="flex flex-col gap-3">
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  { label: "Date", value: new Date(data.date).toLocaleString() },
-                  { label: "Vehicle Number", value: data.vehicle_number },
-                  { label: "Gross Weight", value: data.gross_weight },
-                  { label: "Tare Weight", value: data.tare_weight },
-                  { label: "Net Weight", value: data.net_weight },
-                  { label: "A Weight", value: data.A_weight },
-                  { label: "B Weight", value: data.B_weight },
-                ].map(({ label, value }) => (
-                  <div key={label} className="bg-base-300 rounded-lg px-4 py-3">
-                    <p className="text-xs text-slate-500 mb-0.5">{label}</p>
-                    <p className="text-sm font-medium text-slate-100">{String(value)}</p>
-                  </div>
-                ))}
-              </div>
+            <div className=" p-4 rounded-lg">
+              <p>
+                <strong>Date:</strong> {new Date(data.date).toLocaleString()}
+              </p>
+              <p>
+                <strong>Vehicle Number:</strong> {data.vehicle_number}
+              </p>
+              <p>
+                <strong>Gross weight:</strong> {data.gross_weight}
+              </p>
+              <p>
+                <strong>Tare weight:</strong> {data.tare_weight}
+              </p>
+              <p>
+                <strong>Net weight:</strong> {data.net_weight}
+              </p>
+              <p>
+                <strong>A weight:</strong> {data.A_weight}
+              </p>
+              <p>
+                <strong>B weight:</strong> {data.B_weight}
+              </p>
 
-              {companies?.find((v) => v.id == getValues("companyId"))?.shotName.toLowerCase() !== "dadri" && (
-                <div className="flex flex-wrap gap-2 pt-2">
-                  <button onClick={handlePrintData} className="btn btn-secondary btn-sm">Print Annexure</button>
-                  <button onClick={handlePrintChallan} className="btn btn-secondary btn-sm">Print Challan</button>
-                  <button onClick={handlePrintMarges} className="btn btn-secondary btn-sm">Merge PDF</button>
-                  <button onClick={handlePrintMargesSign} className="btn btn-secondary btn-sm">Merge PDF (Signed)</button>
+              {companies
+                ?.find((v) => v.id == getValues("companyId"))
+                ?.shotName.toLowerCase() !== "dadri" && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={handlePrintData}
+                    className="btn btn-secondary mt-4"
+                  >
+                    Print annexure
+                  </button>
+                  <button
+                    onClick={handlePrintChallan}
+                    className="btn btn-secondary mt-4"
+                  >
+                    Print Challan
+                  </button>
+                  <button
+                    onClick={handlePrintMarges}
+                    className="btn btn-secondary mt-4"
+                  >
+                    merge pdf
+                  </button>
+                  <button
+                    onClick={handlePrintMargesSign}
+                    className="btn btn-secondary mt-4"
+                  >
+                    merge pdf sign
+                  </button>
                 </div>
               )}
 
-              {companies?.find((v) => v.id == getValues("companyId"))?.shotName.toLowerCase() === "dadri" && (
-                <div className="flex flex-wrap gap-2 pt-2">
-                  <button onClick={handlePrintData2} className="btn btn-secondary btn-sm">Print Annexure 2</button>
-                  <button onClick={handlePrintChallan2} className="btn btn-secondary btn-sm">Print Challan 2</button>
-                  <button onClick={handlePrintMarges2} className="btn btn-secondary btn-sm">Merge PDF 2</button>
-                  <button onClick={handlePrintMarges2sign} className="btn btn-secondary btn-sm">Merge PDF (Signed) 2</button>
+              {companies
+                ?.find((v) => v.id == getValues("companyId"))
+                ?.shotName.toLowerCase() == "dadri" && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={handlePrintData2}
+                    className="btn btn-secondary mt-4"
+                  >
+                    Print annexure 2
+                  </button>
+                  <button
+                    onClick={handlePrintChallan2}
+                    className="btn btn-secondary mt-4"
+                  >
+                    Print Challan 2
+                  </button>
+                  <button
+                    onClick={handlePrintMarges2}
+                    className="btn btn-secondary mt-4"
+                  >
+                    merge pdf 2
+                  </button>
+                  {/* <button
+                    onClick={handlePrintData2sign}
+                    className="btn btn-secondary mt-4"
+                  >
+                    Print annexure sign 2
+                  </button>
+                  <button
+                    onClick={handlePrintChallan2sign}
+                    className="btn btn-secondary mt-4"
+                  >
+                    Print Challan sign 2
+                  </button> */}
+                  <button
+                    onClick={handlePrintMarges2sign}
+                    className="btn btn-secondary mt-4"
+                  >
+                    merge pdf sign 2
+                  </button>
                 </div>
               )}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-16 gap-2">
-              <p className="text-slate-400 text-sm font-medium">No data to display</p>
-              <p className="text-slate-600 text-xs">Upload images and extract data to see results here</p>
-            </div>
+            <p>No data to display</p>
           )}
         </div>
       </div>
