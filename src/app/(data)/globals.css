@@ -3,6 +3,10 @@
   themes: dracula --default;
 }
 
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
 @keyframes progress-bar {
   0%   { width: 0%; margin-left: 0%; }
   50%  { width: 70%; margin-left: 0%; }
