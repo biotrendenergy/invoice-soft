@@ -25,7 +25,12 @@ const Page = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-semibold my-3">Records</h1>
+      <div className="flex items-center justify-between my-4">
+      <div>
+        <h1 className="text-2xl font-semibold text-slate-100 tracking-tight">Records</h1>
+        <p className="text-xs text-slate-500 mt-0.5">All challan records · BioTrend Energy</p>
+      </div>
+    </div>
       <RecordTable data={ocrData} />
     </>
   );
