@@ -139,11 +139,6 @@ const Page = () => {
     }
   };
 
-  const renderPreview = (file: File[] | null) =>
-    file &&
-    file.map((d) => (
-      <div className="mt-2 text-sm text-center truncate">📄 {d.name}</div>
-    ));
   const [ocr, setOcr] = useState<ocr[]>([]);
   const [ocrData, setOcrData] = useState<ocr>();
   useEffect(() => {
@@ -151,73 +146,103 @@ const Page = () => {
       setOcr(await getAllOcr());
     })();
   }, []);
+  const isMatch = resultMessage === "All fields match!";
+
   return (
-    <div className="min-h-screen bg-base-100 p-6 flex flex-col gap-6">
-      <h1 className="text-3xl font-bold text-center">Upload PDFs to Compare</h1>
+    <div className="flex flex-col gap-6 py-4">
+      {/* Page Header */}
+      <div>
+        <h1 className="text-2xl font-semibold text-slate-100 tracking-tight">PDF Compare</h1>
+        <p className="text-xs text-slate-500 mt-0.5">Compare challan records against uploaded PDFs · BioTrend Energy</p>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Left Upload Box */}
-
-        <div className="bg-base-200 p-6 rounded-xl shadow border-2 border-dashed border-base-300  cursor-pointer transition ">
-          <div className="flex flex-col">
-            <label>challan</label>
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+        {/* Left — Challan Selector */}
+        <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-3">
+          <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Step 1 — Select Challan</h2>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-slate-300">Challan Record</label>
             <select
-              className="select select-bordered"
+              className="select select-bordered w-full"
               defaultValue=""
               onChange={(v) =>
-                setOcrData(
-                  ocr.filter((xx) => xx.id == Number(v.target.value))[0]
-                )
+                setOcrData(ocr.filter((xx) => xx.id == Number(v.target.value))[0])
               }
             >
-              <option value="" disabled>
-                Select Challan
-              </option>
-              {ocr?.map((ocr) => (
-                <option key={ocr.id} value={ocr.id}>
-                  {ocr.challan || `OCR #${ocr.id}`}
+              <option value="" disabled>Select challan</option>
+              {ocr?.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.challan || `OCR #${o.id}`}
                 </option>
               ))}
             </select>
-            {/* <div>{JSON.stringify(ocrData)}</div> */}
           </div>
+
+          {ocrData && (
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              {[
+                { label: "Vehicle Number", value: ocrData.vehicle_number },
+                { label: "Date", value: new Date(ocrData.date).toLocaleDateString("en-GB") },
+                { label: "Net Weight (kg)", value: ocrData.net_weight },
+                { label: "Challan", value: ocrData.challan },
+              ].map(({ label, value }) => (
+                <div key={label} className="bg-base-300 rounded-lg px-4 py-3">
+                  <p className="text-xs text-slate-500 mb-0.5">{label}</p>
+                  <p className="text-sm font-medium text-slate-100">{String(value ?? "-")}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Right Upload Box */}
-        <div
-          className="bg-base-200 p-6 rounded-xl shadow border-2 border-dashed border-base-300 hover:border-primary cursor-pointer transition text-center"
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => handleDrop(e, setRightFile)}
-          onClick={() => rightInputRef.current?.click()}
-        >
-          <p className="text-base-content/70">
-            Drop or click to upload PDF (Right)
-          </p>
-          {renderPreview(rightFile)}
-          <input
-            ref={rightInputRef}
-            type="file"
-            accept="application/pdf"
-            className="hidden"
-            onChange={(e) => handleFileChange(e, setRightFile)}
-          />
+        {/* Right — PDF Upload */}
+        <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-3">
+          <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Step 2 — Upload PDF(s)</h2>
+          <div
+            className="border-2 border-dashed border-base-300 hover:border-primary rounded-xl p-8 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors"
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => handleDrop(e, setRightFile)}
+            onClick={() => rightInputRef.current?.click()}
+          >
+            <p className="text-slate-400 text-sm">Drop PDF here or click to browse</p>
+            <p className="text-slate-600 text-xs">Only PDF files are accepted</p>
+            <input
+              ref={rightInputRef}
+              type="file"
+              accept="application/pdf"
+              className="hidden"
+              onChange={(e) => handleFileChange(e, setRightFile)}
+            />
+          </div>
+
+          {rightFile && rightFile.length > 0 && (
+            <div className="flex flex-col gap-1.5">
+              {rightFile.map((d, i) => (
+                <div key={i} className="bg-base-300 rounded-lg px-4 py-2.5 flex items-center gap-2">
+                  <span className="text-slate-400 text-sm">📄</span>
+                  <span className="text-sm text-slate-200 truncate">{d.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="text-center">
-        <button
-          className="btn btn-primary mt-6"
-          disabled={!rightFile || loading}
-          onClick={handleSubmit}
-        >
-          Compare
-        </button>
+      {/* Compare Action + Result */}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-3">
+          <button
+            className="btn btn-primary"
+            disabled={!rightFile || !ocrData || loading}
+            onClick={handleSubmit}
+          >
+            {loading ? "Comparing..." : "Compare"}
+          </button>
 
-        {resultMessage && (
-          <div className="flex flex-col gap-2 mt-2.5">
+          {resultMessage && (
             <button
               disabled={loading}
-              className="btn  ml-auto btn-error"
+              className="btn btn-ghost text-warning"
               onClick={async () => {
                 setLoading(true);
                 if (rightFile) {
@@ -229,20 +254,23 @@ const Page = () => {
                       })
                     )
                   );
-                  localStorage.setItem(
-                    `data_for_mis_${ocrData?.id}`,
-                    JSON.stringify(data)
-                  );
+                  localStorage.setItem(`data_for_mis_${ocrData?.id}`, JSON.stringify(data));
                   toast.success("Data saved successfully!");
                 }
                 setLoading(false);
               }}
             >
-              Accept?
+              Accept anyway
             </button>
-            <div className="mt-4 p-4 rounded bg-base-200 text-base-content whitespace-pre-wrap border border-base-300">
-              {resultMessage}
-            </div>
+          )}
+        </div>
+
+        {resultMessage && (
+          <div className={`bg-base-200 border rounded-xl px-5 py-4 ${isMatch ? "border-success/40" : "border-error/40"}`}>
+            <p className={`text-xs font-semibold uppercase tracking-widest mb-2 ${isMatch ? "text-success" : "text-error"}`}>
+              {isMatch ? "Result — Match" : "Result — Mismatch"}
+            </p>
+            <p className="text-sm text-slate-200 whitespace-pre-wrap">{resultMessage}</p>
           </div>
         )}
       </div>
