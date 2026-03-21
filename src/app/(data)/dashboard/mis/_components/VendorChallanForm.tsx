@@ -93,63 +93,60 @@ const FileUploadModal = ({
   return (
     open && (
       <dialog open className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg mb-4">Upload Files</h3>
-          <div className="flex flex-col gap-4">
-            <label>challan</label>
-            <select
-              className="select select-bordered"
-              defaultValue=""
-              onChange={(v) => {
-                const selected = ocrData.find(
-                  (xx) =>
-                    xx.id === Number(v.target.value) && xx.company !== null
-                );
-                if (selected && selected.company) {
-                  // Type assertion is safe here because of the check above
-                  selectOcrData(selected as Ocr);
-                } else {
-                  selectOcrData(undefined);
-                }
-              }}
-            >
-              <option value="" disabled>
-                Select Challan
-              </option>
-              {ocrData?.map((ocr) => (
-                <option key={ocr.id} value={ocr.id}>
-                  {ocr.challan || `OCR #${ocr.id}`}
-                </option>
-              ))}
-            </select>
-            <label>Vendor challan</label>
-            <input
-              onChange={(e) => {
-                if (!e.target.files) return;
-                setChallan(e.target.files[0]);
-              }}
-              type="file"
-              className="file-input file-input-bordered"
-            />
-            <label>Vendor E-way bill</label>
-            <input
-              onChange={(e) => {
-                if (!e.target.files) return;
-                setEwayBill(e.target.files[0]);
-              }}
-              type="file"
-              className="file-input file-input-bordered"
-            />
+        <div className="modal-box bg-base-200 border border-base-300 flex flex-col gap-5">
+          <div>
+            <h3 className="text-lg font-semibold text-slate-100 tracking-tight">Upload Files</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Select a challan and upload the relevant documents</p>
           </div>
-          <div className="modal-action">
-            <button className="btn" disabled={loading} onClick={onClose}>
-              Close
-            </button>
-            <button
-              className="btn"
-              disabled={!ewayBill || loading}
-              onClick={onsubmit}
-            >
+
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-slate-300">Challan</label>
+              <select
+                className="select select-bordered w-full"
+                defaultValue=""
+                onChange={(v) => {
+                  const selected = ocrData.find(
+                    (xx) => xx.id === Number(v.target.value) && xx.company !== null
+                  );
+                  if (selected && selected.company) {
+                    selectOcrData(selected as Ocr);
+                  } else {
+                    selectOcrData(undefined);
+                  }
+                }}
+              >
+                <option value="" disabled>Select challan</option>
+                {ocrData?.map((ocr) => (
+                  <option key={ocr.id} value={ocr.id}>
+                    {ocr.challan || `OCR #${ocr.id}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-slate-300">Vendor Challan (PDF)</label>
+              <input
+                onChange={(e) => { if (!e.target.files) return; setChallan(e.target.files[0]); }}
+                type="file"
+                className="file-input file-input-bordered w-full"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-slate-300">Vendor E-Way Bill (PDF)</label>
+              <input
+                onChange={(e) => { if (!e.target.files) return; setEwayBill(e.target.files[0]); }}
+                type="file"
+                className="file-input file-input-bordered w-full"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-1">
+            <button className="btn btn-ghost" disabled={loading} onClick={onClose}>Cancel</button>
+            <button className="btn btn-primary" disabled={!ewayBill || loading} onClick={onsubmit}>
               {loading ? "Processing..." : "Submit"}
             </button>
           </div>
@@ -258,174 +255,57 @@ export default function VendorChallanForm() {
 
   return (
     <>
-      <button className="btn btn-accent" onClick={() => setModalOpen(true)}>
-        Change bill
-      </button>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className=" grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
-      >
-        <div className="flex flex-col">
-          <label>Vendor Name</label>
-          <select
-            className="select select-bordered"
-            defaultValue=""
-            onChange={(v) => {
-              setValue("vendorName", v.target.value);
-            }}
-          >
-            <option value="" disabled>
-              Select vendor
-            </option>
-            {vendors?.map((ocr) => (
-              <option key={ocr.id} value={ocr.name}>
-                {ocr.name || `OCR #${ocr.id}`}
-              </option>
-            ))}
-          </select>
-          {errors.vendorName && (
-            <p className="text-error">{errors.vendorName.message}</p>
-          )}
+      <div className="flex flex-col gap-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Form</p>
+            <h2 className="text-base font-semibold text-slate-100">Vendor Challan Details</h2>
+          </div>
+          <button className="btn btn-ghost btn-sm" onClick={() => setModalOpen(true)}>
+            Change Bill
+          </button>
         </div>
-        <Field
-          label="Vendor Challan Date"
-          name="vendorChallanDate"
-          type="date"
-          register={register}
-          error={errors.vendorChallanDate}
-          inputClass="input"
-        />
-        <Field
-          label="Vendor Challan No./Bill No."
-          name="vendorChallanNo"
-          register={register}
-          error={errors.vendorChallanNo}
-          inputClass="input"
-        />
-        {/* <Field
-          label="Vendor E-Way Bill Date"
-          name="vendorEwayBillDate"
-          type="date"
-          register={register}
-          error={errors.vendorEwayBillDate}
-          inputClass="input"
-        /> */}
-        {/* <Field
-          label="Vendor Eway-Bill"
-          name="vendorEwayBill"
-          register={register}
-          error={errors.vendorEwayBill}
-          inputClass="input"
-        /> */}
-        <Field
-          label="Vendor material Weight "
-          name="netWeightVendor"
-          register={register}
-          error={errors.netWeightVendor}
-          inputClass="input"
-        />
 
-        <Field
-          label="Vehicle No."
-          name="vehicleNo"
-          register={register}
-          error={errors.vehicleNo}
-          inputClass="input"
-        />
-        <Field
-          label="BTE Challan No."
-          name="bteChallanNo"
-          register={register}
-          error={errors.bteChallanNo}
-          inputClass="input"
-        />
-        <Field
-          label="Challan Date"
-          name="challanDate"
-          type="date"
-          register={register}
-          error={errors.challanDate}
-          inputClass="input"
-        />
-        {/* <Field
-          label="HSN Code"
-          name="hsnCode"
-          register={register}
-          error={errors.hsnCode}
-          inputClass="input"
-        /> */}
-        {/* <Field
-          label="Registration State"
-          name="registrationState"
-          register={register}
-          error={errors.registrationState}
-          inputClass="input"
-        /> */}
-        {/* <Field
-          label="GST Code"
-          name="gstCode"
-          register={register}
-          error={errors.gstCode}
-          inputClass="input"
-        /> */}
-        {/* <Field
-          label="GST Number"
-          name="gstNumber"
-          register={register}
-          error={errors.gstNumber}
-          inputClass="input"
-        /> */}
-        {/* <Field
-          label="E-Way Bill Date"
-          name="ewayBillDate"
-          type="date"
-          register={register}
-          error={errors.ewayBillDate}
-          inputClass="input"
-        /> */}
-        <Field
-          label="E-Way Bill No."
-          name="ewayBillNo"
-          register={register}
-          error={errors.ewayBillNo}
-          inputClass="input"
-        />
-        <Field
-          label="Gross Weight"
-          name="grossWeight"
-          register={register}
-          error={errors.grossWeight}
-          inputClass="input"
-        />
-        <Field
-          label="Tare Weight"
-          name="tareWeight"
-          register={register}
-          error={errors.tareWeight}
-          inputClass="input"
-        />
-        <Field
-          label="Net Weight (For NTPC)"
-          name="netWeightNTPC"
-          register={register}
-          error={errors.netWeightNTPC}
-          inputClass="input"
-        />
-        <Field
-          label="Party NTPC Challan No."
-          name="biomeChallanNo"
-          register={register}
-          error={errors.biomeChallanNo}
-          inputClass="input"
-        />
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="btn btn-primary col-span-full mt-4"
-        >
-          {isSubmitting ? "Possessing..." : "Submit"}
-        </button>
-      </form>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+          {/* Vendor & Challan Info */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-slate-300">Vendor Name</label>
+            <select
+              className="select select-bordered w-full"
+              defaultValue=""
+              onChange={(v) => setValue("vendorName", v.target.value)}
+            >
+              <option value="" disabled>Select vendor</option>
+              {vendors?.map((ocr) => (
+                <option key={ocr.id} value={ocr.name}>
+                  {ocr.name || `Vendor #${ocr.id}`}
+                </option>
+              ))}
+            </select>
+            {errors.vendorName && <p className="text-error text-xs">{errors.vendorName.message}</p>}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <Field label="Vendor Challan Date" name="vendorChallanDate" type="date" register={register} error={errors.vendorChallanDate} inputClass="input" />
+            <Field label="Vendor Challan No. / Bill No." name="vendorChallanNo" register={register} error={errors.vendorChallanNo} inputClass="input" />
+            <Field label="Vendor Material Weight" name="netWeightVendor" register={register} error={errors.netWeightVendor} inputClass="input" />
+            <Field label="Vehicle No." name="vehicleNo" register={register} error={errors.vehicleNo} inputClass="input" />
+            <Field label="BTE Challan No." name="bteChallanNo" register={register} error={errors.bteChallanNo} inputClass="input" />
+            <Field label="Challan Date" name="challanDate" type="date" register={register} error={errors.challanDate} inputClass="input" />
+            <Field label="E-Way Bill No." name="ewayBillNo" register={register} error={errors.ewayBillNo} inputClass="input" />
+            <Field label="Gross Weight" name="grossWeight" register={register} error={errors.grossWeight} inputClass="input" />
+            <Field label="Tare Weight" name="tareWeight" register={register} error={errors.tareWeight} inputClass="input" />
+            <Field label="Net Weight (For NTPC)" name="netWeightNTPC" register={register} error={errors.netWeightNTPC} inputClass="input" />
+            <Field label="Party NTPC Challan No." name="biomeChallanNo" register={register} error={errors.biomeChallanNo} inputClass="input" />
+          </div>
+
+          <div className="pt-1">
+            <button type="submit" disabled={isSubmitting} className="btn btn-primary w-full sm:w-auto">
+              {isSubmitting ? "Processing..." : "Submit to Sheet"}
+            </button>
+          </div>
+        </form>
+      </div>
 
       <FileUploadModal
         selectOcrData={setOcrData}
