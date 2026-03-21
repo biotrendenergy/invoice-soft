@@ -89,99 +89,80 @@ const FileUploadModal = ({
   return (
     open && (
       <dialog open className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg mb-4">Upload Files</h3>
-          <div className="flex flex-col gap-4">
-            <label>Challan</label>
-            <select
-              className="select select-bordered"
-              defaultValue=""
-              onChange={(v) => {
-                const selected = ocrData.find(
-                  (xx) =>
-                    xx.id === Number(v.target.value) && xx.company !== null
-                );
-                if (selected && selected.company) {
-                  selectOcrData(selected as Ocr);
-                  setOcr(selected);
-                } else {
-                  selectOcrData(undefined);
-                }
-              }}
-            >
-              <option value="" disabled>
-                Select Challan
-              </option>
-              {ocrData?.map((ocr) => (
-                <option key={ocr.id} value={ocr.id}>
-                  {ocr.challan || `OCR #${ocr.id}`}
-                </option>
-              ))}
-            </select>
-
-            <label>Upload Slip</label>
-            <input
-              onChange={(e) => {
-                if (!e.target.files) return;
-                setSlipFile(e.target.files[0]);
-              }}
-              type="file"
-              className="file-input file-input-bordered"
-            />
-
-            <label>Upload Vendor Challan</label>
-            <input
-              onChange={(e) => {
-                if (!e.target.files) return;
-                setChallan(e.target.files[0]);
-              }}
-              type="file"
-              className="file-input file-input-bordered"
-            />
+        <div className="modal-box bg-base-200 border border-base-300 flex flex-col gap-5">
+          <div>
+            <h3 className="text-lg font-semibold text-slate-100 tracking-tight">Upload Files</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Select a challan and upload the slip documents</p>
           </div>
 
-          <div className="modal-action flex justify-between items-center">
-            <button className="btn" onClick={onClose} disabled={loading}>
-              Close
-            </button>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-slate-300">Challan</label>
+              <select
+                className="select select-bordered w-full"
+                defaultValue=""
+                onChange={(v) => {
+                  const selected = ocrData.find(
+                    (xx) => xx.id === Number(v.target.value) && xx.company !== null
+                  );
+                  if (selected && selected.company) {
+                    selectOcrData(selected as Ocr);
+                    setOcr(selected);
+                  } else {
+                    selectOcrData(undefined);
+                  }
+                }}
+              >
+                <option value="" disabled>Select challan</option>
+                {ocrData?.map((ocr) => (
+                  <option key={ocr.id} value={ocr.id}>
+                    {ocr.challan || `OCR #${ocr.id}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-slate-300">Upload Slip</label>
+              <input
+                onChange={(e) => { if (!e.target.files) return; setSlipFile(e.target.files[0]); }}
+                type="file"
+                className="file-input file-input-bordered w-full"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-slate-300">Upload Vendor Challan (optional)</label>
+              <input
+                onChange={(e) => { if (!e.target.files) return; setChallan(e.target.files[0]); }}
+                type="file"
+                className="file-input file-input-bordered w-full"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-1">
+            <button className="btn btn-ghost" onClick={onClose} disabled={loading}>Cancel</button>
             <button
-              className={`btn ${loading ? "btn-disabled opacity-50" : ""}`}
+              className="btn btn-primary"
               onClick={async () => {
                 try {
                   if (!slipFile) return;
                   setLoading(true);
-
                   const file = await getFilePart(slipFile);
                   const data = await extractData_slipData(file);
                   if (challan) {
-                    const challanFile = await getFilePart(challan); // <-- might be a mistake, should this be `challan`?
-                    const ChallanData = await extractEWayBill_withIn(
-                      challanFile
-                    );
+                    const challanFile = await getFilePart(challan);
+                    const ChallanData = await extractEWayBill_withIn(challanFile);
                     setVendorChallan(ChallanData);
                   }
-
                   setValue("grossWeight", data.gross_weight);
                   setValue("netWeight", data.net_weight);
                   setValue("slipInDate", convertToHtmlDate(data.date_in));
                   setValue("slipOut", convertToHtmlDate(data.date_out));
                   setValue("tareWeight", data.tare_weight);
-                  setValue(
-                    "stayDuration",
-                    getDurationInWords(
-                      data.date_in,
-                      data.date_out,
-                      data.time_in,
-                      data.time_out
-                    )
-                  );
-
-                  setValue(
-                    "weightDiff",
-                    Math.abs(
-                      parseInt(data.net_weight) - (ocr?.net_weight ?? 0)
-                    ).toString() + " kgs"
-                  );
+                  setValue("stayDuration", getDurationInWords(data.date_in, data.date_out, data.time_in, data.time_out));
+                  setValue("weightDiff", Math.abs(parseInt(data.net_weight) - (ocr?.net_weight ?? 0)).toString() + " kgs");
                 } catch (e) {
                   console.error("Submission error", e);
                 } finally {
@@ -197,9 +178,7 @@ const FileUploadModal = ({
         </div>
 
         <form method="dialog" className="modal-backdrop">
-          <button onClick={onClose} disabled={loading}>
-            close
-          </button>
+          <button onClick={onClose} disabled={loading}>close</button>
         </form>
       </dialog>
     )
@@ -322,85 +301,48 @@ export default function SlipDetailsForm() {
   const [showDebitModal, setShowDebitModal] = useState(false);
   return (
     <>
-      <button className="btn btn-accent" onClick={() => setModalOpen(true)}>
-        upload receiving slip
-      </button>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
-      >
-        <Field
-          label="Slip In Date (DD-MM-YYYY)"
-          name="slipInDate"
-          type="date"
-          register={register}
-          error={errors.slipInDate}
-          inputClass="input"
-        />
-        <Field
-          label="Slip Out"
-          name="slipOut"
-          type="date"
-          register={register}
-          error={errors.slipOut}
-          inputClass="input"
-        />
-        <Field
-          label="Vehicle Stay Duration"
-          name="stayDuration"
-          register={register}
-          error={errors.stayDuration}
-          inputClass="input"
-        />
-        <Field
-          label="Gross Weight"
-          name="grossWeight"
-          register={register}
-          error={errors.grossWeight}
-          inputClass="input"
-        />
-        <Field
-          label="Tare Weight"
-          name="tareWeight"
-          register={register}
-          error={errors.tareWeight}
-          inputClass="input"
-        />
-        <Field
-          label="Net Weight"
-          name="netWeight"
-          register={register}
-          error={errors.netWeight}
-          inputClass="input"
-        />
-        <Field
-          label="Weight Difference B/W BTE and NTPC"
-          name="weightDiff"
-          register={register}
-          error={errors.weightDiff}
-          inputClass="input"
-        />
+      <div className="flex flex-col gap-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Form</p>
+            <h2 className="text-base font-semibold text-slate-100">Slip Details</h2>
+          </div>
+          <button className="btn btn-ghost btn-sm" onClick={() => setModalOpen(true)}>
+            Upload Receiving Slip
+          </button>
+        </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="btn btn-primary col-span-full mt-4"
-        >
-          {isSubmitting ? "Processing" : "Submit"}
-        </button>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <Field label="Slip In Date" name="slipInDate" type="date" register={register} error={errors.slipInDate} inputClass="input" />
+            <Field label="Slip Out Date" name="slipOut" type="date" register={register} error={errors.slipOut} inputClass="input" />
+            <Field label="Vehicle Stay Duration" name="stayDuration" register={register} error={errors.stayDuration} inputClass="input" />
+            <Field label="Gross Weight" name="grossWeight" register={register} error={errors.grossWeight} inputClass="input" />
+            <Field label="Tare Weight" name="tareWeight" register={register} error={errors.tareWeight} inputClass="input" />
+            <Field label="Net Weight" name="netWeight" register={register} error={errors.netWeight} inputClass="input" />
+            <Field label="Weight Difference (BTE vs NTPC)" name="weightDiff" register={register} error={errors.weightDiff} inputClass="input" />
+          </div>
 
-        {watch("weightDiff") &&
-          parseInt(getValues("weightDiff")) !== 0 &&
-          !isNaN(parseInt(getValues("weightDiff"))) && (
-            <button
-              type="button"
-              className="btn btn-active"
-              onClick={() => setShowDebitModal(true)}
-            >
-              Create Debit Note
+          <div className="flex items-center gap-3 pt-1">
+            <button type="submit" disabled={isSubmitting} className="btn btn-primary">
+              {isSubmitting ? "Processing..." : "Submit to Sheet"}
             </button>
-          )}
-      </form>
+
+            {watch("weightDiff") &&
+              parseInt(getValues("weightDiff")) !== 0 &&
+              !isNaN(parseInt(getValues("weightDiff"))) && (
+                <button
+                  type="button"
+                  className="btn btn-ghost text-warning"
+                  onClick={() => setShowDebitModal(true)}
+                >
+                  Create Debit Note
+                </button>
+              )}
+          </div>
+        </form>
+      </div>
+
       <CreateDebitNoteModal
         open={showDebitModal}
         onClose={() => setShowDebitModal(false)}
@@ -412,10 +354,7 @@ export default function SlipDetailsForm() {
           companyDetailId: ocrData?.company.id,
           vendorChallan: vendorChallan?.ChallanOrInvoiceNumber ?? undefined,
           e_way_bill_ship_to: ocrData?.e_way_bill_ship_to ?? undefined,
-
-          // rate: 1, // set default or calculate
         }}
-        // you can add vendor info if available
       />
       <FileUploadModal
         setVendorChallan={setVendorChallan}
