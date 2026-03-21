@@ -9,43 +9,41 @@ const ChallanForm = () => {
   const [selectedTab, setSelectedTab] = useState("vendor");
 
   return (
-    <div className="tabs tabs-border ">
-      {/* Radio input for Vendor Tab */}
-      <input
-        type="radio"
-        name="my_tabs_2"
-        id="tab1"
-        className="tab"
-        aria-label="Vendor Challan"
-        checked={selectedTab === "vendor"}
-        onChange={() => setSelectedTab("vendor")}
-      />
-
-      <div
-        className={`tab-content border-base-300 bg-base-100 p-10  ${
-          selectedTab === "vendor" ? "block" : "hidden"
-        }`}
-      >
-        <VendorChallanForm />
+    <div className="flex flex-col gap-6 py-4">
+      {/* Page Header */}
+      <div>
+        <h1 className="text-2xl font-semibold text-slate-100 tracking-tight">MIS Entry</h1>
+        <p className="text-xs text-slate-500 mt-0.5">Submit vendor challan and slip details to Google Sheets · BioTrend Energy</p>
       </div>
 
-      {/* Radio input for Slip Tab */}
-      <input
-        type="radio"
-        name="my_tabs_2"
-        id="tab2"
-        className="tab"
-        aria-label="Slip Details"
-        checked={selectedTab === "slip"}
-        onChange={() => setSelectedTab("slip")}
-      />
+      {/* Tab Switcher */}
+      <div className="flex gap-1 bg-base-200 border border-base-300 rounded-xl p-1 w-fit">
+        <button
+          className={`px-5 py-2 rounded-lg text-sm font-medium transition-colors ${
+            selectedTab === "vendor"
+              ? "bg-base-100 text-slate-100 shadow"
+              : "text-slate-500 hover:text-slate-300"
+          }`}
+          onClick={() => setSelectedTab("vendor")}
+        >
+          Vendor Challan
+        </button>
+        <button
+          className={`px-5 py-2 rounded-lg text-sm font-medium transition-colors ${
+            selectedTab === "slip"
+              ? "bg-base-100 text-slate-100 shadow"
+              : "text-slate-500 hover:text-slate-300"
+          }`}
+          onClick={() => setSelectedTab("slip")}
+        >
+          Slip Details
+        </button>
+      </div>
 
-      <div
-        className={`tab-content border-base-300 bg-base-100 p-10 ${
-          selectedTab === "slip" ? "block" : "hidden"
-        }`}
-      >
-        <SlipDetailsForm />
+      {/* Tab Content */}
+      <div className="bg-base-200 border border-base-300 rounded-xl p-6">
+        {selectedTab === "vendor" && <VendorChallanForm />}
+        {selectedTab === "slip" && <SlipDetailsForm />}
       </div>
     </div>
   );
