@@ -31,6 +31,7 @@ const page = () => {
     formState: { errors, isValid },
     setValue,
     setError,
+    clearErrors,
     getValues,
     resetField,
     reset,
@@ -38,6 +39,18 @@ const page = () => {
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
+  const normalizeVehicle = (v: string) =>
+    v.toUpperCase().replace(/[\s\-_]/g, "");
+
+  const clearWeightErrors = () => {
+    clearErrors("tar_file");
+    clearErrors("tar_data");
+    clearErrors("net_file");
+    clearErrors("net_data");
+    clearErrors("gross_file");
+    clearErrors("gross_data");
+  };
   const [companies, setCompanies] = useState<companyDetail[] | null>(null);
   const [vendors, setVendors] = useState<vendorDetail[] | null>(null);
   const [vehicle_number, setVehicle] = useState<string | null>(null);
@@ -161,21 +174,17 @@ const page = () => {
     setLoading(true);
     const name = e.target.name as keyof formType;
     if (!e.target.files) {
-      setError(name, {
-        message: `${name} that file not get`,
-      });
+      setError(name, { message: `${name} file not received` });
+      setLoading(false);
       return;
     }
 
     setValue(name, e.target.files[0]);
     let dataPart = await getFilePart(e.target.files[0]);
-    console.log(name);
 
     switch (name) {
       case "e_wayBill":
-        setError("e_wayBill", {
-          message: "",
-        });
+        clearErrors("e_wayBill");
         setValue("e_wayBill", e.target.files[0]);
         const e_way_bill_data = await extractEWayBill_withIn(dataPart);
         setValue("e_wayBill_data", Number(e_way_bill_data.EWayBillNumber));
@@ -189,244 +198,105 @@ const page = () => {
         setVehicle(e_way_bill_data.vehicle_number);
         setLoading(false);
         return;
-      case "tar_file":
-        setError("tar_file", {
-          message: "",
-        });
-        setError("tar_data", {
-          message: "",
-        });
-        setError("net_data", {
-          message: "",
-        });
-        setError("net_file", {
-          message: "",
-        });
-        setError("gross_data", {
-          message: "",
-        });
 
-        setError("gross_file", {
-          message: "",
-        });
+      case "tar_file":
+        clearWeightErrors();
         const tar_data = await extractData(dataPart);
-        console.log(tar_data);
 
         if (!tar_data) {
-          setError("tar_file", {
-            message: "File not found or invalid format",
-          });
+          setError("tar_file", { message: "File not found or invalid format" });
           setLoading(false);
           return;
         }
         if (!vehicle_number) {
-          setError("e_wayBill", {
-            message: "Please upload the e-way bill first.",
-          });
+          setError("e_wayBill", { message: "Please upload the e-way bill first." });
           setLoading(false);
           return;
         }
-        if (tar_data.vehicle_number != vehicle_number) {
+        if (normalizeVehicle(tar_data.vehicle_number) !== normalizeVehicle(vehicle_number)) {
           setError("tar_file", {
-            message: "vehicle number not mach to e way bill",
+            message: `Vehicle number mismatch: image has "${tar_data.vehicle_number}", e-way bill has "${vehicle_number}"`,
           });
           setLoading(false);
-
           return;
         }
-
-        setError("tar_file", {
-          message: "",
-        });
-        setError("tar_data", {
-          message: "",
-        });
-        setError("net_data", {
-          message: "",
-        });
-        setError("net_file", {
-          message: "",
-        });
-        setError("gross_data", {
-          message: "",
-        });
-
-        setError("gross_file", {
-          message: "",
-        });
+        clearWeightErrors();
         setValue("tar_data", tar_data);
-
         setLoading(false);
         return;
-      case "net_file":
-        setError("tar_file", {
-          message: "",
-        });
-        setError("tar_data", {
-          message: "",
-        });
-        setError("net_data", {
-          message: "",
-        });
-        setError("net_file", {
-          message: "",
-        });
-        setError("gross_data", {
-          message: "",
-        });
 
-        setError("gross_file", {
-          message: "",
-        });
+      case "net_file":
+        clearWeightErrors();
         const net_data = await extractData(dataPart);
-        console.log(net_data);
 
         if (!net_data) {
-          setError("net_data", {
-            message: "File not found or invalid format",
-          });
+          setError("net_data", { message: "File not found or invalid format" });
           setLoading(false);
           return;
         }
         if (!vehicle_number) {
-          setError("e_wayBill", {
-            message: "Fist upload E way bill",
-          });
+          setError("e_wayBill", { message: "Please upload the e-way bill first." });
           setLoading(false);
           return;
         }
-        if (net_data.vehicle_number !== vehicle_number) {
+        if (normalizeVehicle(net_data.vehicle_number) !== normalizeVehicle(vehicle_number)) {
           setError("net_data", {
-            message: "Vehicle number does not match the e-way bill.",
+            message: `Vehicle number mismatch: image has "${net_data.vehicle_number}", e-way bill has "${vehicle_number}"`,
           });
           setLoading(false);
           return;
         }
-
         if (!getValues("tar_data")) {
-          setError("tar_file", {
-            message: "Please upload tare weight first.",
-          });
+          setError("tar_file", { message: "Please upload tare weight first." });
           setLoading(false);
           return;
         }
-
         if (getValues("tar_data.weight") > net_data.weight) {
           setError("net_data", {
-            message:
-              "Net weight / A weight must be greater than to the tare weight. Please check and try again.",
+            message: "Net weight (A) must be greater than tare weight. Please check and try again.",
           });
           setLoading(false);
           return;
         }
-        setError("tar_file", {
-          message: "",
-        });
-        setError("tar_data", {
-          message: "",
-        });
-        setError("net_data", {
-          message: "",
-        });
-        setError("net_file", {
-          message: "",
-        });
-        setError("gross_data", {
-          message: "",
-        });
-
-        setError("gross_file", {
-          message: "",
-        });
+        clearWeightErrors();
         setValue("net_data", net_data);
         setLoading(false);
-
         return;
-      case "gross_file":
-        setError("tar_file", {
-          message: "",
-        });
-        setError("tar_data", {
-          message: "",
-        });
-        setError("net_data", {
-          message: "",
-        });
-        setError("net_file", {
-          message: "",
-        });
-        setError("gross_data", {
-          message: "",
-        });
 
-        setError("gross_file", {
-          message: "",
-        });
+      case "gross_file":
+        clearWeightErrors();
         const gross_data = await extractData(dataPart);
-        console.log(gross_data);
 
         if (!gross_data) {
-          setError("gross_data", {
-            message: "File not found or invalid format",
-          });
+          setError("gross_data", { message: "File not found or invalid format" });
           setLoading(false);
           return;
         }
         if (!vehicle_number) {
-          setError("e_wayBill", {
-            message: "Please upload the e-way bill first.",
-          });
+          setError("e_wayBill", { message: "Please upload the e-way bill first." });
           setLoading(false);
           return;
         }
-        if (gross_data.vehicle_number != vehicle_number) {
+        if (normalizeVehicle(gross_data.vehicle_number) !== normalizeVehicle(vehicle_number)) {
           setError("gross_data", {
-            message: "vehicle number not mach to e way bill",
+            message: `Vehicle number mismatch: image has "${gross_data.vehicle_number}", e-way bill has "${vehicle_number}"`,
           });
           setLoading(false);
-
           return;
         }
-        console.log(getValues("net_data"));
-
         if (!getValues("net_data")) {
-          setError("net_file", {
-            message: "Please upload Net weight / A weight first.",
-          });
+          setError("net_file", { message: "Please upload Net weight (A) first." });
           setLoading(false);
           return;
         }
-
         if (getValues("net_data").weight > gross_data.weight) {
           setError("net_data", {
-            message:
-              "Net weight / A weight cannot be greater than gross weight / B weight. Please check and try again.",
+            message: "Net weight (A) cannot be greater than gross weight (B). Please check and try again.",
           });
           setLoading(false);
           return;
         }
-        // setValue("gross_data.weight", g ?? 0);
-        setError("tar_file", {
-          message: "",
-        });
-        setError("tar_data", {
-          message: "",
-        });
-        setError("net_data", {
-          message: "",
-        });
-        setError("net_file", {
-          message: "",
-        });
-        setError("gross_data", {
-          message: "",
-        });
-
-        setError("gross_file", {
-          message: "",
-        });
-        console.log(gross_data);
-
+        clearWeightErrors();
         setValue("gross_data", gross_data);
         setLoading(false);
         return;
@@ -693,8 +563,10 @@ const page = () => {
                         resetField("multi_file");
                         return;
                       }
-                      if (result.vehicle_number != vehicle_number) {
-                        setError("multi_file", { message: "vehicle number not mach to e way bill" });
+                      if (normalizeVehicle(result.vehicle_number ?? "") !== normalizeVehicle(vehicle_number ?? "")) {
+                        setError("multi_file", {
+                          message: `Vehicle number mismatch: image has "${result.vehicle_number}", e-way bill has "${vehicle_number}"`,
+                        });
                         setLoading(false);
                         return;
                       }
