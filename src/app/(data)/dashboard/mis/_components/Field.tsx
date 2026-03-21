@@ -17,12 +17,16 @@ export const Field = ({
   error,
   type = "text",
 }: FieldProps) => (
-  <div className="flex flex-col">
-    <label htmlFor={name} className="mb-1 font-medium">
+  <div className="flex flex-col gap-1">
+    <label htmlFor={name} className="text-sm font-medium text-slate-300">
       {label}
     </label>
-    <input id={name} type={type} {...register(name)} className={inputClass} />
-
-    {error && <p className="text-red-400">{error.message}</p>}
+    <input
+      id={name}
+      type={type}
+      {...register(name)}
+      className="input input-bordered w-full"
+    />
+    {error && <p className="text-error text-xs">{error.message}</p>}
   </div>
 );
