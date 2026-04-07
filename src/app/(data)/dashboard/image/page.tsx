@@ -399,8 +399,8 @@ const page = () => {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-100 tracking-tight">Upload Images</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Extract challan data from weight images · BioTrend Energy</p>
+          <h1 className="text-2xl font-semibold text-green-900 tracking-tight">Upload Images</h1>
+          <p className="text-xs text-green-600 mt-0.5">Extract challan data from weight images · BioTrend Energy</p>
         </div>
       </div>
 
@@ -410,11 +410,11 @@ const page = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
 
           {/* Vendor & Company */}
-          <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-4">
-            <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Details</h2>
+          <div className="rounded-xl p-5 flex flex-col gap-4 border border-white/60 shadow-md" style={{ background: "rgba(255,255,255,0.65)", backdropFilter: "blur(16px)" }}>
+            <h2 className="text-xs font-semibold text-green-600 uppercase tracking-widest">Details</h2>
 
             <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-              <label className="text-sm font-medium text-slate-300">Vendor Name</label>
+              <label className="text-sm font-medium text-gray-700">Vendor Name</label>
               <select
                 className="select select-bordered w-full"
                 defaultValue=""
@@ -430,7 +430,7 @@ const page = () => {
             </fieldset>
 
             <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-              <label className="text-sm font-medium text-slate-300">Short Name</label>
+              <label className="text-sm font-medium text-gray-700">Short Name</label>
               <select
                 disabled={loading}
                 className="select select-bordered w-full"
@@ -446,10 +446,10 @@ const page = () => {
           </div>
 
           {/* E-Way Bill */}
-          <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-3">
-            <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">E-Way Bill</h2>
+          <div className="rounded-xl p-5 flex flex-col gap-3 border border-white/60 shadow-md" style={{ background: "rgba(255,255,255,0.65)", backdropFilter: "blur(16px)" }}>
+            <h2 className="text-xs font-semibold text-green-600 uppercase tracking-widest">E-Way Bill</h2>
             <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-              <label className="text-sm font-medium text-slate-300">Upload PDF</label>
+              <label className="text-sm font-medium text-gray-700">Upload PDF</label>
               <input
                 disabled={loading}
                 type="file"
@@ -464,8 +464,8 @@ const page = () => {
           </div>
 
           {/* Weight Images */}
-          <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-4">
-            <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Weight Images</h2>
+          <div className="rounded-xl p-5 flex flex-col gap-4 border border-white/60 shadow-md" style={{ background: "rgba(255,255,255,0.65)", backdropFilter: "blur(16px)" }}>
+            <h2 className="text-xs font-semibold text-green-600 uppercase tracking-widest">Weight Images</h2>
 
             <div className="tabs tabs-lifted">
               <input
@@ -479,7 +479,7 @@ const page = () => {
               />
               <div role="tabpanel" className="tab-content bg-base-100 border-base-300 p-5 flex flex-col gap-4">
                 <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-                  <label className="text-sm font-medium text-slate-300">Tare Image</label>
+                  <label className="text-sm font-medium text-gray-700">Tare Image</label>
                   <input
                     disabled={loading || getValues("e_wayBill") == undefined || getValues("e_wayBill_data") == undefined}
                     type="file"
@@ -488,7 +488,7 @@ const page = () => {
                     name={"tar_file" as keyof formType}
                     onChange={handleFileChange}
                   />
-                  <p className="text-xs text-slate-500">{watch("tar_data.vehicle_number")}</p>
+                  <p className="text-xs text-gray-400">{watch("tar_data.vehicle_number")}</p>
                   {(errors.tar_data || errors.tar_file) && (
                     <p className="text-error text-xs">{(errors.tar_data ?? errors.tar_file)?.message}</p>
                   )}
@@ -496,7 +496,7 @@ const page = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-                    <label className="text-sm font-medium text-slate-300">Net Weight (A)</label>
+                    <label className="text-sm font-medium text-gray-700">Net Weight (A)</label>
                     <input
                       type="file"
                       disabled={loading || getValues("multi_file") !== undefined || getValues("e_wayBill") == undefined || getValues("tar_file") == undefined}
@@ -505,14 +505,14 @@ const page = () => {
                       accept="image/*"
                       name={"net_file" as keyof formType}
                     />
-                    <p className="text-xs text-slate-500">{watch("net_data.vehicle_number")}</p>
+                    <p className="text-xs text-gray-400">{watch("net_data.vehicle_number")}</p>
                     {(errors.net_data || errors.net_file) && (
                       <p className="text-error text-xs">{(errors.net_data ?? errors.net_file)?.message}</p>
                     )}
                   </fieldset>
 
                   <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-                    <label className="text-sm font-medium text-slate-300">Net Weight (B)</label>
+                    <label className="text-sm font-medium text-gray-700">Net Weight (B)</label>
                     <input
                       type="file"
                       className="file-input w-full"
@@ -521,7 +521,7 @@ const page = () => {
                       disabled={loading || getValues("multi_file") !== undefined || getValues("e_wayBill") == undefined || getValues("tar_file") == undefined || getValues("net_file") == undefined}
                       name={"gross_file" as keyof formType}
                     />
-                    <p className="text-xs text-slate-500">{watch("gross_data.vehicle_number")}</p>
+                    <p className="text-xs text-gray-400">{watch("gross_data.vehicle_number")}</p>
                     {(errors.gross_data || errors.gross_file) && (
                       <p className="text-error text-xs">{(errors.gross_data ?? errors.gross_file)?.message}</p>
                     )}
@@ -539,7 +539,7 @@ const page = () => {
               />
               <div role="tabpanel" className="tab-content bg-base-100 border-base-300 p-5">
                 <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-                  <label className="text-sm font-medium text-slate-300">All Weights in One Image</label>
+                  <label className="text-sm font-medium text-gray-700">All Weights in One Image</label>
                   <input
                     type="file"
                     className="file-input w-full"
@@ -598,9 +598,9 @@ const page = () => {
           </div>
 
           {/* Gross Weight + Actions */}
-          <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-4">
+          <div className="rounded-xl p-5 flex flex-col gap-4 border border-white/60 shadow-md" style={{ background: "rgba(255,255,255,0.65)", backdropFilter: "blur(16px)" }}>
             <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
-              <label className="text-sm font-medium text-slate-300">Gross Weight <span className="text-slate-500 font-normal">(Auto-filled)</span></label>
+              <label className="text-sm font-medium text-gray-700">Gross Weight <span className="text-gray-400 font-normal">(Auto-filled)</span></label>
               <input
                 type="text"
                 disabled
@@ -610,7 +610,7 @@ const page = () => {
             </fieldset>
 
             <div className="flex gap-3 pt-1">
-              <button className="btn btn-primary flex-1" type="submit" disabled={loading}>
+              <button className="btn btn-green flex-1" type="submit" disabled={loading}>
                 {loading ? "Processing..." : "Extract Data"}
               </button>
               <button type="button" className="btn btn-ghost" onClick={() => reset()}>
@@ -622,10 +622,10 @@ const page = () => {
         </form>
 
         {/* Right Column - Extracted Data */}
-        <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-4">
+        <div className="rounded-xl p-5 flex flex-col gap-4 border border-white/60 shadow-md" style={{ background: "rgba(255,255,255,0.65)", backdropFilter: "blur(16px)" }}>
           <div>
-            <h2 className="text-2xl font-semibold text-slate-100 tracking-tight">Extracted Data</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Results from the uploaded weight images</p>
+            <h2 className="text-2xl font-semibold text-green-900 tracking-tight">Extracted Data</h2>
+            <p className="text-xs text-gray-400 mt-0.5">Results from the uploaded weight images</p>
           </div>
 
           {data ? (
@@ -640,35 +640,35 @@ const page = () => {
                   { label: "A Weight", value: data.A_weight },
                   { label: "B Weight", value: data.B_weight },
                 ].map(({ label, value }) => (
-                  <div key={label} className="bg-base-300 rounded-lg px-4 py-3">
-                    <p className="text-xs text-slate-500 mb-0.5">{label}</p>
-                    <p className="text-sm font-medium text-slate-100">{String(value)}</p>
+                  <div key={label} className="bg-green-50/80 rounded-lg px-4 py-3 ring-1 ring-green-100">
+                    <p className="text-xs text-gray-400 mb-0.5">{label}</p>
+                    <p className="text-sm font-medium text-gray-900">{String(value)}</p>
                   </div>
                 ))}
               </div>
 
               {companies?.find((v) => v.id == getValues("companyId"))?.shotName.toLowerCase() !== "dadri" && (
                 <div className="flex flex-wrap gap-2 pt-2">
-                  <button onClick={handlePrintData} className="btn btn-secondary btn-sm">Print Annexure</button>
-                  <button onClick={handlePrintChallan} className="btn btn-secondary btn-sm">Print Challan</button>
-                  <button onClick={handlePrintMarges} className="btn btn-secondary btn-sm">Merge PDF</button>
-                  <button onClick={handlePrintMargesSign} className="btn btn-secondary btn-sm">Merge PDF (Signed)</button>
+                  <button onClick={handlePrintData} className="btn btn-green btn-sm">Print Annexure</button>
+                  <button onClick={handlePrintChallan} className="btn btn-green btn-sm">Print Challan</button>
+                  <button onClick={handlePrintMarges} className="btn btn-green btn-sm">Merge PDF</button>
+                  <button onClick={handlePrintMargesSign} className="btn btn-green btn-sm">Merge PDF (Signed)</button>
                 </div>
               )}
 
               {companies?.find((v) => v.id == getValues("companyId"))?.shotName.toLowerCase() === "dadri" && (
                 <div className="flex flex-wrap gap-2 pt-2">
-                  <button onClick={handlePrintData2} className="btn btn-secondary btn-sm">Print Annexure 2</button>
-                  <button onClick={handlePrintChallan2} className="btn btn-secondary btn-sm">Print Challan 2</button>
-                  <button onClick={handlePrintMarges2} className="btn btn-secondary btn-sm">Merge PDF 2</button>
-                  <button onClick={handlePrintMarges2sign} className="btn btn-secondary btn-sm">Merge PDF (Signed) 2</button>
+                  <button onClick={handlePrintData2} className="btn btn-green btn-sm">Print Annexure 2</button>
+                  <button onClick={handlePrintChallan2} className="btn btn-green btn-sm">Print Challan 2</button>
+                  <button onClick={handlePrintMarges2} className="btn btn-green btn-sm">Merge PDF 2</button>
+                  <button onClick={handlePrintMarges2sign} className="btn btn-green btn-sm">Merge PDF (Signed) 2</button>
                 </div>
               )}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-16 gap-2">
-              <p className="text-slate-400 text-sm font-medium">No data to display</p>
-              <p className="text-slate-600 text-xs">Upload images and extract data to see results here</p>
+              <p className="text-gray-400 text-sm font-medium">No data to display</p>
+              <p className="text-gray-400 text-xs">Upload images and extract data to see results here</p>
             </div>
           )}
         </div>

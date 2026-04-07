@@ -9,43 +9,102 @@ export async function deleteMultipleOCR(ids: number[]) {
   const cookie = await cookies();
   const jwt = await verifyToken(cookie.get("token")?.value || "");
   const user = await prisma.user.findUnique({
-    where: {
-      id: Number(jwt?.payload.userId),
-    },
+    where: { id: Number(jwt?.payload.userId) },
   });
+
   try {
     if (!Array.isArray(ids) || ids.length === 0) {
-      console.log("Invalid input: ids must be a non-empty array.");
-      return {
-        error: "Invalid input: ids must be a non-empty array."
-      };
+      return { error: "Invalid input: ids must be a non-empty array." };
     }
-    // await prisma.audit.create({
-    //   data: {
-    //     ip: (await headers()).get("x-forwarded-for") ?? "0.0.0.0",
-    //     message: `delete ocr with ids: ${ids.join(", ")} - ${ids.length} records`,
-    //   },
-    // });
-    let s = await prisma.ocr.deleteMany({
-      where: {
-        id: {
-          in: ids,
-        },
-      },
-    });
-    console.log(s);
 
-    return s;
-  } catch (error) {
-    // throw error;
+    // 1. Fetch records before deletion
+    const records = await prisma.ocr.findMany({ where: { id: { in: ids } } });
+
+    // 2. Copy records to recycle bin
+    await prisma.deletedOcr.createMany({
+      data: records.map((r) => ({
+        originalId: r.id,
+        A_weight: r.A_weight,
+        B_weight: r.B_weight,
+        challan: r.challan,
+        address: r.address,
+        map_url: r.map_url,
+        latitude: r.latitude,
+        longitude: r.longitude,
+        delivery_date: r.delivery_date,
+        delivery_status: r.delivery_status,
+        net_weight: r.net_weight,
+        tare_weight: r.tare_weight,
+        gross_weight: r.gross_weight,
+        vehicle_number: r.vehicle_number,
+        date: r.date,
+        created_at: r.created_at,
+        e_way_bill: r.e_way_bill,
+        e_way_bill_date: r.e_way_bill_date,
+        e_way_bill_gst: r.e_way_bill_gst,
+        e_way_bill_bill_to: r.e_way_bill_bill_to,
+        e_way_bill_ship_to: r.e_way_bill_ship_to,
+        vendorDetailId: r.vendorDetailId,
+        companyDetailId: r.companyDetailId,
+        deletedBy: user?.username ?? "<unknown>",
+      })),
+    });
+
+    // 3. Remove related records then ocr
+    await prisma.media.deleteMany({ where: { ocrId: { in: ids } } });
+    await prisma.mis.deleteMany({ where: { ocrId: { in: ids } } });
+    const result = await prisma.ocr.deleteMany({ where: { id: { in: ids } } });
+
     await prisma.audit.create({
       data: {
         username: user?.username ?? "<unknown>",
-        message: `Error deleting ocr with ids: ${ids.join(", ")} - ${ids.length} records`,
+        message: `Moved ${ids.length} record(s) to recycle bin: ids [${ids.join(", ")}]`,
+      },
+    });
+
+    return result;
+  } catch (error) {
+    await prisma.audit.create({
+      data: {
+        username: user?.username ?? "<unknown>",
+        message: `Error deleting ocr with ids: ${ids.join(", ")}`,
       },
     });
     return new Error(`Error deleting records: ${error instanceof Error ? error.message : String(error)}`);
   }
+}
+
+export async function getRecycleBin() {
+  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  // Auto-purge records older than 24 hours
+  await prisma.deletedOcr.deleteMany({ where: { deletedAt: { lt: oneDayAgo } } });
+  return prisma.deletedOcr.findMany({ orderBy: { deletedAt: "desc" } });
+}
+
+export async function restoreFromRecycleBin(id: number) {
+  const deleted = await prisma.deletedOcr.findUnique({ where: { id } });
+  if (!deleted) throw new Error("Record not found in recycle bin");
+
+  const { id: _binId, originalId, deletedAt, deletedBy, ...data } = deleted;
+
+  await prisma.ocr.create({ data });
+  await prisma.deletedOcr.delete({ where: { id } });
+
+  const cookie = await cookies();
+  const jwt = await verifyToken(cookie.get("token")?.value || "");
+  const user = await prisma.user.findUnique({ where: { id: Number(jwt?.payload.userId) } });
+  await prisma.audit.create({
+    data: {
+      username: user?.username ?? "<unknown>",
+      message: `Restored record (original id: ${originalId}, challan: ${data.challan}) from recycle bin`,
+    },
+  });
+
+  return { success: true };
+}
+
+export async function permanentDeleteFromBin(id: number) {
+  return prisma.deletedOcr.delete({ where: { id } });
 }
 const PROMPT = `
 **🖼️ Image Data Extraction Prompt (GPS Camera Format)**

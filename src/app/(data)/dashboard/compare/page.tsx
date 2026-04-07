@@ -10,24 +10,20 @@ import {
 import { ocr } from "@/generated/prisma";
 import { useState, useRef, DragEvent, ChangeEvent, useEffect } from "react";
 import { toast } from "sonner";
+
 const normalizeWeight = (value: string | null) => {
   if (!value) return null;
   const match = value.match(/^([\d.]+)\s*([a-zA-Z]+)$/);
-  if (!match) return value.trim(); // fallback: return as-is
+  if (!match) return value.trim();
 
   const [, number, unit] = match;
   let normalizedUnit = unit.toLowerCase();
-
-  // Convert known variants to standard form
   if (normalizedUnit === "kgs") normalizedUnit = "kg";
   if (normalizedUnit === "mts") normalizedUnit = "mt";
-
-  // Remove .00 if present
   const cleanNumber = number.endsWith(".00")
     ? parseInt(number).toString()
     : parseInt(number).toString();
   console.log(cleanNumber, cleanNumber.replace(",", ""));
-
   return `${cleanNumber} ${normalizedUnit}`;
 };
 
@@ -35,7 +31,6 @@ const Page = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [rightFile, setRightFile] = useState<File[] | null>(null);
   const [resultMessage, setResultMessage] = useState<string | null>(null);
-
   const rightInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async () => {
@@ -50,12 +45,6 @@ const Page = () => {
           net_weight: ocrData.net_weight + " kg",
         },
       ];
-      // leftData = await Promise.all(
-      //   leftFile.map(async (e) => {
-      //     const filePart = await getFilePart(e);
-      //     return ExtractDataFORCompar(filePart);
-      //   })
-      // );
       rightData = await Promise.all(
         rightFile.map(async (e) => {
           const filePart = await getFilePart(e);
@@ -65,21 +54,16 @@ const Page = () => {
     }
     console.log(leftData, rightData);
 
-    // Compare leftData and rightData and show result
-    // Assuming leftData and rightData are arrays of objects (one per file)
     let resultMessage = "";
     if (Array.isArray(leftData) && Array.isArray(rightData)) {
       const mismatches: string[] = [];
       leftData.forEach((leftObj, i) => {
         const rightObj = rightData[i];
-
         if (rightObj) {
           Object.keys(leftObj).forEach((key) => {
             let leftVal = leftObj[key];
             let rightVal = rightObj[key];
-            if (rightObj[key] == null) {
-              return;
-            }
+            if (rightObj[key] == null) return;
             if (key === "net_weight") {
               leftVal = normalizeWeight(leftVal);
               rightVal = normalizeWeight(rightVal);
@@ -101,10 +85,7 @@ const Page = () => {
               })
             )
           );
-          localStorage.setItem(
-            `data_for_mis_${ocrData?.id}`,
-            JSON.stringify(data)
-          );
+          localStorage.setItem(`data_for_mis_${ocrData?.id}`, JSON.stringify(data));
           toast.success("Data saved successfully!");
         }
       } else {
@@ -152,16 +133,19 @@ const Page = () => {
     <div className="flex flex-col gap-6 py-4">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-semibold text-slate-100 tracking-tight">PDF Compare</h1>
-        <p className="text-xs text-slate-500 mt-0.5">Compare challan records against uploaded PDFs · BioTrend Energy</p>
+        <h1 className="text-2xl font-semibold text-green-900 tracking-tight">PDF Compare</h1>
+        <p className="text-xs text-green-600 mt-0.5">Compare challan records against uploaded PDFs · BioTrend Energy</p>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
         {/* Left — Challan Selector */}
-        <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-3">
-          <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Step 1 — Select Challan</h2>
+        <div
+          className="rounded-xl p-5 flex flex-col gap-3 border border-white/60 shadow-md"
+          style={{ background: "rgba(255,255,255,0.65)", backdropFilter: "blur(16px)" }}
+        >
+          <h2 className="text-xs font-semibold text-green-600 uppercase tracking-widest">Step 1 — Select Challan</h2>
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-slate-300">Challan Record</label>
+            <label className="text-sm font-medium text-gray-700">Challan Record</label>
             <select
               className="select select-bordered w-full"
               defaultValue=""
@@ -186,9 +170,9 @@ const Page = () => {
                 { label: "Net Weight (kg)", value: ocrData.net_weight },
                 { label: "Challan", value: ocrData.challan },
               ].map(({ label, value }) => (
-                <div key={label} className="bg-base-300 rounded-lg px-4 py-3">
-                  <p className="text-xs text-slate-500 mb-0.5">{label}</p>
-                  <p className="text-sm font-medium text-slate-100">{String(value ?? "-")}</p>
+                <div key={label} className="bg-green-50/80 rounded-lg px-4 py-3 ring-1 ring-green-100">
+                  <p className="text-xs text-gray-500 mb-0.5">{label}</p>
+                  <p className="text-sm font-medium text-gray-900">{String(value ?? "-")}</p>
                 </div>
               ))}
             </div>
@@ -196,16 +180,19 @@ const Page = () => {
         </div>
 
         {/* Right — PDF Upload */}
-        <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-3">
-          <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Step 2 — Upload PDF(s)</h2>
+        <div
+          className="rounded-xl p-5 flex flex-col gap-3 border border-white/60 shadow-md"
+          style={{ background: "rgba(255,255,255,0.65)", backdropFilter: "blur(16px)" }}
+        >
+          <h2 className="text-xs font-semibold text-green-600 uppercase tracking-widest">Step 2 — Upload PDF(s)</h2>
           <div
-            className="border-2 border-dashed border-base-300 hover:border-primary rounded-xl p-8 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors"
+            className="border-2 border-dashed border-green-200 hover:border-green-400 rounded-xl p-8 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors"
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => handleDrop(e, setRightFile)}
             onClick={() => rightInputRef.current?.click()}
           >
-            <p className="text-slate-400 text-sm">Drop PDF here or click to browse</p>
-            <p className="text-slate-600 text-xs">Only PDF files are accepted</p>
+            <p className="text-gray-400 text-sm">Drop PDF here or click to browse</p>
+            <p className="text-gray-400 text-xs">Only PDF files are accepted</p>
             <input
               ref={rightInputRef}
               type="file"
@@ -218,9 +205,9 @@ const Page = () => {
           {rightFile && rightFile.length > 0 && (
             <div className="flex flex-col gap-1.5">
               {rightFile.map((d, i) => (
-                <div key={i} className="bg-base-300 rounded-lg px-4 py-2.5 flex items-center gap-2">
-                  <span className="text-slate-400 text-sm">📄</span>
-                  <span className="text-sm text-slate-200 truncate">{d.name}</span>
+                <div key={i} className="bg-green-50/80 rounded-lg px-4 py-2.5 flex items-center gap-2 ring-1 ring-green-100">
+                  <span className="text-gray-400 text-sm">📄</span>
+                  <span className="text-sm text-gray-700 truncate">{d.name}</span>
                 </div>
               ))}
             </div>
@@ -232,7 +219,7 @@ const Page = () => {
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
           <button
-            className="btn btn-primary"
+            className="btn btn-green"
             disabled={!rightFile || !ocrData || loading}
             onClick={handleSubmit}
           >
@@ -266,11 +253,14 @@ const Page = () => {
         </div>
 
         {resultMessage && (
-          <div className={`bg-base-200 border rounded-xl px-5 py-4 ${isMatch ? "border-success/40" : "border-error/40"}`}>
-            <p className={`text-xs font-semibold uppercase tracking-widest mb-2 ${isMatch ? "text-success" : "text-error"}`}>
+          <div
+            className={`rounded-xl px-5 py-4 border ${isMatch ? "border-emerald-300/60" : "border-red-300/60"}`}
+            style={{ background: "rgba(255,255,255,0.65)", backdropFilter: "blur(16px)" }}
+          >
+            <p className={`text-xs font-semibold uppercase tracking-widest mb-2 ${isMatch ? "text-emerald-600" : "text-red-500"}`}>
               {isMatch ? "Result — Match" : "Result — Mismatch"}
             </p>
-            <p className="text-sm text-slate-200 whitespace-pre-wrap">{resultMessage}</p>
+            <p className="text-sm text-gray-700 whitespace-pre-wrap">{resultMessage}</p>
           </div>
         )}
       </div>

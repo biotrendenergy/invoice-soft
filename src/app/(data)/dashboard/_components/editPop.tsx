@@ -174,7 +174,7 @@ const UpdateOcrModal = forwardRef<
           </div>
 
           <div className="modal-action">
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-green">
               Update
             </button>
             <button

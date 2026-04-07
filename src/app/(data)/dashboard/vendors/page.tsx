@@ -4,15 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  AddVendor,
-  deleteVendor,
-  getAllVendor,
-  updateVendor,
-} from "@/action/vendores";
+import { AddVendor, deleteVendor, getAllVendor, updateVendor } from "@/action/vendores";
 import { StateData } from "@/utility/getStateCode";
 
-// Zod schema for validation
 const vendorSchema = z.object({
   name: z.string().min(2, "Vendor name is required"),
   address: z.string().nullable(),
@@ -38,13 +32,7 @@ export default function VendorTable() {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors },
-  } = useForm<VendorFormData>({
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<VendorFormData>({
     resolver: zodResolver(vendorSchema),
   });
 
@@ -71,19 +59,17 @@ export default function VendorTable() {
       updateVendor(selectedVendor.id, data);
       await updateData();
     } else {
-      await AddVendor({
-        ...data,
-      });
+      await AddVendor({ ...data });
       await updateData();
     }
     setLoading(false);
     closeModal();
   };
+
   useEffect(() => {
-    (async () => {
-      await updateData();
-    })();
+    (async () => { await updateData(); })();
   }, []);
+
   const confirmDelete = (vendor: Vendor) => {
     setSelectedVendor(vendor);
     setIsDeleteConfirmOpen(true);
@@ -99,52 +85,56 @@ export default function VendorTable() {
             setIsDeleteConfirmOpen(false);
           });
         })
-        .finally(() => {
-          setLoading(false);
-        });
+        .finally(() => { setLoading(false); });
     }
   };
 
   return (
-    <div className="p-4">
-      {/* Header */}
-      <div className="mb-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold">Vendors</h1>
-        <button className="btn btn-primary" onClick={() => openFormModal()}>
-          ➕ Add Vendor
+    <div className="flex flex-col gap-6 py-4">
+      {/* Page Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-green-900 tracking-tight">Vendors</h1>
+          <p className="text-xs text-green-600 mt-0.5">Manage vendor details and GST information · BioTrend Energy</p>
+        </div>
+        <button className="btn btn-green" onClick={() => openFormModal()}>
+          + Add Vendor
         </button>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="table table-zebra w-full">
+      <div
+        className="overflow-x-auto rounded-xl shadow-lg border border-white/60"
+        style={{ background: "rgba(255,255,255,0.60)", backdropFilter: "blur(16px)" }}
+      >
+        <table className="w-full text-sm">
           <thead>
-            <tr className="uppercase">
-              <th>Name</th>
-              <th>Address</th>
-              <th>State</th>
-              <th>GST</th>
-              <th>Actions</th>
+            <tr className="border-b border-green-100/80" style={{ background: "rgba(240,253,244,0.80)" }}>
+              {["Name", "Address", "State", "GST", "Actions"].map((h) => (
+                <th key={h} className="px-4 py-3.5 text-left text-xs font-semibold text-green-700 uppercase tracking-wider whitespace-nowrap">
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-green-100/60">
             {vendors.map((vendor) => (
-              <tr key={vendor.id}>
-                <td>{vendor.name}</td>
-                <td>{vendor.address}</td>
-                <td>{vendor.state}</td>
-                <td>{vendor.gst}</td>
-                <td>
-                  <div className="flex gap-2">
+              <tr key={vendor.id} className="bg-white/30 hover:bg-white/60 transition-colors duration-100">
+                <td className="px-4 py-3.5 font-medium text-gray-800">{vendor.name}</td>
+                <td className="px-4 py-3.5 text-gray-500 max-w-[200px] truncate">{vendor.address}</td>
+                <td className="px-4 py-3.5 text-gray-600">{vendor.state}</td>
+                <td className="px-4 py-3.5 font-mono text-xs text-gray-600">{vendor.gst}</td>
+                <td className="px-4 py-3.5">
+                  <div className="flex items-center gap-2">
                     <button
-                      className="btn btn-sm btn-outline"
+                      className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white/70 text-gray-600 ring-1 ring-gray-200 hover:bg-white hover:text-gray-900 transition-all duration-150 shadow-sm"
                       onClick={() => openFormModal(vendor)}
                       disabled={loading}
                     >
                       Update
                     </button>
                     <button
-                      className="btn btn-sm btn-error"
+                      className="px-3 py-1.5 rounded-lg text-xs font-medium bg-red-50 text-red-500 ring-1 ring-red-200 hover:bg-red-100 transition-all duration-150 shadow-sm"
                       onClick={() => confirmDelete(vendor)}
                       disabled={loading}
                     >
@@ -156,7 +146,7 @@ export default function VendorTable() {
             ))}
             {vendors.length === 0 && (
               <tr>
-                <td colSpan={2} className="text-center text-gray-500">
+                <td colSpan={5} className="px-4 py-12 text-center text-gray-400 text-sm">
                   No vendors found.
                 </td>
               </tr>
@@ -168,91 +158,53 @@ export default function VendorTable() {
       {/* Add/Update Modal */}
       {isModalOpen && (
         <dialog open className="modal modal-open">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg mb-4">
+          <div
+            className="modal-box border border-white/60"
+            style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "blur(20px)" }}
+          >
+            <h3 className="font-bold text-lg text-green-900 mb-4">
               {isEditing ? "Update" : "Add"} Vendor
             </h3>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Vendor Name</span>
+                  <span className="label-text text-gray-700">Vendor Name</span>
                 </label>
-                <input
-                  {...register("name")}
-                  className="input input-bordered w-full"
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.name.message}
-                  </p>
-                )}
+                <input {...register("name")} className="input input-bordered w-full" />
+                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
               </div>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Vendor GST</span>
+                  <span className="label-text text-gray-700">Vendor GST</span>
                 </label>
-                <input
-                  {...register("gst")}
-                  className="input input-bordered w-full"
-                />
-                {errors.gst && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.gst.message}
-                  </p>
-                )}
+                <input {...register("gst")} className="input input-bordered w-full" />
+                {errors.gst && <p className="text-red-500 text-sm mt-1">{errors.gst.message}</p>}
               </div>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Vendor address</span>
+                  <span className="label-text text-gray-700">Vendor Address</span>
                 </label>
-                <input
-                  {...register("address")}
-                  className="input input-bordered w-full"
-                />
-                {errors.address && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.address.message}
-                  </p>
-                )}
+                <input {...register("address")} className="input input-bordered w-full" />
+                {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
               </div>
               <div className="form-control flex flex-col">
                 <label className="label">
-                  <span className="label-text">Vendor state</span>
+                  <span className="label-text text-gray-700">Vendor State</span>
                 </label>
                 <select
                   className="select select-bordered"
                   defaultValue=""
-                  onChange={(v) => {
-                    setValue("state", v.target.value);
-                  }}
+                  onChange={(v) => setValue("state", v.target.value)}
                 >
                   {Object.keys(StateData).map((v, i) => (
-                    <option key={i} value={v}>
-                      {v}
-                    </option>
+                    <option key={i} value={v}>{v}</option>
                   ))}
                 </select>
-                {/* <input
-                  {...register("state")}
-                  className="input input-bordered w-full"
-                /> */}
-                {errors.state && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.state.message}
-                  </p>
-                )}
+                {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state.message}</p>}
               </div>
               <div className="modal-action">
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={loading}
-                >
-                  Save
-                </button>
-                <button type="button" className="btn" onClick={closeModal}>
-                  Cancel
-                </button>
+                <button type="submit" className="btn btn-green" disabled={loading}>Save</button>
+                <button type="button" className="btn" onClick={closeModal}>Cancel</button>
               </div>
             </form>
           </div>
@@ -262,26 +214,17 @@ export default function VendorTable() {
       {/* Delete Confirmation Modal */}
       {isDeleteConfirmOpen && (
         <dialog open className="modal modal-open">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Confirm Delete</h3>
-            <p className="py-2">
-              Are you sure you want to delete{" "}
-              <strong>{selectedVendor?.name}</strong>?
+          <div
+            className="modal-box border border-white/60"
+            style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "blur(20px)" }}
+          >
+            <h3 className="font-bold text-lg text-green-900">Confirm Delete</h3>
+            <p className="py-2 text-gray-600">
+              Are you sure you want to delete <strong>{selectedVendor?.name}</strong>?
             </p>
             <div className="modal-action">
-              <button
-                className="btn btn-error"
-                onClick={handleDelete}
-                disabled={loading}
-              >
-                Delete
-              </button>
-              <button
-                className="btn"
-                onClick={() => setIsDeleteConfirmOpen(false)}
-              >
-                Cancel
-              </button>
+              <button className="btn btn-error" onClick={handleDelete} disabled={loading}>Delete</button>
+              <button className="btn" onClick={() => setIsDeleteConfirmOpen(false)}>Cancel</button>
             </div>
           </div>
         </dialog>

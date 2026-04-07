@@ -60,7 +60,7 @@ export default function AuditPage() {
             onChange={(e) => setTo(e.target.value)}
             className="input input-bordered"
           />
-          <button onClick={fetchData} className="btn btn-primary">
+          <button onClick={fetchData} className="btn btn-green">
             Filter
           </button>
           <button onClick={downloadCSV} className="btn btn-outline">

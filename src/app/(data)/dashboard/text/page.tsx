@@ -150,15 +150,15 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
   }, [entry]);
 
   return (
-    <div key={index} className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-4">
+    <div key={index} className="rounded-xl p-5 flex flex-col gap-4 border border-white/60 shadow-md" style={{ background: "rgba(255,255,255,0.65)", backdropFilter: "blur(16px)" }}>
       {/* Card Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Record</p>
-          <h3 className="text-lg font-semibold text-slate-100 tracking-tight">Vehicle #{index + 1}</h3>
+          <p className="text-xs font-semibold text-green-600 uppercase tracking-widest mb-0.5">Record</p>
+          <h3 className="text-lg font-semibold text-green-900 tracking-tight">Vehicle #{index + 1}</h3>
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-slate-400">Company (short name)</label>
+          <label className="text-xs font-medium text-gray-500">Company (short name)</label>
           <select
             className="select select-bordered select-sm"
             value={company?.toString()}
@@ -184,9 +184,9 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
           { label: "Section A Weight (kg)", value: entryData["a weight"] },
           { label: "Section B Weight (kg)", value: entryData["b weight"] },
         ].map(({ label, value }) => (
-          <div key={label} className="bg-base-300 rounded-lg px-4 py-3">
-            <p className="text-xs text-slate-500 mb-0.5">{label}</p>
-            <p className="text-sm font-medium text-slate-100">{value || "-"}</p>
+          <div key={label} className="bg-green-50/80 rounded-lg px-4 py-3 ring-1 ring-green-100">
+            <p className="text-xs text-gray-500 mb-0.5">{label}</p>
+            <p className="text-sm font-medium text-gray-900">{value || "-"}</p>
           </div>
         ))}
       </div>
@@ -194,7 +194,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
       {/* E-Way Bill Upload */}
       {!e_way_bill && (
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-slate-300">Add E-Way Bill (PDF)</label>
+          <label className="text-sm font-medium text-gray-700">Add E-Way Bill (PDF)</label>
           <input
             type="file"
             accept=".pdf"
@@ -229,7 +229,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
       {/* Save Button */}
       {e_way_bill && !id && (
         <button
-          className="btn btn-primary w-full"
+          className="btn btn-green w-full"
           disabled={loading}
           onClick={async () => {
             setLoading(true);
@@ -293,18 +293,18 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
         <div className="flex flex-wrap gap-2 pt-1">
           {companies?.find((v) => v.id == company)?.shotName.toLowerCase() !== "dadri" && (
             <>
-              <button className="btn btn-secondary btn-sm" onClick={handlePrintData}>Print Annexure</button>
-              <button className="btn btn-secondary btn-sm" onClick={handlePrintChallan}>Print Challan</button>
-              <button className="btn btn-secondary btn-sm" onClick={handlePrintMarges}>Merge PDF</button>
-              <button className="btn btn-secondary btn-sm" onClick={handlePrintMargesSign}>Merge PDF (Signed)</button>
+              <button className="btn btn-green btn-sm" onClick={handlePrintData}>Print Annexure</button>
+              <button className="btn btn-green btn-sm" onClick={handlePrintChallan}>Print Challan</button>
+              <button className="btn btn-green btn-sm" onClick={handlePrintMarges}>Merge PDF</button>
+              <button className="btn btn-green btn-sm" onClick={handlePrintMargesSign}>Merge PDF (Signed)</button>
             </>
           )}
           {companies?.find((v) => v.id == company)?.shotName.toLowerCase() === "dadri" && (
             <>
-              <button className="btn btn-secondary btn-sm" onClick={handlePrintData2}>Print Annexure 2</button>
-              <button className="btn btn-secondary btn-sm" onClick={handlePrintChallan2}>Print Challan 2</button>
-              <button className="btn btn-secondary btn-sm" onClick={handlePrintMarges2}>Merge PDF 2</button>
-              <button className="btn btn-secondary btn-sm" onClick={handlePrintMarges2sign}>Merge PDF (Signed) 2</button>
+              <button className="btn btn-green btn-sm" onClick={handlePrintData2}>Print Annexure 2</button>
+              <button className="btn btn-green btn-sm" onClick={handlePrintChallan2}>Print Challan 2</button>
+              <button className="btn btn-green btn-sm" onClick={handlePrintMarges2}>Merge PDF 2</button>
+              <button className="btn btn-green btn-sm" onClick={handlePrintMarges2sign}>Merge PDF (Signed) 2</button>
             </>
           )}
         </div>
@@ -351,15 +351,15 @@ export default function Home() {
     <div className="flex flex-col gap-6 py-4">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-semibold text-slate-100 tracking-tight">Text Entry</h1>
-        <p className="text-xs text-slate-500 mt-0.5">Paste raw text records to extract and save challan data · BioTrend Energy</p>
+        <h1 className="text-2xl font-semibold text-green-900 tracking-tight">Text Entry</h1>
+        <p className="text-xs text-green-600 mt-0.5">Paste raw text records to extract and save challan data · BioTrend Energy</p>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
         {/* Input Panel */}
-        <div className="bg-base-200 border border-base-300 rounded-xl p-5 flex flex-col gap-3">
-          <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Input</h2>
-          <label className="text-sm font-medium text-slate-300">Enter Multiple Records</label>
+        <div className="rounded-xl p-5 flex flex-col gap-3 border border-white/60 shadow-md" style={{ background: "rgba(255,255,255,0.65)", backdropFilter: "blur(16px)" }}>
+          <h2 className="text-xs font-semibold text-green-600 uppercase tracking-widest">Input</h2>
+          <label className="text-sm font-medium text-gray-700">Enter Multiple Records</label>
           <textarea
             className="textarea textarea-bordered w-full min-h-[400px] text-sm"
             placeholder={"date - 01/01/2025\nvehicle no - HR55AM1234\ngross weight - 5000\ntare weight - 2000\nnet weight - 3000\na weight - 1500\nb weight - 1500\n\n(blank line separates records)"}
@@ -371,9 +371,9 @@ export default function Home() {
         {/* Parsed Records */}
         <div className="flex flex-col gap-4">
           {entries.length === 0 || (entries.length === 1 && Object.keys(entries[0]).length === 0) ? (
-            <div className="bg-base-200 border border-base-300 rounded-xl p-10 flex flex-col items-center justify-center gap-2">
-              <p className="text-slate-400 text-sm font-medium">No records parsed yet</p>
-              <p className="text-slate-600 text-xs">Paste text on the left to see records here</p>
+            <div className="rounded-xl p-10 flex flex-col items-center justify-center gap-2 border border-white/60 shadow-md" style={{ background: "rgba(255,255,255,0.65)", backdropFilter: "blur(16px)" }}>
+              <p className="text-gray-400 text-sm font-medium">No records parsed yet</p>
+              <p className="text-gray-400 text-xs">Paste text on the left to see records here</p>
             </div>
           ) : (
             entries.map((entry, index) => (

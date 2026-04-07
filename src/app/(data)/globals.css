@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: dracula --default;
+  themes: light --default;
 }
 
 @theme {
@@ -15,4 +15,21 @@
 
 .animate-progress-bar {
   animation: progress-bar 0.8s ease-in-out;
+}
+
+.btn-green {
+  border: 1px solid rgb(16 185 129);
+  color: rgb(52 211 153);
+  background-color: rgb(16 185 129 / 0.1);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 12px rgb(16 185 129 / 0.15);
+  transition: all 0.2s;
+}
+.btn-green:hover:not(:disabled) {
+  background-color: rgb(16 185 129 / 0.2);
+  box-shadow: 0 0 18px rgb(16 185 129 / 0.25);
+}
+.btn-green:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }

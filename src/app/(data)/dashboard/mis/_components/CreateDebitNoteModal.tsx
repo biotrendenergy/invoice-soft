@@ -301,7 +301,7 @@ export const CreateDebitNoteModal = ({
               <button type="button" className="btn" onClick={onClose}>
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-green">
                 Create Note
               </button>
             </div>

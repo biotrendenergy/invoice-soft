@@ -19,6 +19,7 @@ model user {
   id       Int    @id @default(autoincrement())
   username String @unique
   password String
+  role     String @default("user")
 }
 
 model ocr {
@@ -128,4 +129,33 @@ model audit {
   message  String
   username String
   createAt DateTime @default(now())
+}
+
+model deletedOcr {
+  id                 Int      @id @default(autoincrement())
+  originalId         Int
+  A_weight           Int
+  B_weight           Int
+  challan            String
+  address            String
+  map_url            String
+  latitude           Float
+  longitude          Float
+  delivery_date      DateTime
+  delivery_status    String
+  net_weight         Int
+  tare_weight        Int
+  gross_weight       Int
+  vehicle_number     String
+  date               DateTime
+  created_at         DateTime
+  e_way_bill         String
+  e_way_bill_date    DateTime
+  e_way_bill_gst     String
+  e_way_bill_bill_to String?
+  e_way_bill_ship_to String?
+  vendorDetailId     Int?
+  companyDetailId    Int?
+  deletedAt          DateTime @default(now())
+  deletedBy          String   @default("")
 }

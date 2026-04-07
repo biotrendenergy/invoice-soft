@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
+import { getCurrentUser } from "@/action/user";
 
-const navItems = [
+const baseNavItems = [
   {
     href: "/dashboard",
     label: "Home",
@@ -98,16 +98,34 @@ const navItems = [
   },
 ];
 
+const adminNavItem = {
+  href: "/dashboard/admin",
+  label: "Admin",
+  icon: (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+    </svg>
+  ),
+};
+
 const Sidebar = (props: PropsWithChildren) => {
   const pathname = usePathname();
   const router = useRouter();
   const [loadingHref, setLoadingHref] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<{ id: number; username: string; role: string } | null>(null);
+
+  useEffect(() => {
+    getCurrentUser().then(setCurrentUser);
+  }, []);
+
+  const isAdmin = currentUser?.role === "admin";
+  const navItems = isAdmin ? [...baseNavItems, adminNavItem] : baseNavItems;
 
   const handleNav = (href: string) => {
-    if (href === pathname) return; // already on this page
+    if (href === pathname) return;
     setLoadingHref(href);
     router.push(href);
-    // Clear loader after navigation settles
     setTimeout(() => setLoadingHref(null), 800);
   };
 
@@ -117,7 +135,6 @@ const Sidebar = (props: PropsWithChildren) => {
 
       {/* Main content + top loader bar */}
       <div className="drawer-content relative">
-        {/* Top progress bar */}
         {loadingHref && (
           <div className="fixed top-0 left-0 right-0 z-50 h-0.5 bg-green-100 overflow-hidden">
             <div className="h-full bg-green-500 animate-progress-bar" />
@@ -130,8 +147,10 @@ const Sidebar = (props: PropsWithChildren) => {
         <label htmlFor="dashboard-drawer" className="drawer-overlay" />
 
         {/* Sidebar container */}
-        <div className="flex flex-col w-60 min-h-full bg-white border-r border-gray-200 shadow-sm">
-
+        <div
+          className="flex flex-col w-60 min-h-full border-r border-white/60 shadow-xl"
+          style={{ background: "rgba(255,255,255,0.75)", backdropFilter: "blur(20px)" }}
+        >
           {/* Logo area */}
           <div className="px-4 py-4 border-b border-gray-100">
             <div className="flex items-center gap-3 p-2.5 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 ring-1 ring-green-100">
@@ -151,7 +170,7 @@ const Sidebar = (props: PropsWithChildren) => {
 
           {/* Nav label */}
           <div className="px-5 pt-5 pb-2">
-            <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">
+            <p className="text-[10px] font-semibold text-green-600/70 uppercase tracking-widest">
               Navigation
             </p>
           </div>
@@ -161,6 +180,7 @@ const Sidebar = (props: PropsWithChildren) => {
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               const isLoading = loadingHref === item.href;
+              const isAdminItem = item.href === "/dashboard/admin";
 
               return (
                 <button
@@ -169,16 +189,25 @@ const Sidebar = (props: PropsWithChildren) => {
                   className="w-full text-left"
                 >
                   <div className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150 group cursor-pointer
-                    ${isActive
-                      ? "bg-green-500/10 text-green-700 ring-1 ring-green-200"
-                      : isLoading
-                        ? "bg-green-50 text-green-600"
-                        : "text-gray-500 hover:bg-gray-100 hover:text-gray-800"
-                    }`}
+                    ${isAdminItem && !isActive
+                      ? "text-purple-600 hover:bg-purple-50 hover:text-purple-700"
+                      : isActive
+                        ? "bg-green-500/10 text-green-700 ring-1 ring-green-200"
+                        : isLoading
+                          ? "bg-green-50 text-green-600"
+                          : "text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                    }
+                    ${isAdminItem && isActive ? "bg-purple-500/10 text-purple-700 ring-1 ring-purple-200" : ""}
+                  `}
                   >
                     {/* Icon or spinner */}
                     <span className={`flex-shrink-0 transition-colors
-                      ${isActive ? "text-green-600" : isLoading ? "text-green-500" : "text-gray-400 group-hover:text-gray-600"}`}>
+                      ${isAdminItem && !isActive ? "text-purple-500 group-hover:text-purple-600" : ""}
+                      ${isAdminItem && isActive ? "text-purple-600" : ""}
+                      ${!isAdminItem && isActive ? "text-green-600" : ""}
+                      ${!isAdminItem && isLoading ? "text-green-500" : ""}
+                      ${!isAdminItem && !isActive && !isLoading ? "text-gray-400 group-hover:text-gray-600" : ""}
+                    `}>
                       {isLoading ? (
                         <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10"
@@ -190,13 +219,18 @@ const Sidebar = (props: PropsWithChildren) => {
                     </span>
 
                     {/* Label */}
-                    <span className={`font-medium ${isActive ? "text-green-700" : isLoading ? "text-green-600" : ""}`}>
+                    <span className={`font-medium uppercase tracking-wide text-xs
+                      ${isAdminItem && isActive ? "text-purple-700" : ""}
+                      ${isAdminItem && !isActive ? "text-purple-600" : ""}
+                      ${!isAdminItem && isActive ? "text-green-700" : ""}
+                      ${!isAdminItem && isLoading ? "text-green-600" : ""}
+                    `}>
                       {item.label}
                     </span>
 
                     {/* Active dot OR loading pulse */}
                     {isActive && !isLoading && (
-                      <span className="ml-auto w-1.5 h-1.5 rounded-full bg-green-500" />
+                      <span className={`ml-auto w-1.5 h-1.5 rounded-full ${isAdminItem ? "bg-purple-500" : "bg-green-500"}`} />
                     )}
                     {isLoading && (
                       <span className="ml-auto flex gap-0.5">
@@ -211,9 +245,23 @@ const Sidebar = (props: PropsWithChildren) => {
             })}
           </nav>
 
-          {/* Bottom */}
-          <div className="px-5 py-4 border-t border-gray-100">
-            <p className="text-[10px] text-gray-400">© 2026 BioTrend Energy Pvt Ltd.</p>
+          {/* User info + Bottom */}
+          <div className="px-4 py-4 border-t border-white/60 flex flex-col gap-2">
+            {currentUser && (
+              <div className="flex items-center gap-2.5 px-2 py-2 rounded-lg bg-green-50/60">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0
+                  ${isAdmin ? "bg-purple-500" : "bg-green-500"}`}>
+                  {currentUser.username.charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-gray-800 truncate">{currentUser.username}</p>
+                  <p className={`text-[10px] font-medium uppercase tracking-wide ${isAdmin ? "text-purple-500" : "text-green-600"}`}>
+                    {currentUser.role}
+                  </p>
+                </div>
+              </div>
+            )}
+            <p className="text-[10px] text-green-600/60 px-1">© 2026 BioTrend Energy Pvt Ltd.</p>
           </div>
         </div>
       </div>

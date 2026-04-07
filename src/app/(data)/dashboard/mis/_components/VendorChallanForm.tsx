@@ -93,15 +93,15 @@ const FileUploadModal = ({
   return (
     open && (
       <dialog open className="modal">
-        <div className="modal-box bg-base-200 border border-base-300 flex flex-col gap-5">
+        <div className="modal-box border border-white/60 flex flex-col gap-5" style={{ background: "rgba(255,255,255,0.90)", backdropFilter: "blur(20px)" }}>
           <div>
-            <h3 className="text-lg font-semibold text-slate-100 tracking-tight">Upload Files</h3>
-            <p className="text-xs text-slate-500 mt-0.5">Select a challan and upload the relevant documents</p>
+            <h3 className="text-lg font-semibold text-green-900 tracking-tight">Upload Files</h3>
+            <p className="text-xs text-green-600 mt-0.5">Select a challan and upload the relevant documents</p>
           </div>
 
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-slate-300">Challan</label>
+              <label className="text-sm font-medium text-gray-700">Challan</label>
               <select
                 className="select select-bordered w-full"
                 defaultValue=""
@@ -126,7 +126,7 @@ const FileUploadModal = ({
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-slate-300">Vendor Challan (PDF)</label>
+              <label className="text-sm font-medium text-gray-700">Vendor Challan (PDF)</label>
               <input
                 onChange={(e) => { if (!e.target.files) return; setChallan(e.target.files[0]); }}
                 type="file"
@@ -135,7 +135,7 @@ const FileUploadModal = ({
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-slate-300">Vendor E-Way Bill (PDF)</label>
+              <label className="text-sm font-medium text-gray-700">Vendor E-Way Bill (PDF)</label>
               <input
                 onChange={(e) => { if (!e.target.files) return; setEwayBill(e.target.files[0]); }}
                 type="file"
@@ -146,7 +146,7 @@ const FileUploadModal = ({
 
           <div className="flex justify-end gap-3 pt-1">
             <button className="btn btn-ghost" disabled={loading} onClick={onClose}>Cancel</button>
-            <button className="btn btn-primary" disabled={!ewayBill || loading} onClick={onsubmit}>
+            <button className="btn btn-green" disabled={!ewayBill || loading} onClick={onsubmit}>
               {loading ? "Processing..." : "Submit"}
             </button>
           </div>
@@ -258,10 +258,13 @@ export default function VendorChallanForm() {
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Form</p>
-            <h2 className="text-base font-semibold text-slate-100">Vendor Challan Details</h2>
+            <p className="text-xs font-semibold text-green-600 uppercase tracking-widest mb-0.5">Form</p>
+            <h2 className="text-base font-semibold text-green-900">Vendor Challan Details</h2>
           </div>
-          <button className="btn btn-ghost btn-sm" onClick={() => setModalOpen(true)}>
+          <button
+            className="btn btn-sm border border-emerald-500 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 backdrop-blur-sm shadow-[0_0_12px_rgba(16,185,129,0.15)] hover:shadow-[0_0_18px_rgba(16,185,129,0.25)] transition-all duration-200"
+            onClick={() => setModalOpen(true)}
+          >
             Change Bill
           </button>
         </div>
@@ -269,7 +272,7 @@ export default function VendorChallanForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
           {/* Vendor & Challan Info */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-slate-300">Vendor Name</label>
+            <label className="text-sm font-medium text-gray-700">Vendor Name</label>
             <select
               className="select select-bordered w-full"
               defaultValue=""
@@ -300,7 +303,7 @@ export default function VendorChallanForm() {
           </div>
 
           <div className="pt-1">
-            <button type="submit" disabled={isSubmitting} className="btn btn-primary w-full sm:w-auto">
+            <button type="submit" disabled={isSubmitting} className="btn btn-green w-full sm:w-auto">
               {isSubmitting ? "Processing..." : "Submit to Sheet"}
             </button>
           </div>

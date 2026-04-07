@@ -80,7 +80,7 @@ export default function OcrDashboard() {
                   <td>
                     {ocr.medias.length > 0 && (
                       <button
-                        className="btn btn-sm btn-primary"
+                        className="btn btn-sm btn-green"
                         onClick={() =>
                           handleDownload(
                             ocr.company?.name || "media",

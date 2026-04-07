@@ -18,7 +18,7 @@ export const Field = ({
   type = "text",
 }: FieldProps) => (
   <div className="flex flex-col gap-1">
-    <label htmlFor={name} className="text-sm font-medium text-slate-300">
+    <label htmlFor={name} className="text-sm font-medium text-gray-700">
       {label}
     </label>
     <input

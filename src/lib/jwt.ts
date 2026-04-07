@@ -5,6 +5,7 @@ import { jwtVerify } from "jose";
 const JWT_SECRET = process.env.JWT_SECRET!;
 interface JwtPayload {
   userId: string;
+  role?: string;
 }
 export const signToken = async (
   payload: JwtPayload,

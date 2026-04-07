@@ -8,7 +8,7 @@ import { deleteMultipleOCR } from "@/action/ocr";
 
 type Record = ocr;
 
-const RecordTable = ({ data }: { data: Record[] }) => {
+const RecordTable = ({ data, isAdmin }: { data: Record[]; isAdmin: boolean }) => {
   const [selected, setSelected] = useState<string[]>([]);
 
   const toggleSelect = (id: string) => {
@@ -31,75 +31,86 @@ const RecordTable = ({ data }: { data: Record[] }) => {
   const getStatusStyle = (status: string) => {
     switch (status?.toLowerCase()) {
       case "delivered":
-        return "bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30";
+      case "completed":
+        return "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-300";
       case "pending":
-        return "bg-slate-500/20 text-slate-300 ring-1 ring-slate-500/25";
+        return "bg-amber-50 text-amber-600 ring-1 ring-amber-300";
       case "cancelled":
-        return "bg-red-500/15 text-red-400 ring-1 ring-red-500/30";
+        return "bg-red-50 text-red-500 ring-1 ring-red-300";
       default:
-        return "bg-slate-500/15 text-slate-400 ring-1 ring-slate-500/30";
+        return "bg-gray-100 text-gray-500 ring-1 ring-gray-300";
     }
   };
 
   return (
     <div className="space-y-4">
-      {/* Delete Button */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={handleDeleteSelected}
-          disabled={selected.length === 0}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150
-            ${selected.length > 0
-              ? "bg-red-500/20 text-red-400 ring-1 ring-red-500/40 hover:bg-red-500/30 cursor-pointer"
-              : "bg-[#1e2530] text-slate-600 ring-1 ring-slate-700/50 cursor-not-allowed"
-            }`}
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-          Delete Selected
-          {selected.length > 0 && (
-            <span className="bg-red-500/30 text-red-300 text-xs px-1.5 py-0.5 rounded-full">
-              {selected.length}
-            </span>
-          )}
-        </button>
-
-        {selected.length > 0 && (
+      {/* Delete Button — admin only */}
+      {isAdmin && (
+        <div className="flex items-center gap-3">
           <button
-            onClick={() => setSelected([])}
-            className="text-xs text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
+            onClick={handleDeleteSelected}
+            disabled={selected.length === 0}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150
+              ${selected.length > 0
+                ? "bg-red-500/15 text-red-500 ring-1 ring-red-300 hover:bg-red-500/25 cursor-pointer"
+                : "bg-white/50 text-gray-400 ring-1 ring-gray-200 cursor-not-allowed"
+              }`}
           >
-            Clear selection
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Delete Selected
+            {selected.length > 0 && (
+              <span className="bg-red-100 text-red-500 text-xs px-1.5 py-0.5 rounded-full">
+                {selected.length}
+              </span>
+            )}
           </button>
-        )}
-      </div>
+
+          {selected.length > 0 && (
+            <button
+              onClick={() => setSelected([])}
+              className="text-xs text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+            >
+              Clear selection
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl ring-1 ring-slate-700/60 shadow-xl">
+      <div
+        className="overflow-x-auto rounded-xl shadow-lg border border-white/60"
+        style={{ background: "rgba(255,255,255,0.60)", backdropFilter: "blur(16px)" }}
+      >
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-[#161b22] border-b border-slate-700/60">
-              <th className="px-4 py-3.5 text-left">
-                <input
-                  type="checkbox"
-                  checked={selected.length === data.length && data.length > 0}
-                  onChange={(e) =>
-                    setSelected(e.target.checked ? data.map((d) => d.id.toString()) : [])
-                  }
-                  className="w-4 h-4 rounded border-slate-600 bg-slate-800 accent-emerald-500 cursor-pointer"
-                />
-              </th>
+            <tr
+              className="border-b border-green-100/80"
+              style={{ background: "rgba(240,253,244,0.80)" }}
+            >
+              {isAdmin && (
+                <th className="px-4 py-3.5 text-left">
+                  <input
+                    type="checkbox"
+                    checked={selected.length === data.length && data.length > 0}
+                    onChange={(e) =>
+                      setSelected(e.target.checked ? data.map((d) => d.id.toString()) : [])
+                    }
+                    className="w-4 h-4 rounded border-green-300 accent-emerald-500 cursor-pointer"
+                  />
+                </th>
+              )}
               {["#", "Challan", "Address", "Delivery Date", "Vehicle Number", "Status", "Actions"].map((h) => (
-                <th key={h} className="px-4 py-3.5 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                <th key={h} className="px-4 py-3.5 text-left text-xs font-semibold text-green-700 uppercase tracking-wider">
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-700/40">
+          <tbody className="divide-y divide-green-100/60">
             {data.map((ocr, index) => {
               const isSelected = selected.includes(ocr.id.toString());
               return (
@@ -107,40 +118,42 @@ const RecordTable = ({ data }: { data: Record[] }) => {
                   key={ocr.id}
                   className={`transition-colors duration-100 group
                     ${isSelected
-                      ? "bg-emerald-500/5 hover:bg-emerald-500/8"
-                      : "bg-[#0d1117] hover:bg-[#161b22]"
+                      ? "bg-emerald-50/70 hover:bg-emerald-50"
+                      : "bg-white/30 hover:bg-white/60"
                     }`}
                 >
-                  {/* Checkbox */}
-                  <td className="px-4 py-3.5">
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => toggleSelect(ocr.id.toString())}
-                      className="w-4 h-4 rounded border-slate-600 bg-slate-800 accent-emerald-500 cursor-pointer"
-                    />
-                  </td>
+                  {/* Checkbox — admin only */}
+                  {isAdmin && (
+                    <td className="px-4 py-3.5">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleSelect(ocr.id.toString())}
+                        className="w-4 h-4 rounded border-green-300 accent-emerald-500 cursor-pointer"
+                      />
+                    </td>
+                  )}
 
                   {/* # */}
-                  <td className="px-4 py-3.5 text-slate-500 font-mono text-xs">
+                  <td className="px-4 py-3.5 text-gray-400 font-mono text-xs">
                     {index + 1}
                   </td>
 
                   {/* Challan */}
                   <td className="px-4 py-3.5">
-                    <span className="font-medium text-slate-200 font-mono tracking-wide">
+                    <span className="font-medium text-gray-800 font-mono tracking-wide">
                       {ocr.challan}
                     </span>
                   </td>
 
                   {/* Address */}
-                  <td className="px-4 py-3.5 text-slate-400 max-w-[180px] truncate">
+                  <td className="px-4 py-3.5 text-gray-500 max-w-[180px] truncate">
                     {ocr.address}
                   </td>
 
                   {/* Delivery Date */}
                   <td className="px-4 py-3.5">
-                    <span className="text-slate-300 bg-slate-800/60 px-2.5 py-1 rounded-lg text-xs font-medium ring-1 ring-slate-700/50">
+                    <span className="text-gray-700 bg-green-50/80 px-2.5 py-1 rounded-lg text-xs font-medium ring-1 ring-green-200/60">
                       {new Date(ocr.delivery_date).toLocaleDateString("en-IN", {
                         day: "2-digit", month: "short", year: "numeric"
                       })}
@@ -149,7 +162,7 @@ const RecordTable = ({ data }: { data: Record[] }) => {
 
                   {/* Vehicle Number */}
                   <td className="px-4 py-3.5">
-                    <span className="font-mono text-xs text-slate-300 bg-slate-800/60 px-2.5 py-1 rounded-lg ring-1 ring-slate-700/50 tracking-wider">
+                    <span className="font-mono text-xs text-gray-700 bg-green-50/80 px-2.5 py-1 rounded-lg ring-1 ring-green-200/60 tracking-wider">
                       {ocr.vehicle_number}
                     </span>
                   </td>
@@ -166,12 +179,12 @@ const RecordTable = ({ data }: { data: Record[] }) => {
                   <td className="px-4 py-3.5">
                     <div className="flex items-center gap-2">
                       <Link href={`/data/${ocr.id}`}>
-                        <button className="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-500/40 text-slate-300 ring-1 ring-slate-400/50 hover:bg-slate-600/60 hover:text-slate-100 transition-all duration-150 cursor-pointer whitespace-nowrap">
+                        <button className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white/70 text-gray-600 ring-1 ring-gray-200 hover:bg-white hover:text-gray-900 transition-all duration-150 cursor-pointer whitespace-nowrap shadow-sm">
                           Print Annexure
                         </button>
                       </Link>
                       <Link href={`/challan/${ocr.id}`}>
-                        <button className="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-700/40 text-slate-400 ring-1 ring-slate-600/40 hover:bg-slate-600/50 hover:text-slate-200 transition-all duration-150 cursor-pointer whitespace-nowrap">
+                        <button className="px-3 py-1.5 rounded-lg text-xs font-medium bg-green-500 text-white ring-1 ring-green-400 hover:bg-green-600 transition-all duration-150 cursor-pointer whitespace-nowrap shadow-sm">
                           Print Challan
                         </button>
                       </Link>
@@ -187,11 +200,11 @@ const RecordTable = ({ data }: { data: Record[] }) => {
 
       {/* Footer row count */}
       <div className="flex items-center justify-between px-1">
-        <p className="text-xs text-slate-600">
-          Showing <span className="text-slate-400 font-medium">{data.length}</span> records
+        <p className="text-xs text-gray-400">
+          Showing <span className="text-gray-600 font-medium">{data.length}</span> records
         </p>
         {selected.length > 0 && (
-          <p className="text-xs text-emerald-500/70">
+          <p className="text-xs text-emerald-600">
             {selected.length} record{selected.length > 1 ? "s" : ""} selected
           </p>
         )}

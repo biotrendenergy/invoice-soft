@@ -89,15 +89,15 @@ const FileUploadModal = ({
   return (
     open && (
       <dialog open className="modal">
-        <div className="modal-box bg-base-200 border border-base-300 flex flex-col gap-5">
+        <div className="modal-box border border-white/60 flex flex-col gap-5" style={{ background: "rgba(255,255,255,0.90)", backdropFilter: "blur(20px)" }}>
           <div>
-            <h3 className="text-lg font-semibold text-slate-100 tracking-tight">Upload Files</h3>
-            <p className="text-xs text-slate-500 mt-0.5">Select a challan and upload the slip documents</p>
+            <h3 className="text-lg font-semibold text-green-900 tracking-tight">Upload Files</h3>
+            <p className="text-xs text-green-600 mt-0.5">Select a challan and upload the slip documents</p>
           </div>
 
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-slate-300">Challan</label>
+              <label className="text-sm font-medium text-gray-700">Challan</label>
               <select
                 className="select select-bordered w-full"
                 defaultValue=""
@@ -123,7 +123,7 @@ const FileUploadModal = ({
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-slate-300">Upload Slip</label>
+              <label className="text-sm font-medium text-gray-700">Upload Slip</label>
               <input
                 onChange={(e) => { if (!e.target.files) return; setSlipFile(e.target.files[0]); }}
                 type="file"
@@ -132,7 +132,7 @@ const FileUploadModal = ({
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-slate-300">Upload Vendor Challan (optional)</label>
+              <label className="text-sm font-medium text-gray-700">Upload Vendor Challan (optional)</label>
               <input
                 onChange={(e) => { if (!e.target.files) return; setChallan(e.target.files[0]); }}
                 type="file"
@@ -144,7 +144,7 @@ const FileUploadModal = ({
           <div className="flex justify-end gap-3 pt-1">
             <button className="btn btn-ghost" onClick={onClose} disabled={loading}>Cancel</button>
             <button
-              className="btn btn-primary"
+              className="btn btn-green"
               onClick={async () => {
                 try {
                   if (!slipFile) return;
@@ -304,8 +304,8 @@ export default function SlipDetailsForm() {
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Form</p>
-            <h2 className="text-base font-semibold text-slate-100">Slip Details</h2>
+            <p className="text-xs font-semibold text-green-600 uppercase tracking-widest mb-0.5">Form</p>
+            <h2 className="text-base font-semibold text-green-900">Slip Details</h2>
           </div>
           <button className="btn btn-ghost btn-sm" onClick={() => setModalOpen(true)}>
             Upload Receiving Slip
@@ -324,7 +324,7 @@ export default function SlipDetailsForm() {
           </div>
 
           <div className="flex items-center gap-3 pt-1">
-            <button type="submit" disabled={isSubmitting} className="btn btn-primary">
+            <button type="submit" disabled={isSubmitting} className="btn btn-green">
               {isSubmitting ? "Processing..." : "Submit to Sheet"}
             </button>
 
