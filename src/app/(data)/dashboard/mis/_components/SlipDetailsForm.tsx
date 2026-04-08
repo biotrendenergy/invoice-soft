@@ -10,6 +10,7 @@ import {
   extractEWayBill_withIn,
   getAllOcr,
   getFilePart,
+  UpdateOCRData,
 } from "@/action/ocr";
 import Link from "next/link";
 import { companyDetail, ocr } from "@/generated/prisma";
@@ -234,8 +235,17 @@ export default function SlipDetailsForm() {
         redirect: "follow",
       })
         .then((data) => data.json())
-        .then((data) => {
+        .then(async (data) => {
           alert(data.massage ?? data.message);
+          if (ocrData?.id) {
+            try {
+              await UpdateOCRData(ocrData.id, { delivery_status: "delivered" });
+              toast.success("Status updated to delivered.");
+            } catch (updateError) {
+              console.error("Failed to update delivery status:", updateError);
+              toast.error("Submitted to sheet, but failed to update status.");
+            }
+          }
         });
     } catch (error) {
       console.error("Error submitting form:", error);

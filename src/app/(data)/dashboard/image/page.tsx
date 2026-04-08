@@ -110,7 +110,7 @@ const page = () => {
         latitude: data.gross_data.latitude,
         longitude: data.gross_data.longitude,
         delivery_date: new Date(),
-        delivery_status: "",
+        delivery_status: "pending",
         vehicle_number: data.gross_data.vehicle_number,
         created_at: new Date(),
         date: new Date(),

@@ -12,6 +12,7 @@ import {
   extractEWayBill_withIn,
   getAllOcr,
   getFilePart,
+  UpdateOCRData,
 } from "@/action/ocr";
 import { toast } from "sonner";
 import { getAllVendor } from "@/action/vendores";

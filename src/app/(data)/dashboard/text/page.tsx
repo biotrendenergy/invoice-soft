@@ -250,7 +250,7 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
                 latitude: 26.9124,
                 longitude: 75.7873,
                 delivery_date: new Date(),
-                delivery_status: "Pending",
+                delivery_status: "pending",
                 net_weight: safeNumber(entryData["net weight"] ?? "0"),
                 tare_weight: safeNumber(entryData["tare weight"] ?? "0"),
                 gross_weight: safeNumber(entryData["gross weight"] ?? "0"),
