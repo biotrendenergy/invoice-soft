@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getCompanies, getOcrByCompany } from "@/action/ocr";
 import { downloadMediaZip } from "@/utility/downloadZip";
+import Pagination from "../_components/Pagination";
 
 export default function OcrDashboard() {
   const [ocrData, setOcrData] = useState<any[]>([]);
@@ -11,6 +12,8 @@ export default function OcrDashboard() {
     []
   );
   const [loading, setLoading] = useState<boolean>(false);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
 
   useEffect(() => {
     const load = async () => {
@@ -22,6 +25,7 @@ export default function OcrDashboard() {
         ]);
         setOcrData(ocr);
         setCompanies(comps);
+        setPage(1);
       } finally {
         setLoading(false);
       }
@@ -55,6 +59,7 @@ export default function OcrDashboard() {
           Loading...
         </div>
       ) : (
+        <>
         <div className="overflow-x-auto">
           <table className="table table-zebra">
             <thead>
@@ -69,7 +74,7 @@ export default function OcrDashboard() {
               </tr>
             </thead>
             <tbody>
-              {ocrData.map((ocr) => (
+              {ocrData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((ocr) => (
                 <tr key={ocr.id}>
                   <td>{ocr.id}</td>
                   <td>{ocr.challan}</td>
@@ -97,6 +102,14 @@ export default function OcrDashboard() {
             </tbody>
           </table>
         </div>
+        <Pagination
+          page={page}
+          totalPages={Math.ceil(ocrData.length / PAGE_SIZE)}
+          onPageChange={setPage}
+          totalItems={ocrData.length}
+          pageSize={PAGE_SIZE}
+        />
+        </>
       )}
     </div>
   );
