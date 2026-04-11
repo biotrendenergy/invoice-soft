@@ -12,6 +12,7 @@ import {
   updateCompany,
 } from "@/action/company";
 import { StateData } from "@/utility/getStateCode";
+import Pagination from "../_components/Pagination";
 
 const companySchema = z.object({
   shotName: z.string().min(2, "Short name is required"),
@@ -38,6 +39,8 @@ type CompanyFormData = z.infer<typeof companySchema>;
 
 export default function CompanyTable() {
   const [companies, setCompanies] = useState<companyDetail[]>([]);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
   const [selectedCompany, setSelectedCompany] = useState<companyDetail | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -151,7 +154,7 @@ export default function CompanyTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-green-100/60">
-            {companies.map((company) => (
+            {companies.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((company) => (
               <tr key={company.id} className="bg-white/30 hover:bg-white/60 transition-colors duration-100">
                 <td className="px-4 py-3.5 font-medium text-gray-800 whitespace-nowrap">{company.shotName}</td>
                 <td className="px-4 py-3.5 text-gray-700 whitespace-nowrap">{company.name}</td>
@@ -201,6 +204,13 @@ export default function CompanyTable() {
           </tbody>
         </table>
       </div>
+      <Pagination
+        page={page}
+        totalPages={Math.ceil(companies.length / PAGE_SIZE)}
+        onPageChange={setPage}
+        totalItems={companies.length}
+        pageSize={PAGE_SIZE}
+      />
 
       {/* Add/Update Modal */}
       {isModalOpen && (

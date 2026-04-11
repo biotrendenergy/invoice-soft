@@ -5,17 +5,24 @@ import Link from "next/link";
 import EditButton from "./_components/editButton";
 import { ocr } from "@/generated/prisma";
 import { deleteMultipleOCR } from "@/action/ocr";
+import Pagination from "./_components/Pagination";
 
 type Record = ocr;
 
+const PAGE_SIZE = 10;
+
 const RecordTable = ({ data, isAdmin }: { data: Record[]; isAdmin: boolean }) => {
   const [selected, setSelected] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
 
   const toggleSelect = (id: string) => {
     setSelected((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
+
+  const totalPages = Math.ceil(data.length / PAGE_SIZE);
+  const paged = data.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const handleDeleteSelected = () => {
     if (!confirm("Are you sure you want to delete selected records?")) return;
@@ -111,7 +118,7 @@ const RecordTable = ({ data, isAdmin }: { data: Record[]; isAdmin: boolean }) =>
           </thead>
 
           <tbody className="divide-y divide-green-100/60">
-            {data.map((ocr, index) => {
+            {paged.map((ocr, index) => {
               const isSelected = selected.includes(ocr.id.toString());
               return (
                 <tr
@@ -136,7 +143,7 @@ const RecordTable = ({ data, isAdmin }: { data: Record[]; isAdmin: boolean }) =>
 
                   {/* # */}
                   <td className="px-4 py-3.5 text-gray-400 font-mono text-xs">
-                    {index + 1}
+                    {(page - 1) * PAGE_SIZE + index + 1}
                   </td>
 
                   {/* Challan */}
@@ -198,11 +205,14 @@ const RecordTable = ({ data, isAdmin }: { data: Record[]; isAdmin: boolean }) =>
         </table>
       </div>
 
-      {/* Footer row count */}
-      <div className="flex items-center justify-between px-1">
-        <p className="text-xs text-gray-400">
-          Showing <span className="text-gray-600 font-medium">{data.length}</span> records
-        </p>
+      <div className="flex items-center justify-between px-1 flex-wrap gap-2">
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          totalItems={data.length}
+          pageSize={PAGE_SIZE}
+        />
         {selected.length > 0 && (
           <p className="text-xs text-emerald-600">
             {selected.length} record{selected.length > 1 ? "s" : ""} selected

@@ -4,16 +4,20 @@
 import { useState } from "react";
 import { getAuditLogs } from "@/action/audit";
 import { format } from "date-fns";
+import Pagination from "../_components/Pagination";
 
 export default function AuditPage() {
   const [search, setSearch] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [data, setData] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
 
   const fetchData = async () => {
     const logs = await getAuditLogs({ search, from, to });
     setData(logs);
+    setPage(1);
   };
 
   const downloadCSV = () => {
@@ -80,7 +84,7 @@ export default function AuditPage() {
             </thead>
             <tbody>
               {data.length > 0 ? (
-                data.map((log) => (
+                data.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((log) => (
                   <tr key={log.id}>
                     <td>{log.id}</td>
                     <td>{log.message}</td>
@@ -100,6 +104,13 @@ export default function AuditPage() {
             </tbody>
           </table>
         </div>
+        <Pagination
+          page={page}
+          totalPages={Math.ceil(data.length / PAGE_SIZE)}
+          onPageChange={setPage}
+          totalItems={data.length}
+          pageSize={PAGE_SIZE}
+        />
       </div>
     </div>
   );

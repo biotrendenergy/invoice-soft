@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getRecycleBin, restoreFromRecycleBin, permanentDeleteFromBin } from "@/action/ocr";
 import { getCurrentUser } from "@/action/user";
+import Pagination from "../_components/Pagination";
 
 type DeletedRecord = {
   id: number;
@@ -39,6 +40,8 @@ function getUrgencyColor(deletedAt: Date) {
 export default function RecycleBinPage() {
   const router = useRouter();
   const [records, setRecords] = useState<DeletedRecord[]>([]);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
   const [loading, setLoading] = useState(false);
   const [actionId, setActionId] = useState<number | null>(null);
   const [confirmPermanent, setConfirmPermanent] = useState<DeletedRecord | null>(null);
@@ -147,7 +150,7 @@ export default function RecycleBinPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-green-100/60">
-              {records.map((record) => (
+              {records.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((record) => (
                 <tr key={record.id} className="bg-white/30 hover:bg-white/60 transition-colors duration-100">
                   <td className="px-4 py-3.5 font-medium text-gray-800 font-mono">{record.challan}</td>
                   <td className="px-4 py-3.5">
@@ -204,9 +207,13 @@ export default function RecycleBinPage() {
           </table>
 
           <div className="px-4 py-3 border-t border-green-100/60">
-            <p className="text-xs text-gray-400">
-              {records.length} record{records.length !== 1 ? "s" : ""} in recycle bin
-            </p>
+            <Pagination
+              page={page}
+              totalPages={Math.ceil(records.length / PAGE_SIZE)}
+              onPageChange={setPage}
+              totalItems={records.length}
+              pageSize={PAGE_SIZE}
+            />
           </div>
         </div>
       )}

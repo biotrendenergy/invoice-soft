@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react";
 import { getAllUsers, createUser, updateUserRole, deleteUser, getCurrentUser } from "@/action/user";
 import { useRouter } from "next/navigation";
+import Pagination from "../_components/Pagination";
 
 type User = { id: number; username: string; role: string };
 
 export default function AdminPage() {
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -140,7 +143,7 @@ export default function AdminPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-green-100/60">
-            {users.map((user, i) => (
+            {users.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((user, i) => (
               <tr key={user.id} className="bg-white/30 hover:bg-white/60 transition-colors duration-100">
                 <td className="px-4 py-3.5 text-gray-400 font-mono text-xs">{i + 1}</td>
 
@@ -220,6 +223,13 @@ export default function AdminPage() {
           </tbody>
         </table>
       </div>
+      <Pagination
+        page={page}
+        totalPages={Math.ceil(users.length / PAGE_SIZE)}
+        onPageChange={setPage}
+        totalItems={users.length}
+        pageSize={PAGE_SIZE}
+      />
 
       {/* ── Create User Modal ── */}
       {showCreateModal && (

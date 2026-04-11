@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddVendor, deleteVendor, getAllVendor, updateVendor } from "@/action/vendores";
 import { StateData } from "@/utility/getStateCode";
+import Pagination from "../_components/Pagination";
 
 const vendorSchema = z.object({
   name: z.string().min(2, "Vendor name is required"),
@@ -26,6 +27,8 @@ interface Vendor {
 
 export default function VendorTable() {
   const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -118,7 +121,7 @@ export default function VendorTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-green-100/60">
-            {vendors.map((vendor) => (
+            {vendors.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((vendor) => (
               <tr key={vendor.id} className="bg-white/30 hover:bg-white/60 transition-colors duration-100">
                 <td className="px-4 py-3.5 font-medium text-gray-800">{vendor.name}</td>
                 <td className="px-4 py-3.5 text-gray-500 max-w-[200px] truncate">{vendor.address}</td>
@@ -154,6 +157,13 @@ export default function VendorTable() {
           </tbody>
         </table>
       </div>
+      <Pagination
+        page={page}
+        totalPages={Math.ceil(vendors.length / PAGE_SIZE)}
+        onPageChange={setPage}
+        totalItems={vendors.length}
+        pageSize={PAGE_SIZE}
+      />
 
       {/* Add/Update Modal */}
       {isModalOpen && (
