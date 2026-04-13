@@ -66,6 +66,7 @@ const page = () => {
   const [vehicle_number, setVehicle] = useState<string | null>(null);
   const [data, setData] = useState<ocr | null>(null); // Store extracted data
   const [loading, setLoading] = useState(false);
+  const [uploadMode, setUploadMode] = useState<"multi" | "single">("multi");
   useEffect(() => {
     (async () => {
       setVendors(await getAllVendor());
@@ -502,12 +503,13 @@ const page = () => {
                 className="tab"
                 aria-label="Multi Upload"
                 defaultChecked
+                onChange={() => setUploadMode("multi")}
               />
               <div role="tabpanel" className="tab-content bg-base-100 border-base-300 p-5 flex flex-col gap-4">
                 <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
                   <label className="text-sm font-medium text-gray-700">Tare Image</label>
                   <input
-                    disabled={loading || getValues("e_wayBill") == undefined || getValues("e_wayBill_data") == undefined}
+                    disabled={loading || uploadMode === "single" || getValues("e_wayBill") == undefined || getValues("e_wayBill_data") == undefined}
                     type="file"
                     className="file-input w-full"
                     accept="image/*"
@@ -533,7 +535,7 @@ const page = () => {
                     <label className="text-sm font-medium text-gray-700">Net Weight (A)</label>
                     <input
                       type="file"
-                      disabled={loading || getValues("multi_file") !== undefined || getValues("e_wayBill") == undefined || getValues("tar_file") == undefined}
+                      disabled={loading || uploadMode === "single" || getValues("e_wayBill") == undefined || getValues("tar_file") == undefined}
                       className="file-input w-full"
                       onChange={handleFileChange}
                       accept="image/*"
@@ -560,7 +562,7 @@ const page = () => {
                       className="file-input w-full"
                       onChange={handleFileChange}
                       accept="image/*"
-                      disabled={loading || getValues("multi_file") !== undefined || getValues("e_wayBill") == undefined || getValues("tar_file") == undefined || getValues("net_file") == undefined}
+                      disabled={loading || uploadMode === "single" || getValues("e_wayBill") == undefined || getValues("tar_file") == undefined || getValues("net_file") == undefined}
                       name={"gross_file" as keyof formType}
                     />
                     <p className="text-xs text-gray-400">{watch("gross_data.vehicle_number")}</p>
@@ -586,6 +588,7 @@ const page = () => {
                 className="tab"
                 disabled={loading}
                 aria-label="Single Upload"
+                onChange={() => setUploadMode("single")}
               />
               <div role="tabpanel" className="tab-content bg-base-100 border-base-300 p-5">
                 <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
@@ -593,7 +596,7 @@ const page = () => {
                   <input
                     type="file"
                     className="file-input w-full"
-                    disabled={loading || getValues("gross_file") !== undefined || getValues("net_file") !== undefined || getValues("tar_file") !== undefined}
+                    disabled={loading || uploadMode === "multi"}
                     accept="image/*"
                     name={"multi_file" as keyof formType}
                     onChange={async (e) => {
