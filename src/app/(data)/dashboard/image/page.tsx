@@ -79,9 +79,11 @@ const page = () => {
       setError("tar_file", { message: "Tar image not uploaded" });
     }
 
-    // Show a toast if *any* file is missing
-    if (!data.net_file || !data.gross_file || !data.tar_file) {
-      toast.error("Please upload all required files.");
+    // Show a toast if *any* file is missing (only for multi-upload mode)
+    if (!data.multi_file && (!data.net_file || !data.gross_file || !data.tar_file)) {
+      toast.error("Please upload all required weight images.");
+      setLoading(false);
+      return;
     }
     try {
       const tare = data.tar_data.weight;
@@ -125,7 +127,7 @@ const page = () => {
       if (result instanceof Error || !result) {
         console.log(result);
 
-        toast.error("Failed to save data!");
+        toast.error("Failed to save data!" + (result instanceof Error ? ": " + result.message : ""));
       } else {
         await addMedia(
           "E-Way bill - " + data.challanNo,
@@ -442,6 +444,7 @@ const page = () => {
                   <option key={i} value={v.id}>{v.shotName}</option>
                 ))}
               </select>
+              {errors.companyId && <p className="text-error text-xs">{errors.companyId?.message}</p>}
             </fieldset>
           </div>
 
@@ -460,6 +463,19 @@ const page = () => {
                 onFocus={() => setError("e_wayBill", { message: "" })}
               />
               {errors.e_wayBill && <p className="text-error text-xs">{errors.e_wayBill.message}</p>}
+            </fieldset>
+            <fieldset className="fieldset flex flex-col gap-1 p-0 border-none">
+              <label className="text-sm font-medium text-gray-700">
+                Challan / Invoice No <span className="text-gray-400 font-normal">(Auto-filled, edit if needed)</span>
+              </label>
+              <input
+                type="text"
+                className="input input-bordered w-full"
+                disabled={loading}
+                {...register("challanNo")}
+                placeholder="e.g. INV/23-24/0198"
+              />
+              {errors.challanNo && <p className="text-error text-xs">{errors.challanNo.message}</p>}
             </fieldset>
           </div>
 

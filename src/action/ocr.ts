@@ -335,8 +335,6 @@ export async function addOCRData(data: ocr) {
     },
   });
   try {
-    const headerList = await headers();
-
     await prisma.audit.create({
       data: {
         username: user?.username ?? "<unknown>",
@@ -347,7 +345,8 @@ export async function addOCRData(data: ocr) {
       data: { ...data, id: undefined },
     });
   } catch (error) {
-    return Error("error");
+    console.error("addOCRData failed:", error);
+    return new Error(error instanceof Error ? error.message : String(error));
   }
 }
 
