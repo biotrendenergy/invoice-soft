@@ -40,8 +40,18 @@ const page = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const normalizeVehicle = (v: string) =>
-    v.toUpperCase().replace(/[\s\-_]/g, "");
+  const normalizeVehicle = (v: string | null | undefined) =>
+    (v ?? "").toUpperCase().replace(/[\s\-_]/g, "");
+
+  const normalizeExtractedData = (raw: any) => ({
+    weight: typeof raw?.weight === "number" ? raw.weight : 0,
+    vehicle_number: raw?.vehicle_number ?? "",
+    address: raw?.address ?? "",
+    map_url: raw?.map_url ?? "",
+    latitude: typeof raw?.latitude === "number" ? raw.latitude : 0,
+    longitude: typeof raw?.longitude === "number" ? raw.longitude : 0,
+    date: raw?.date ? new Date(raw.date) : new Date(),
+  });
 
   const clearWeightErrors = () => {
     clearErrors("tar_file");
@@ -223,7 +233,7 @@ const page = () => {
           return;
         }
         clearWeightErrors();
-        setValue("tar_data", tar_data);
+        setValue("tar_data", normalizeExtractedData(tar_data));
         setLoading(false);
         return;
 
@@ -261,7 +271,7 @@ const page = () => {
           return;
         }
         clearWeightErrors();
-        setValue("net_data", net_data);
+        setValue("net_data", normalizeExtractedData(net_data));
         setLoading(false);
         return;
 
@@ -299,7 +309,7 @@ const page = () => {
           return;
         }
         clearWeightErrors();
-        setValue("gross_data", gross_data);
+        setValue("gross_data", normalizeExtractedData(gross_data));
         setLoading(false);
         return;
 
@@ -505,8 +515,16 @@ const page = () => {
                     onChange={handleFileChange}
                   />
                   <p className="text-xs text-gray-400">{watch("tar_data.vehicle_number")}</p>
-                  {(errors.tar_data || errors.tar_file) && (
-                    <p className="text-error text-xs">{(errors.tar_data ?? errors.tar_file)?.message}</p>
+                  {errors.tar_file && (
+                    <p className="text-error text-xs">{errors.tar_file.message}</p>
+                  )}
+                  {errors.tar_data && !errors.tar_file && (
+                    <p className="text-error text-xs">
+                      {(errors.tar_data as any).message ||
+                        (errors.tar_data as any).vehicle_number?.message ||
+                        (errors.tar_data as any).weight?.message ||
+                        "Tare image data is invalid — re-upload the image"}
+                    </p>
                   )}
                 </fieldset>
 
@@ -522,8 +540,16 @@ const page = () => {
                       name={"net_file" as keyof formType}
                     />
                     <p className="text-xs text-gray-400">{watch("net_data.vehicle_number")}</p>
-                    {(errors.net_data || errors.net_file) && (
-                      <p className="text-error text-xs">{(errors.net_data ?? errors.net_file)?.message}</p>
+                    {errors.net_file && (
+                      <p className="text-error text-xs">{errors.net_file.message}</p>
+                    )}
+                    {errors.net_data && !errors.net_file && (
+                      <p className="text-error text-xs">
+                        {(errors.net_data as any).message ||
+                          (errors.net_data as any).vehicle_number?.message ||
+                          (errors.net_data as any).weight?.message ||
+                          "Net weight (A) image data is invalid — re-upload the image"}
+                      </p>
                     )}
                   </fieldset>
 
@@ -538,8 +564,16 @@ const page = () => {
                       name={"gross_file" as keyof formType}
                     />
                     <p className="text-xs text-gray-400">{watch("gross_data.vehicle_number")}</p>
-                    {(errors.gross_data || errors.gross_file) && (
-                      <p className="text-error text-xs">{(errors.gross_data ?? errors.gross_file)?.message}</p>
+                    {errors.gross_file && (
+                      <p className="text-error text-xs">{errors.gross_file.message}</p>
+                    )}
+                    {errors.gross_data && !errors.gross_file && (
+                      <p className="text-error text-xs">
+                        {(errors.gross_data as any).message ||
+                          (errors.gross_data as any).vehicle_number?.message ||
+                          (errors.gross_data as any).weight?.message ||
+                          "Net weight (B) image data is invalid — re-upload the image"}
+                      </p>
                     )}
                   </fieldset>
                 </div>
