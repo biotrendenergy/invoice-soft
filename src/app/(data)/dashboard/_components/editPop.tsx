@@ -119,6 +119,8 @@ const UpdateOcrModal = forwardRef<
           {[
             { key: "challan", label: "Challan" },
             { key: "vehicle_number", label: "Vehicle Number" },
+
+            { key: "delivery_status", label: "Delivery Status" },
           ].map(({ key, label }) => (
             <div key={key}>
               <label htmlFor={key} className="label font-semibold">
@@ -138,26 +140,6 @@ const UpdateOcrModal = forwardRef<
               )}
             </div>
           ))}
-
-          <div>
-            <label htmlFor="delivery_status" className="label font-semibold">
-              Delivery Status
-            </label>
-            <select
-              id="delivery_status"
-              {...register("delivery_status")}
-              className="select select-bordered w-full"
-            >
-              <option value="pending">Pending</option>
-              <option value="delivered">Delivered</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
-            {errors.delivery_status && (
-              <p className="text-red-500 text-sm">
-                {errors.delivery_status.message}
-              </p>
-            )}
-          </div>
 
           <div>
             <label htmlFor="delivery_date" className="label font-semibold">
