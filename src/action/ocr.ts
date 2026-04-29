@@ -5,6 +5,48 @@ import { ocr } from "@/generated/prisma";
 import { verifyToken } from "@/lib/jwt";
 import { cookies, headers } from "next/headers";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+function isRateLimitError(error: unknown): boolean {
+  if (typeof error === "object" && error !== null && (error as any).status === 429) return true;
+  if (error instanceof Error) {
+    return (
+      error.message.includes("429") ||
+      error.message.toLowerCase().includes("too many requests") ||
+      error.message.toLowerCase().includes("resource exhausted")
+    );
+  }
+  return false;
+}
+
+function getRetryDelay(attempt: number, rateLimited: boolean): number {
+  if (rateLimited) {
+    // Exponential backoff for rate limits: 15s, 30s, 60s
+    return Math.min(15000 * Math.pow(2, attempt - 1), 60000);
+  }
+  return 1000 * attempt;
+}
+
+async function generateWithRetry(
+  contents: Parameters<typeof model.generateContent>[0],
+  maxRetries = 3
+): Promise<ReturnType<typeof model.generateContent>> {
+  let attempt = 0;
+  while (attempt < maxRetries) {
+    try {
+      return await model.generateContent(contents);
+    } catch (error) {
+      attempt++;
+      if (attempt >= maxRetries) throw error;
+      const rateLimited = isRateLimitError(error);
+      const delay = getRetryDelay(attempt, rateLimited);
+      console.warn(`API attempt ${attempt} failed${rateLimited ? " (rate limited)" : ""}. Retrying in ${delay}ms...`);
+      await new Promise((res) => setTimeout(res, delay));
+    }
+  }
+  throw new Error("Unreachable");
+}
+
 export async function deleteMultipleOCR(ids: number[]) {
   const cookie = await cookies();
   const jwt = await verifyToken(cookie.get("token")?.value || "");
@@ -203,7 +245,6 @@ Return the ** first valid occurrence ** of each value in the following ** pure J
   > ✅ Return ** only the JSON output **, no explanation or extra text.
 
 `;
-const model = genAI.getGenerativeModel({ model: "gemini-3-flash" });
 export type ExtractDataJsonType = {
   weight: number;
   vehicle_number: string;
@@ -250,46 +291,29 @@ export const extractData = async (
       id: Number(jwt?.payload.userId),
     },
   });
-  let attempt = 0;
-  while (attempt < maxRetries) {
-    try {
-      const result = await model.generateContent({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: PROMPT }, filePart],
-          },
-        ],
-      });
-
-      const jsonText = await result.response.text();
-      const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
-      console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
-      await prisma.audit.create({
-        data: {
-          username: user?.username ?? "<unknown>",
-          message: `Extracted data from image: ${jsonString}`,
-        },
-      });
-      return JSON.parse(jsonString);
-    } catch (error) {
-      await prisma.audit.create({
-        data: {
-          username: user?.username ?? "<unknown>",
-          message: `Error extracting data from image: ${error instanceof Error ? error.message : String(error)
-            }`,
-        },
-      });
-      console.error(`Attempt ${attempt + 1} failed:`, error);
-      attempt++;
-
-      // Optional: wait before retrying
-      const isRateLimit = error instanceof Error && error.message.includes("429");
-      const delay = isRateLimit ? 10000 * attempt : 1000 * attempt;
-      await new Promise((res) => setTimeout(res, delay));
-    }
+  try {
+    const result = await generateWithRetry({
+      contents: [{ role: "user", parts: [{ text: PROMPT }, filePart] }],
+    }, maxRetries);
+    const jsonText = await result.response.text();
+    const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
+    console.log("Extracted JSON:", jsonString);
+    await prisma.audit.create({
+      data: {
+        username: user?.username ?? "<unknown>",
+        message: `Extracted data from image: ${jsonString}`,
+      },
+    });
+    return JSON.parse(jsonString);
+  } catch (error) {
+    await prisma.audit.create({
+      data: {
+        username: user?.username ?? "<unknown>",
+        message: `Error extracting data from image: ${error instanceof Error ? error.message : String(error)}`,
+      },
+    });
+    throw new Error("Failed to extract data from image after multiple attempts.");
   }
-  throw new Error("Failed to extract data from image after multiple attempts.");
 };
 
 export async function extractFromImages(formData: FormData) {
@@ -402,44 +426,29 @@ export const extractEWayBill = async (
       id: Number(jwt?.payload.userId),
     },
   });
-  let attempt = 0;
-  while (attempt < maxRetries) {
-    try {
-      const result = await model.generateContent({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: E_WAYBILL_PROMPT }, filePart],
-          },
-        ],
-      });
-
-      const jsonText = await result.response.text();
-      const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
-      console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
-      await prisma.audit.create({
-        data: {
-          username: user?.username ?? "<unknown>",
-          message: `Extracted E-Way Bill data: ${jsonString}`,
-        },
-      });
-      return JSON.parse(jsonString);
-    } catch (error) {
-      console.error(`Attempt ${attempt + 1} failed:`, error);
-      await prisma.audit.create({
-        data: {
-          username: user?.username ?? "<unknown>",
-          message: `Error extracting E-Way Bill data: ${error instanceof Error ? error.message : String(error)
-            }`,
-        },
-      });
-      attempt++;
-
-      // Optional: wait before retrying
-      await new Promise((res) => setTimeout(res, 500 * attempt));
-    }
+  try {
+    const result = await generateWithRetry({
+      contents: [{ role: "user", parts: [{ text: E_WAYBILL_PROMPT }, filePart] }],
+    }, maxRetries);
+    const jsonText = await result.response.text();
+    const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
+    console.log("Extracted E-Way Bill JSON:", jsonString);
+    await prisma.audit.create({
+      data: {
+        username: user?.username ?? "<unknown>",
+        message: `Extracted E-Way Bill data: ${jsonString}`,
+      },
+    });
+    return JSON.parse(jsonString);
+  } catch (error) {
+    await prisma.audit.create({
+      data: {
+        username: user?.username ?? "<unknown>",
+        message: `Error extracting E-Way Bill data: ${error instanceof Error ? error.message : String(error)}`,
+      },
+    });
+    throw new Error("Failed to extract E-Way Bill data after multiple attempts.");
   }
-  throw new Error("Failed to extract data from image after multiple attempts.");
 };
 
 const E_WAYBILL_PROMPT_in = `
@@ -551,32 +560,13 @@ export const extractEWayBill_withIn = async (
   quantity: string | number;
 }> => {
 
-  let attempt = 0;
-  while (attempt < maxRetries) {
-    try {
-      const result = await model.generateContent({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: E_WAYBILL_PROMPT_in }, filePart],
-          },
-        ],
-      });
-
-      const jsonText = await result.response.text();
-      const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
-      console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
-
-      return JSON.parse(jsonString);
-    } catch (error) {
-      console.error(`Attempt ${attempt + 1} failed:`, error);
-      attempt++;
-
-      // Optional: wait before retrying
-      await new Promise((res) => setTimeout(res, 500 * attempt));
-    }
-  }
-  throw new Error("Failed to extract data from image after multiple attempts.");
+  const result = await generateWithRetry({
+    contents: [{ role: "user", parts: [{ text: E_WAYBILL_PROMPT_in }, filePart] }],
+  }, maxRetries);
+  const jsonText = await result.response.text();
+  const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
+  console.log("Extracted E-Way Bill (withIn) JSON:", jsonString);
+  return JSON.parse(jsonString);
 };
 
 const Compare_PROMPT = `
@@ -645,32 +635,13 @@ export const ExtractDataFORCompar = async (
   maxRetries = 3
 ): Promise<ExtractDataFORComparJsonType> => {
 
-  let attempt = 0;
-  while (attempt < maxRetries) {
-    try {
-      const result = await model.generateContent({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: Compare_PROMPT }, filePart],
-          },
-        ],
-      });
-
-      const jsonText = await result.response.text();
-      const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
-      console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
-
-      return JSON.parse(jsonString);
-    } catch (error) {
-      console.error(`Attempt ${attempt + 1} failed:`, error);
-      attempt++;
-
-      // Optional: wait before retrying
-      await new Promise((res) => setTimeout(res, 500 * attempt));
-    }
-  }
-  throw new Error("Failed to extract data from image after multiple attempts.");
+  const result = await generateWithRetry({
+    contents: [{ role: "user", parts: [{ text: Compare_PROMPT }, filePart] }],
+  }, maxRetries);
+  const jsonText = await result.response.text();
+  const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
+  console.log("Extracted Compare JSON:", jsonString);
+  return JSON.parse(jsonString);
 };
 
 export async function UpdateOCRData(id: number, data: Partial<ocr>) {
@@ -772,32 +743,13 @@ If a challan number is not found in a file, set "challan_number" to null.
 `;
 
 export async function getChallanNumber(filePart: any[], maxRetries = 3) {
-  let attempt = 0;
-  while (attempt < maxRetries) {
-    try {
-      const result = await model.generateContent({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: EXtractPrompt }, ...filePart],
-          },
-        ],
-      });
-
-      const jsonText = await result.response.text();
-      const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
-      console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
-
-      return JSON.parse(jsonString);
-    } catch (error) {
-      console.error(`Attempt ${attempt + 1} failed:`, error);
-      attempt++;
-
-      // Optional: wait before retrying
-      await new Promise((res) => setTimeout(res, 500 * attempt));
-    }
-  }
-  throw new Error("Failed to extract data from image after multiple attempts.");
+  const result = await generateWithRetry({
+    contents: [{ role: "user", parts: [{ text: EXtractPrompt }, ...filePart] }],
+  }, maxRetries);
+  const jsonText = await result.response.text();
+  const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
+  console.log("Extracted Challan Number JSON:", jsonString);
+  return JSON.parse(jsonString);
 }
 
 const sPrompt = `
@@ -870,32 +822,13 @@ export async function extractData_msi(
   filePart: any[],
   maxRetries = 3
 ): Promise<MsiData> {
-  let attempt = 0;
-  while (attempt < maxRetries) {
-    try {
-      const result = await model.generateContent({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: sPrompt }, ...filePart],
-          },
-        ],
-      });
-
-      const jsonText = await result.response.text();
-      const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
-      console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
-
-      return JSON.parse(jsonString);
-    } catch (error) {
-      console.error(`Attempt ${attempt + 1} failed:`, error);
-      attempt++;
-
-      // Optional: wait before retrying
-      await new Promise((res) => setTimeout(res, 500 * attempt));
-    }
-  }
-  throw new Error("Failed to extract data from image after multiple attempts.");
+  const result = await generateWithRetry({
+    contents: [{ role: "user", parts: [{ text: sPrompt }, ...filePart] }],
+  }, maxRetries);
+  const jsonText = await result.response.text();
+  const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
+  console.log("Extracted MSI JSON:", jsonString);
+  return JSON.parse(jsonString);
 }
 
 const slipPrompt = `
@@ -949,32 +882,13 @@ export async function extractData_slipData(
   filePart: any,
   maxRetries = 3
 ): Promise<slipType> {
-  let attempt = 0;
-  while (attempt < maxRetries) {
-    try {
-      const result = await model.generateContent({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: slipPrompt }, filePart],
-          },
-        ],
-      });
-
-      const jsonText = await result.response.text();
-      const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
-      console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
-
-      return JSON.parse(jsonString);
-    } catch (error) {
-      console.error(`Attempt ${attempt + 1} failed:`, error);
-      attempt++;
-
-      // Optional: wait before retrying
-      await new Promise((res) => setTimeout(res, 500 * attempt));
-    }
-  }
-  throw new Error("Failed to extract data from image after multiple attempts.");
+  const result = await generateWithRetry({
+    contents: [{ role: "user", parts: [{ text: slipPrompt }, filePart] }],
+  }, maxRetries);
+  const jsonText = await result.response.text();
+  const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
+  console.log("Extracted Slip JSON:", jsonString);
+  return JSON.parse(jsonString);
 }
 
 export async function deleteOcr(id: number | undefined) {
@@ -1062,32 +976,13 @@ export async function extractData_AllWight(
   longitude: null | number;
   date: null | string;
 }> {
-  let attempt = 0;
-  while (attempt < maxRetries) {
-    try {
-      const result = await model.generateContent({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: PROMPT_All_WIGHT }, filePart],
-          },
-        ],
-      });
-
-      const jsonText = await result.response.text();
-      const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
-      console.log(`Extracted JSON (attempt ${attempt + 1}):`, jsonString);
-
-      return JSON.parse(jsonString);
-    } catch (error) {
-      console.error(`Attempt ${attempt + 1} failed:`, error);
-      attempt++;
-
-      // Optional: wait before retrying
-      await new Promise((res) => setTimeout(res, 500 * attempt));
-    }
-  }
-  throw new Error("Failed to extract data from image after multiple attempts.");
+  const result = await generateWithRetry({
+    contents: [{ role: "user", parts: [{ text: PROMPT_All_WIGHT }, filePart] }],
+  }, maxRetries);
+  const jsonText = await result.response.text();
+  const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
+  console.log("Extracted AllWeight JSON:", jsonString);
+  return JSON.parse(jsonString);
 }
 
 export async function addMedia(title: string, content: File, ocrId: number) {
