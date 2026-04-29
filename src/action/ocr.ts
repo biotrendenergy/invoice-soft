@@ -203,7 +203,7 @@ Return the ** first valid occurrence ** of each value in the following ** pure J
   > ✅ Return ** only the JSON output **, no explanation or extra text.
 
 `;
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-3-flash" });
 export type ExtractDataJsonType = {
   weight: number;
   vehicle_number: string;
