@@ -284,7 +284,9 @@ export const extractData = async (
       attempt++;
 
       // Optional: wait before retrying
-      await new Promise((res) => setTimeout(res, 500 * attempt));
+      const isRateLimit = error instanceof Error && error.message.includes("429");
+      const delay = isRateLimit ? 10000 * attempt : 1000 * attempt;
+      await new Promise((res) => setTimeout(res, delay));
     }
   }
   throw new Error("Failed to extract data from image after multiple attempts.");
