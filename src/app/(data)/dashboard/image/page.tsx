@@ -200,15 +200,17 @@ const page = () => {
         clearErrors("e_wayBill");
         setValue("e_wayBill", e.target.files[0]);
         const e_way_bill_data = await extractEWayBill_withIn(dataPart);
-        setValue("e_wayBill_data", Number(e_way_bill_data.EWayBillNumber));
-        setValue("e_way_bill_gst", e_way_bill_data.gst_no);
-        setValue(
-          "e_wayBill_date",
-          parseFlexibleDate(e_way_bill_data.generated_date) ?? new Date()
-        );
-        setValue("e_way_bill_ship_to", e_way_bill_data.shipping_address);
-        setValue("challanNo", e_way_bill_data.ChallanOrInvoiceNumber);
-        setVehicle(e_way_bill_data.vehicle_number);
+        if (e_way_bill_data) {
+          setValue("e_wayBill_data", Number(e_way_bill_data.EWayBillNumber));
+          setValue("e_way_bill_gst", e_way_bill_data.gst_no);
+          setValue(
+            "e_wayBill_date",
+            parseFlexibleDate(e_way_bill_data.generated_date) ?? new Date()
+          );
+          setValue("e_way_bill_ship_to", e_way_bill_data.shipping_address);
+          setValue("challanNo", e_way_bill_data.ChallanOrInvoiceNumber);
+          setVehicle(e_way_bill_data.vehicle_number);
+        }
         setLoading(false);
         return;
 
