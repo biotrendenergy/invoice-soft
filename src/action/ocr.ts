@@ -5,7 +5,7 @@ import { ocr } from "@/generated/prisma";
 import { verifyToken } from "@/lib/jwt";
 import { cookies, headers } from "next/headers";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 function isRateLimitError(error: unknown): boolean {
   if (typeof error === "object" && error !== null && (error as any).status === 429) return true;
@@ -558,15 +558,21 @@ export const extractEWayBill_withIn = async (
   gst_no: string;
   shipping_address: string;
   quantity: string | number;
-}> => {
-
-  const result = await generateWithRetry({
-    contents: [{ role: "user", parts: [{ text: E_WAYBILL_PROMPT_in }, filePart] }],
-  }, maxRetries);
-  const jsonText = await result.response.text();
-  const jsonString = jsonText.replace(/^```json\s*|\s*```$/g, "");
-  console.log("Extracted E-Way Bill (withIn) JSON:", jsonString);
-  return JSON.parse(jsonString);
+} | null> => {
+  try {
+    const result = await generateWithRetry({
+      contents: [{ role: "user", parts: [{ text: E_WAYBILL_PROMPT_in }, filePart] }],
+    }, maxRetries);
+    const jsonText = await result.response.text();
+    // Find the first {...} block regardless of surrounding markdown/text
+    const match = jsonText.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No JSON object in Gemini response");
+    console.log("Extracted E-Way Bill (withIn) JSON:", match[0]);
+    return JSON.parse(match[0]);
+  } catch (error) {
+    console.error("extractEWayBill_withIn failed:", error);
+    return null;
+  }
 };
 
 const Compare_PROMPT = `

@@ -203,24 +203,33 @@ const DataComp = ({ index, entry }: { index: number; entry: any }) => {
             disabled={loading}
             onChange={async (e) => {
               setLoading(true);
-              if (!e.target.files) return;
-              const file = await getFilePart(e.target.files[0]);
-              const eWayBillData = await extractEWayBill_withIn(file);
-              if (eWayBillData.vehicle_number !== entryData["vehicle no"]) {
-                setEntryData((prev: any) => ({
-                  ...prev,
-                  "vehicle no": `❌ ${entryData["vehicle no"]} (E-way bill has ${eWayBillData.vehicle_number})`,
-                }));
+              try {
+                if (!e.target.files) return;
+                const file = await getFilePart(e.target.files[0]);
+                const eWayBillData = await extractEWayBill_withIn(file);
+                if (!eWayBillData) {
+                  toast.error("Failed to read E-Way Bill. The API may be busy — please try again in a moment.");
+                  return;
+                }
+                if (eWayBillData.vehicle_number !== entryData["vehicle no"]) {
+                  setEntryData((prev: any) => ({
+                    ...prev,
+                    "vehicle no": `❌ ${entryData["vehicle no"]} (E-way bill has ${eWayBillData.vehicle_number})`,
+                  }));
+                  return;
+                }
+                setEwayBill(Number(eWayBillData.EWayBillNumber));
+                setInvoice(eWayBillData.ChallanOrInvoiceNumber);
+                setEwayBill_date(parseFlexibleDate(eWayBillData.generated_date));
+                setEwayBill_gst(eWayBillData.gst_no);
+                setEwayBill_ship_to(eWayBillData.shipping_address);
+                setEwayBill_file(e.target.files[0]);
+              } catch (err) {
+                toast.error("An unexpected error occurred. Please try again.");
+                console.error(err);
+              } finally {
                 setLoading(false);
-                return;
               }
-              setEwayBill(Number(eWayBillData.EWayBillNumber));
-              setInvoice(eWayBillData.ChallanOrInvoiceNumber);
-              setEwayBill_date(parseFlexibleDate(eWayBillData.generated_date));
-              setEwayBill_gst(eWayBillData.gst_no);
-              setEwayBill_ship_to(eWayBillData.shipping_address);
-              setEwayBill_file(e.target.files[0]);
-              setLoading(false);
             }}
           />
         </div>
